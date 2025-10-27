@@ -9,7 +9,7 @@ INCLUDE_PATH = C:/msys64/mingw64/include
 LIB_PATH = C:/msys64/mingw64/lib
 
 # Flags de compilação
-CFLAGS = -Wall -std=c99 -Isrc -I$(INCLUDE_PATH)
+CFLAGS = -Wall -std=c99 -Isrc -I$(INCLUDE_PATH) -Isrc/libs
 LIBS = -L$(LIB_PATH) -lraylib -lopengl32 -lgdi32 -lwinmm
 
 # Todos os arquivos fonte em src/ e subpastas (Windows)
