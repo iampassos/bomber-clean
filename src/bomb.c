@@ -5,6 +5,7 @@
 #include <time.h>
 
 #define EXPLODE_DELAY 5.0
+#define PLUS_EXPLODE_DELAY 5.0
 
 typedef struct Bomb {
   Vector2 posi;
@@ -132,4 +133,18 @@ Bomb *find_bomb_to_explode(Bombs *list){
     }while(current!=list->head);
 
     return NULL;
+}
+
+
+// -- funcão que não sei se iremos usar --
+
+void increase_time_to_explode_bombs(Bombs *list){
+    if(list ==NULL || list->head ==NULL) return;
+    Bomb *current=list->head;
+
+    do{
+      current->spawnTime+=PLUS_EXPLODE_DELAY;
+      current=current->next;
+    }while(current!=list->head);
+
 }
