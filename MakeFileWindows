@@ -31,3 +31,7 @@ run: $(TARGET)
 clean:
 	del $(TARGET) 2>nul
 	del raylib.dll 2>nul
+
+	
+#comando pra rodar:
+# mingw32-make -f MakeFileWindows
