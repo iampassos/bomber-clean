@@ -7,19 +7,17 @@ TARGET = main.exe
 # Caminhos padrão de include e lib do MSYS2
 INCLUDE_PATH = C:/msys64/mingw64/include
 LIB_PATH = C:/msys64/mingw64/lib
-BIN_PATH = C:/msys64/mingw64/bin
 
 # Flags de compilação
-CFLAGS = -Wall -std=c99 -I$(INCLUDE_PATH)
+CFLAGS = -Wall -std=c99 -Isrc -I$(INCLUDE_PATH)
 LIBS = -L$(LIB_PATH) -lraylib -lopengl32 -lgdi32 -lwinmm
 
-# Arquivos fonte
-SRC = src/main.c        # <- corrigido para a pasta src
+# Todos os arquivos fonte em src/ e subpastas (Windows)
+SRC = $(shell dir /b /s src\*.c)
 
-# Regra padrão: compilar
+# Regra padrão: compilar tudo direto
 all: $(TARGET)
 
-# Compilação
 $(TARGET): $(SRC)
 	$(CC) $(SRC) -o $(TARGET) $(CFLAGS) $(LIBS)
 
@@ -30,8 +28,6 @@ run: $(TARGET)
 # Limpar arquivos gerados
 clean:
 	del $(TARGET) 2>nul
-	del raylib.dll 2>nul
 
-	
-#comando pra rodar:
-# mingw32-make -f MakeFileWindows
+# Comando para rodar:
+# mingw32-make -f Makefile
