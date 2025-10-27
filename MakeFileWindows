@@ -30,4 +30,4 @@ clean:
 	del $(TARGET) 2>nul
 
 # Comando para rodar:
-# mingw32-make -f Makefile
+# mingw32-make -f MakeFileWindows
