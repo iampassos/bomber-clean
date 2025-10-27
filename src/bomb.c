@@ -69,6 +69,33 @@ void remove_bomb(Bombs *list) {
   free(delete);
 }
 
+//remosão de um no especifico
+bool remove_node_bomb(Bombs *list,Bomb *node){
+    if(node == NULL || list == NULL || list->head == NULL) return false;
+    Bomb *current = list->head;
+    do{
+        if(current==node){
+            //Check de um no
+            if(list->head==list->tail) list->head=list->tail=NULL;
+            else{
+                node->prev->next=node->next;
+                node->next->prev=node->prev;
+
+                if(node == list->head) list->head = node->next;
+                if(node == list->tail) list->tail = node->prev;
+            }
+            list->currentLength--;
+            free(node);
+            return true;
+        }
+        current=current->next;
+    }while(current!=list->head);
+    return false;
+    
+}
+
+
+
 void free_list(Bombs *list) {
   if (list != NULL && list->head != NULL) {
     while (list->head != NULL)
