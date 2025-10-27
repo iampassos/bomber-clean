@@ -1,6 +1,8 @@
 #include "player.h"
 #include "common.h"
+#include "controller.h"
 #include "map.h"
+#include <SDL2/SDL_gamecontroller.h>
 #include <math.h>
 #include <raylib.h>
 #include <state.h>
@@ -49,22 +51,14 @@ int player_can_move(Vector2 projected, float width, float height) {
   return 1;
 }
 
-void player_update(Player *player, int left, int up, int down, int right) {
+void player_update(Player *player, float x, float y) {
   Vector2 projected = player->position;
 
-  if (left)
-    projected.x = fmax(MAP_X_OFFSET, player->position.x - SPEED);
+  if (x)
+    projected.x = fmax(MAP_X_OFFSET, player->position.x - SPEED * x);
 
-  if (right)
-    projected.x = fmin(SCREEN_WIDTH - MAP_X_OFFSET - player->width,
-                       player->position.x + SPEED);
-
-  if (up)
-    projected.y = fmax(MAP_Y_OFFSET, player->position.y - SPEED);
-
-  if (down)
-    projected.y = fmin(MAP_Y_OFFSET + GRID_HEIGHT * TILE_SIZE - player->height,
-                       player->position.y + SPEED);
+  if (y)
+    projected.y = fmax(MAP_Y_OFFSET, player->position.y - SPEED * y);
 
   Vector2 new_pos = player->position;
 
@@ -80,8 +74,25 @@ void player_update(Player *player, int left, int up, int down, int right) {
 }
 
 void player_update_all() {
+  SDL_GameControllerUpdate();
+
+  SDL_GameController *controller = controllers[0];
+  ControllerInput input = controller_input(controller);
+
   for (int i = 0; i < state.player_count; i++) {
-    player_update(&state.players[i], IsKeyDown(KEY_A), IsKeyDown(KEY_W),
-                  IsKeyDown(KEY_S), IsKeyDown(KEY_D));
+    if (controller) {
+      player_update(&state.players[i],
+                    fabs(input.leftAxis.x) > 0.1f ? -input.leftAxis.x : 0.0f,
+                    fabs(input.leftAxis.y) > 0.1f ? -input.leftAxis.y : 0.0f);
+
+    } else {
+      player_update(&state.players[i],
+                    IsKeyDown(KEY_A)   ? 1.0
+                    : IsKeyDown(KEY_D) ? -1.0f
+                                       : 0.0f,
+                    IsKeyDown(KEY_W)   ? 1.0
+                    : IsKeyDown(KEY_S) ? -1.0f
+                                       : 0.0f);
+    }
   }
 }

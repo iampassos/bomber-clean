@@ -1,4 +1,5 @@
 #include "common.h"
+#include "controller.h"
 #include "map.h"
 #include "player.h"
 #include "state.h"
@@ -6,10 +7,15 @@
 
 float delta_time = 0;
 
+SDL_GameController *controllers[MAX_PLAYERS];
+int controllers_n = 0;
+
 int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bomber Clean");
 
   state_init();
+
+  controllers_init(controllers, &controllers_n);
 
   SetTargetFPS(60);
 

@@ -12,7 +12,7 @@ typedef struct Player {
 
 void player_new(int id, Vector2 position, float width, float height);
 int player_can_move(Vector2 projected, float width, float height);
-void player_update(Player *player, int left, int up, int down, int right);
+void player_update(Player *player, float x, float y);
 void player_update_all();
 
 #endif

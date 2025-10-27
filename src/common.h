@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <SDL2/SDL_gamecontroller.h>
+
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 
@@ -13,5 +15,8 @@
 #define MAP_Y_OFFSET (SCREEN_HEIGHT - GRID_HEIGHT * TILE_SIZE)
 
 #define MAX_PLAYERS 1
+
+extern SDL_GameController *controllers[MAX_PLAYERS];
+extern int controllers_n;
 
 #endif
