@@ -76,7 +76,14 @@ void free_list(Bombs *list){
 }
 
 
-bool is_possible_insert_bomb_in_map(TileType tile){
-    if(tile==TILE_EMPTY) return true;
-    return false;
+bool is_possible_insert_bomb_in_map(Bombs *list,Vector2 spawn_posi,TileType tile){
+    if(tile!=TILE_EMPTY) return false;
+    if(list!=NULL && list->head!=NULL){
+        Bomb *current=list->head;
+        do{
+            if(spawn_posi.x == current->posi.x && spawn_posi.y==current->posi.y) return false;
+            current=current->next;
+        }while(current!=list->head);
+    }
+    return true;
 }
