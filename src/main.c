@@ -1,7 +1,7 @@
 #include "common.h"
 #include "map.h"
+#include "player.h"
 #include <raylib.h>
-#include <stdlib.h>
 
 float delta_time = 0;
 
@@ -12,10 +12,15 @@ int main(void) {
 
   Map *map = map_init();
 
+  player_new(0, (Vector2){SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f},
+             TILE_SIZE - 8, TILE_SIZE + 6);
+
   while (!WindowShouldClose()) {
     delta_time = GetFrameTime();
 
     BeginDrawing();
+
+    player_update_all();
 
     ClearBackground(RAYWHITE);
 
@@ -35,6 +40,11 @@ int main(void) {
       DrawLine(MAP_X_OFFSET, MAP_Y_OFFSET + i * TILE_SIZE,
                MAP_X_OFFSET + TILE_SIZE * GRID_WIDTH,
                MAP_Y_OFFSET + i * TILE_SIZE, (Color){128, 128, 128, 32});
+
+    for (int i = 0; i < player_count; i++) {
+      Player *p = players[i];
+      DrawRectangle(p->position.x, p->position.y, p->width, p->height, BEIGE);
+    }
 
     EndDrawing();
   }
