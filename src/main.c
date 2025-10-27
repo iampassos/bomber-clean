@@ -39,6 +39,8 @@ int main(void) {
       DrawRectangle(p->position.x, p->position.y, p->width, p->height, BEIGE);
     }
 
+    player_debug_draw();
+
     EndDrawing();
   }
 
