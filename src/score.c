@@ -1,27 +1,65 @@
 #include <stdio.h>
 #include <string.h>
-
+#include <stdlib.h>
+#include <locale.h>  
+#define MAX_SCORE 200
 typedef struct Score{
     char name[100];
-    int poits;
+    int points;
     double time;
 }Score;
 
 void creater_txt(char *name,int points,double time){
-    FILE *file = fopen("score.txt","a");
+    FILE *file  = fopen("../../resources/score.txt","a");
 
     if(file==NULL) return;
 
-    fprintf(file,"%.2f |%d | %s\n",time,points,name);
+    fprintf(file,"%.2f|%d|%s\n",time,points,name);
     
     fclose(file);
 }
 
 void array_score(Score *array){
-    FILE *file = fopen("score.txt","r");
+    FILE *file  = fopen("../../resources/score.txt","r");
     
-    if(file==NULL) return NULL;
+    if(file==NULL) {
+        for (int k = 0; k < MAX_SCORE; k++){
+            array[k].name[0] = '\0';
+            array[k].points  = 0;
+            array[k].time    = 0.0;
+        }
+        return;
+    }
+    int i = 0;
+    while (i < MAX_SCORE) {
+        double time;
+        int points;
+        char name[100];
 
+        int ok = fscanf(file, " %lf|%d|%99[^\n]", &time, &points, name);
+        if (ok != 3) {
+            if (feof(file)) break;
+            int c;
+            while ((c = fgetc(file)) != '\n' && c != EOF) {}
+            continue;
+        }
+
+        size_t len = strlen(name);
+        if (len && name[len-1] == '\r') name[--len] = '\0';
+
+        array[i].time = time;
+        array[i].points = points;
+
+        strncpy(array[i].name, name, sizeof array[i].name);
+        array[i].name[sizeof array[i].name - 1] = '\0';
+        i++;
+    }
+    fclose(file);
+     for (; i < MAX_SCORE; i++){
+        array[i].name[0] = '\0';
+        array[i].points  = 0;
+        array[i].time    = 0.0;
+    }
 }
 
 void swap_Score(Score *a,Score *b){
@@ -40,4 +78,31 @@ void bubble_sort_score_by_time(Score *array, int len){
             }
         }
     }
+}
+
+void print_scores(const Score *v){
+    for (int i = 0; i < MAX_SCORE && v[i].name[0] != '\0'; i++){
+        printf("%2d) time=%.2f  points=%d  name=%s\n",
+               i+1, v[i].time, v[i].points, v[i].name);
+    }
+}
+
+int main(void){
+    setlocale(LC_NUMERIC, "C");
+
+    FILE *reset = fopen("../../resources/score.txt","w");
+    if (reset) fclose(reset);
+
+    creater_txt("Ana",   120, 15.32);
+    creater_txt("Bruno",  95, 21.07);
+    creater_txt("Carla", 150, 12.88);
+    creater_txt("Diego", 110, 18.01);
+
+    Score arr[MAX_SCORE];
+    array_score(arr);
+
+    puts("Conteúdo lido do score.txt:");
+    print_scores(arr);
+
+    return 0;
 }
