@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define EXPLODE_DELAY 5.0
+
 typedef struct Bomb {
   Vector2 posi;
   double spawnTime;
@@ -118,4 +120,16 @@ bool is_possible_insert_bomb_in_map(Bombs *list, Vector2 spawn_posi,
     } while (current != list->head);
   }
   return true;
+}
+
+Bomb *find_bomb_to_explode(Bombs *list){
+    if(list ==NULL || list->head ==NULL) return NULL;
+
+    Bomb *current=list->head;
+    do{
+        if(GetTime()- current->spawnTime >= EXPLODE_DELAY) return current;
+        current=current->next;
+    }while(current!=list->head);
+
+    return NULL;
 }
