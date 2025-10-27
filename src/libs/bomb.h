@@ -1,9 +1,8 @@
-#include <stdlib.h>
 #include <raylib.h>
+#include <stdlib.h>
 
-typedef struct Bomb{
-    int id;
-    Vector2 posi;
-    double spanwTime;
+typedef struct Bomb {
+    Vector2      position;
+    double       spawn_time;
     struct Bomb *next;
-}Bomb;
+} Bomb;
