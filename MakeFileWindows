@@ -1,21 +1,33 @@
-# Compilador e flags
+# Compilador
 CC = gcc
-CFLAGS = -Wall -std=c99 -Iraylib-5.5_win64_mingw-w64/include -Isrc/libs -Isrc
-LDFLAGS = -Lraylib-5.5_win64_mingw-w64/lib -lraylib -lopengl32 -lgdi32 -lwinmm -mconsole
 
-# Arquivos-fonte e destino
-SRC = $(wildcard src/*.c src/libs/*.c)
-OUT = game.exe
+# Nome do executável
+TARGET = main.exe
 
-# Alvo padrão
-all: $(OUT)
+# Caminhos padrão de include e lib do MSYS2
+INCLUDE_PATH = C:/msys64/mingw64/include
+LIB_PATH = C:/msys64/mingw64/lib
+BIN_PATH = C:/msys64/mingw64/bin
 
-# Como gerar o executável
-$(OUT): $(SRC)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+# Flags de compilação
+CFLAGS = -Wall -std=c99 -I$(INCLUDE_PATH)
+LIBS = -L$(LIB_PATH) -lraylib -lopengl32 -lgdi32 -lwinmm
 
-# Limpeza
+# Arquivos fonte
+SRC = src/main.c        # <- corrigido para a pasta src
+
+# Regra padrão: compilar
+all: $(TARGET)
+
+# Compilação
+$(TARGET): $(SRC)
+	$(CC) $(SRC) -o $(TARGET) $(CFLAGS) $(LIBS)
+
+# Rodar o programa
+run: $(TARGET)
+	./$(TARGET)
+
+# Limpar arquivos gerados
 clean:
-	del /Q $(OUT)
-
-# mingw32-make -f MakeFileWindows && game.exe
+	del $(TARGET) 2>nul
+	del raylib.dll 2>nul
