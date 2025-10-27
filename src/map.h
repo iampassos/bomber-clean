@@ -16,6 +16,6 @@ typedef struct Map {
   TileType grid[GRID_HEIGHT][GRID_WIDTH];
 } Map;
 
-Map *map_init();
+void map_init();
 
 #endif

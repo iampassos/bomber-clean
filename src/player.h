@@ -10,10 +10,8 @@ typedef struct Player {
   float height;
 } Player;
 
-extern Player *players[];
-extern int player_count;
-
-Player *player_new(int id, Vector2 position, float width, float height);
+void player_new(int id, Vector2 position, float width, float height);
+int player_can_move(Vector2 projected, float width, float height);
 void player_update(Player *player, int left, int up, int down, int right);
 void player_update_all();
 
