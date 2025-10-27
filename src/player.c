@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <state.h>
 
-#define SPEED 5.0f
+#define SPEED 4.0f
 
 void player_new(int id, Vector2 position, float width, float height) {
   Player *player = &state.players[state.player_count++];
@@ -15,7 +15,7 @@ void player_new(int id, Vector2 position, float width, float height) {
 
   int col = (position.x - MAP_X_OFFSET) / TILE_SIZE;
   int row = (position.y - MAP_Y_OFFSET) / TILE_SIZE;
-  col = fmax(0, fmin(col, GRID_WIDTH - 1));
+  col = fmax(1, fmin(col, GRID_WIDTH - 1));
 
   for (int r = row; r < GRID_HEIGHT; r++) {
     if (state.map.grid[col][r] == TILE_EMPTY) {
@@ -63,11 +63,20 @@ void player_update(Player *player, int left, int up, int down, int right) {
     projected.y = fmax(MAP_Y_OFFSET, player->position.y - SPEED);
 
   if (down)
-    projected.y = fmin(SCREEN_HEIGHT - MAP_Y_OFFSET - player->height,
+    projected.y = fmin(MAP_Y_OFFSET + GRID_HEIGHT * TILE_SIZE - player->height,
                        player->position.y + SPEED);
 
-  if (player_can_move(projected, player->width, player->height))
-    player->position = projected;
+  Vector2 new_pos = player->position;
+
+  Vector2 horizontal = {projected.x, player->position.y};
+  if (player_can_move(horizontal, player->width, player->height))
+    new_pos.x = horizontal.x;
+
+  Vector2 vertical = {player->position.x, projected.y};
+  if (player_can_move(vertical, player->width, player->height))
+    new_pos.y = vertical.y;
+
+  player->position = new_pos;
 }
 
 void player_update_all() {
