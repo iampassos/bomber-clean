@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <locale.h>  
 #define MAX_SCORE 200
+
 typedef struct Score{
     char name[100];
     int points;
@@ -12,7 +13,8 @@ typedef struct Score{
 void creater_txt(char *name,int points,double time){
     FILE *file  = fopen("../../resources/score.txt","a");
 
-    if(file==NULL) return;
+  if (file == NULL)
+    return;
 
     fprintf(file,"%.2f|%d|%s\n",time,points,name);
     
@@ -62,22 +64,22 @@ void array_score(Score *array){
     }
 }
 
-void swap_Score(Score *a,Score *b){
-    Score temp=*a;
-    *a=*b;
-    *b=temp;
+void swap_Score(Score *a, Score *b) {
+  Score temp = *a;
+  *a = *b;
+  *b = temp;
 }
 
-void bubble_sort_score_by_time(Score *array, int len){
-    if(array !=NULL){
-        for(int i=1;i<len;i++){
-            int current=i;
-            while(current!=0 && array[current].time < array[current-1].time ){
-                swap_Score(&array[current],&array[current-1]);
-                current--;
-            }
-        }
+void bubble_sort_score_by_time(Score *array, int len) {
+  if (array != NULL) {
+    for (int i = 1; i < len; i++) {
+      int current = i;
+      while (current != 0 && array[current].time < array[current - 1].time) {
+        swap_Score(&array[current], &array[current - 1]);
+        current--;
+      }
     }
+  }
 }
 
 void print_scores(const Score *v){
