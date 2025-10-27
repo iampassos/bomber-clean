@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <raylib.h>
+#include <map.h>
 #include <time.h>
 
 typedef struct Bomb{
@@ -18,7 +19,7 @@ typedef struct Bombs{
     int totalCreated;
 }Bombs;
 
-void createBombsList(Bombs *list){
+void create_bombs_list(Bombs *list){
     list->head=NULL;
     list->tail=NULL;
     list->currentLength=0;
@@ -26,14 +27,14 @@ void createBombsList(Bombs *list){
 }
 
 //insersão no final de uma bomba
-void insertBomb(Bombs *list, Vector2 posi, double spawnTime){
+void insert_bomb(Bombs *list, Vector2 posi){
     Bomb *newBomb = malloc(sizeof(Bomb));
     if( newBomb==NULL ) return;
 
     list->totalCreated++;
     list->currentLength++;
     newBomb->posi=posi;
-    newBomb->spawnTime=spawnTime;
+    newBomb->spawnTime=GetTime();
     newBomb->next=NULL;
 
      //insersão com um elemento
@@ -51,7 +52,7 @@ void insertBomb(Bombs *list, Vector2 posi, double spawnTime){
 }
 
 //remosao no final de bomba
-void removeBomb(Bombs *list){
+void remove_bomb(Bombs *list){
     if(list==NULL || list->head==NULL) return;
     
     list->currentLength--;
@@ -66,14 +67,16 @@ void removeBomb(Bombs *list){
     free(delete);
 }
 
-void freeList(Bombs *list){
+void free_list(Bombs *list){
     if(list!=NULL && list->head!=NULL){
-        while(list->head!=NULL) removeBomb(list);
+        while(list->head!=NULL) remove_bomb(list);
         list->currentLength=0;
         list->totalCreated=0;
     }
 }
 
-bool isPossibleInsertBombInMap(){
+
+bool is_possible_insert_bomb_in_map(TileType tile){
+    if(tile==TILE_EMPTY) return true;
     return false;
 }
