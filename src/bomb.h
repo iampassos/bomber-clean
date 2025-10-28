@@ -13,7 +13,8 @@
 
 // Estruturas
 typedef struct Bomb {
-    Vector2 posi;
+    int col;
+    int row;
     double spawnTime;
     struct Bomb *next;
     struct Bomb *prev;
@@ -27,13 +28,13 @@ typedef struct Bombs {
 } Bombs;
 
 // Funções principais
-void create_bombs_list(Bombs *list);
-void insert_bomb(Bombs *list, Vector2 posi);
-void remove_bomb(Bombs *list);
-bool remove_node_bomb(Bombs *list, Bomb *node);
-void free_list(Bombs *list);
-bool is_possible_insert_bomb_in_map(Bombs *list, Vector2 spawn_posi, TileType tile);
-Bomb *find_bomb_to_explode(Bombs *list);
-void increase_time_to_explode_bombs(Bombs *list);
+void bombs_create_list(Bombs *list);
+void bomb_insert(Bombs *list, int col, int row);
+void bomb_remove(Bombs *list);
+bool bomb_node_remove(Bombs *list, Bomb *node);
+void bomb_free_list(Bombs *list);
+bool bomb_is_possible_insert_in_map(Bombs *list,int col, int row, TileType tile);
+Bomb *bomb_find_to_explode(Bombs *list);
+void bombs_increase_time_to_explode(Bombs *list);
 
 #endif

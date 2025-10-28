@@ -1,6 +1,6 @@
 #include "bomb.h"
 
-void create_bombs_list(Bombs *list) {
+void bombs_create_list(Bombs *list) {
   list->head = NULL;
   list->tail = NULL;
   list->currentLength = 0;
@@ -8,14 +8,14 @@ void create_bombs_list(Bombs *list) {
 }
 
 // insersão no final de uma bomba
-void insert_bomb(Bombs *list, Vector2 posi) {
+void bomb_insert(Bombs *list, int col, int row) {
   Bomb *newBomb = malloc(sizeof(Bomb));
   if (newBomb == NULL)
     return;
-
   list->totalCreated++;
   list->currentLength++;
-  newBomb->posi = posi;
+  newBomb->col=col;
+  newBomb->row=row;
   newBomb->spawnTime = GetTime();
   newBomb->next = NULL;
 
@@ -33,7 +33,7 @@ void insert_bomb(Bombs *list, Vector2 posi) {
 }
 
 // remosao no final de bomba
-void remove_bomb(Bombs *list) {
+void bomb_remove(Bombs *list) {
   if (list == NULL || list->head == NULL)
     return;
 
@@ -51,7 +51,7 @@ void remove_bomb(Bombs *list) {
 }
 
 //remosão de um no especifico
-bool remove_node_bomb(Bombs *list,Bomb *node){
+bool bomb_node_remove(Bombs *list,Bomb *node){
     if(node == NULL || list == NULL || list->head == NULL) return false;
     Bomb *current = list->head;
     do{
@@ -77,7 +77,7 @@ bool remove_node_bomb(Bombs *list,Bomb *node){
 
 
 
-void free_list(Bombs *list) {
+void bomb_free_list(Bombs *list) {
   if (list != NULL && list->head != NULL) {
     while (list->head != NULL)
       remove_bomb(list);
@@ -86,14 +86,14 @@ void free_list(Bombs *list) {
   }
 }
 
-bool is_possible_insert_bomb_in_map(Bombs *list, Vector2 spawn_posi,
+bool bomb_is_possible_insert_in_map(Bombs *list,int col, int row,
                                     TileType tile) {
   if (tile != TILE_EMPTY)
     return false;
   if (list != NULL && list->head != NULL) {
     Bomb *current = list->head;
     do {
-      if (spawn_posi.x == current->posi.x && spawn_posi.y == current->posi.y)
+      if (col== current->col && row == current->row)
         return false;
       current = current->next;
     } while (current != list->head);
@@ -101,7 +101,7 @@ bool is_possible_insert_bomb_in_map(Bombs *list, Vector2 spawn_posi,
   return true;
 }
 
-Bomb *find_bomb_to_explode(Bombs *list){
+Bomb *bomb_find_to_explode(Bombs *list){
     if(list ==NULL || list->head ==NULL) return NULL;
 
     Bomb *current=list->head;
@@ -116,7 +116,7 @@ Bomb *find_bomb_to_explode(Bombs *list){
 
 // -- funcão que não sei se iremos usar --
 
-void increase_time_to_explode_bombs(Bombs *list){
+void bombs_increase_time_to_explode(Bombs *list){
     if(list ==NULL || list->head ==NULL) return;
     Bomb *current=list->head;
 
