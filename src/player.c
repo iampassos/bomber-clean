@@ -8,6 +8,42 @@
 #include <state.h>
 
 #define SPEED 4.0f
+#define ANIMATION_STEP_MS 500
+
+const char *PLAYER_IMAGES_PATH[4][3] = {
+    {
+        "assets/sprites/player/BomberManUp1.png",
+        "assets/sprites/player/BomberManUp2.png",
+        "assets/sprites/player/BomberManUp3.png",
+    },
+    {
+        "assets/sprites/player/BomberManBack1.png",
+        "assets/sprites/player/BomberManBack2.png",
+        "assets/sprites/player/BomberManBack3.png",
+    },
+    {
+        "assets/sprites/player/BomberManLeft1.png",
+        "assets/sprites/player/BomberManLeft2.png",
+        "assets/sprites/player/BomberManLeft3.png",
+    },
+    {
+        "assets/sprites/player/BomberManRight1.png",
+        "assets/sprites/player/BomberManRight2.png",
+        "assets/sprites/player/BomberManRight3.png",
+    },
+};
+
+Image PLAYER_IMAGES[4][3];
+Texture2D PLAYER_TEXTURES[4][3];
+
+void player_init() {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 3; j++) {
+      PLAYER_IMAGES[i][j] = LoadImage(PLAYER_IMAGES_PATH[i][j]);
+      ImageResize(&PLAYER_IMAGES[i][j], TILE_SIZE - 10, TILE_SIZE - 10);
+      PLAYER_TEXTURES[i][j] = LoadTextureFromImage(PLAYER_IMAGES[i][j]);
+    }
+}
 
 void player_new(int id, Vector2 position, float width, float height) {
   Player *player = &state.players[state.player_count++];
@@ -16,6 +52,8 @@ void player_new(int id, Vector2 position, float width, float height) {
   player->height = height;
   player->direction = DOWN;
   player->state = IDLE;
+  player->animation_step = 0;
+  player->last_animation_step = 0;
 
   int col = (position.x - MAP_X_OFFSET) / TILE_SIZE;
   int row = (position.y - MAP_Y_OFFSET) / TILE_SIZE;
@@ -83,6 +121,7 @@ void player_update(Player *player, float x, float y) {
     player->state = RUNNING;
   } else if (fabs(dy) == 0.0f && fabs(dx) == 0.0f) {
     player->state = IDLE;
+    player->animation_step = 0;
   }
 
   player->position = new_pos;
@@ -95,13 +134,19 @@ void player_update_all() {
   ControllerInput input = controller_input(controller);
 
   for (int i = 0; i < state.player_count; i++) {
+    Player *p = &state.players[i];
+
+    if (p->state == RUNNING && GetTime() - p->last_animation_step >= 0.1f) {
+      p->animation_step = (p->animation_step + 1) % 3;
+      p->last_animation_step = GetTime();
+    }
+
     if (controller) {
-      player_update(&state.players[i],
-                    fabs(input.leftAxis.x) > 0.1f ? input.leftAxis.x : 0.0f,
+      player_update(p, fabs(input.leftAxis.x) > 0.1f ? input.leftAxis.x : 0.0f,
                     fabs(input.leftAxis.y) > 0.1f ? input.leftAxis.y : 0.0f);
 
     } else {
-      player_update(&state.players[i],
+      player_update(p,
                     IsKeyDown(KEY_A)   ? -1.0
                     : IsKeyDown(KEY_D) ? 1.0f
                                        : 0.0f,
@@ -111,16 +156,6 @@ void player_update_all() {
     }
   }
 }
-
-// typedef struct Player {
-//   int id;
-//   Vector2 position;
-//   float width;
-//   float height;
-//   Direction direction;
-//   PlayerState state;
-// } Player;
-//
 
 void player_debug_draw() {
   Player *p = &state.players[0];
@@ -132,7 +167,8 @@ void player_debug_draw() {
            "width: %.2f\n"
            "height: %.2f\n"
            "direction: %s\n"
-           "state: %s\n",
+           "state: %s\n"
+           "animation-step: %d\n",
            p->id, p->position.x, p->position.y, p->width, p->height,
            p->direction == UP     ? "UP"
            : p->direction == DOWN ? "DOWN"
@@ -140,7 +176,8 @@ void player_debug_draw() {
                                   : "RIGHT",
            p->state == IDLE      ? "IDLE"
            : p->state == RUNNING ? "RUNNING"
-                                 : "DEAD");
+                                 : "DEAD",
+           p->animation_step);
 
   DrawText(strBuffer, 5, 5, 20, WHITE);
 }

@@ -14,6 +14,7 @@ int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bomber Clean");
 
   state_init();
+  player_init();
 
   controllers_init(controllers, &controllers_n);
 
@@ -36,7 +37,8 @@ int main(void) {
 
     for (int i = 0; i < state.player_count; i++) {
       Player *p = &state.players[i];
-      DrawRectangle(p->position.x, p->position.y, p->width, p->height, BEIGE);
+      DrawTexture(PLAYER_TEXTURES[p->direction][p->animation_step],
+                  p->position.x, p->position.y, WHITE);
     }
 
     player_debug_draw();
