@@ -194,7 +194,6 @@ void bomb_dfs(GridPosition pos, TileType grid[GRID_HEIGHT][GRID_WIDTH], int visi
   
 }
 
-// Função que retorna todas as posições possíveis para spawn
 int bomb_get_spawnable_positions(GridPosition *bomb_validedd_position_in_grid, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]) {
     int visited[GRID_HEIGHT][GRID_WIDTH] = {0};
 

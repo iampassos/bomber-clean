@@ -45,7 +45,7 @@ Bomb *bomb_find_to_explode(Bombs *list);
 void bombs_increase_time_to_explode(Bombs *list);
 void bombs_update_all();
 
-int bomb_get_spawnable_positions(GridPosition *out_positions, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]); //retorna indicies validos do arry
+int bomb_get_spawnable_positions(GridPosition *out_positions, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]); //retorna indicies validos do arry: bomb_validedd_position_in_grid
 
 
 #endif
