@@ -7,29 +7,29 @@
 #include <raylib.h>
 #include <state.h>
 
-#define SPEED 4.0f
+#define SPEED 3.0f
 #define ANIMATION_STEP_MS 500
 
 const char *PLAYER_IMAGES_PATH[4][3] = {
     {
-        "assets/sprites/player/BomberManUp1.png",
-        "assets/sprites/player/BomberManUp2.png",
-        "assets/sprites/player/BomberManUp3.png",
+        "assets/sprites/player/UP2.png",
+        "assets/sprites/player/UP1.png",
+        "assets/sprites/player/UP3.png",
     },
     {
-        "assets/sprites/player/BomberManDown1.png",
-        "assets/sprites/player/BomberManDown2.png",
-        "assets/sprites/player/BomberManDown3.png",
+        "assets/sprites/player/DOWN2.png",
+        "assets/sprites/player/DOWN1.png",
+        "assets/sprites/player/DOWN3.png",
     },
     {
-        "assets/sprites/player/BomberManLeft1.png",
-        "assets/sprites/player/BomberManLeft2.png",
-        "assets/sprites/player/BomberManLeft3.png",
+        "assets/sprites/player/LEFT2.png",
+        "assets/sprites/player/LEFT1.png",
+        "assets/sprites/player/LEFT3.png",
     },
     {
-        "assets/sprites/player/BomberManRight1.png",
-        "assets/sprites/player/BomberManRight2.png",
-        "assets/sprites/player/BomberManRight3.png",
+        "assets/sprites/player/RIGHT2.png",
+        "assets/sprites/player/RIGHT1.png",
+        "assets/sprites/player/RIGHT3.png",
     },
 };
 
@@ -40,7 +40,7 @@ void player_init() {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 3; j++) {
       PLAYER_IMAGES[i][j] = LoadImage(PLAYER_IMAGES_PATH[i][j]);
-      ImageResizeNN(&PLAYER_IMAGES[i][j], TILE_SIZE - 10, TILE_SIZE - 10);
+      ImageResizeNN(&PLAYER_IMAGES[i][j], 64, 90);
       PLAYER_TEXTURES[i][j] = LoadTextureFromImage(PLAYER_IMAGES[i][j]);
       SetTextureFilter(PLAYER_TEXTURES[i][j], TEXTURE_FILTER_POINT);
       UnloadImage(PLAYER_IMAGES[i][j]);
@@ -73,10 +73,11 @@ void player_new(int id, Vector2 position, float width, float height) {
 }
 
 int player_can_move(Vector2 projected, float width, float height) {
+  float height_text = 32.0f;
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
   int right = (projected.x + width - MAP_X_OFFSET) / TILE_SIZE;
-  int top = (projected.y - MAP_Y_OFFSET) / TILE_SIZE;
-  int bottom = (projected.y + height - MAP_Y_OFFSET) / TILE_SIZE;
+  int top = (projected.y + height_text - MAP_Y_OFFSET) / TILE_SIZE;
+  int bottom = (projected.y + height + height_text - MAP_Y_OFFSET) / TILE_SIZE;
 
   left = fmax(0, fmin(left, GRID_WIDTH - 1));
   right = fmax(0, fmin(right, GRID_WIDTH - 1));

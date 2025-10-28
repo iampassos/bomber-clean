@@ -6,7 +6,7 @@
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 
-#define TILE_SIZE 70
+#define TILE_SIZE 64
 #define GRID_WIDTH 15
 #define GRID_HEIGHT 13
 #define GRID_SIZE (GRID_WIDTH * GRID_HEIGHT)
