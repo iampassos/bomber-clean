@@ -16,6 +16,8 @@ int main(void) {
   state_init();
   player_init();
 
+  map_load_first();
+
   controllers_init(controllers, &controllers_n);
 
   SetTargetFPS(60);
@@ -29,11 +31,7 @@ int main(void) {
 
     ClearBackground(BLACK);
 
-    for (int i = 0; i < GRID_HEIGHT; i++)
-      for (int j = 0; j < GRID_WIDTH; j++)
-        DrawRectangle(MAP_X_OFFSET + j * TILE_SIZE,
-                      MAP_Y_OFFSET + i * TILE_SIZE, TILE_SIZE, TILE_SIZE,
-                      TILE_COLORS[state.map.grid[i][j]]);
+    state.map.draw();
 
     for (int i = 0; i < state.player_count; i++) {
       Player *p = &state.players[i];
