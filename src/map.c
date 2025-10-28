@@ -10,6 +10,22 @@ const Color TILE_COLORS[3] = {
     [TILE_BRICK] = (Color){58, 58, 58, 255},
 };
 
+GridPosition map_get_grid_position(Vector2 position) {
+  return (GridPosition){.col = (position.x - MAP_X_OFFSET) / TILE_SIZE,
+                        .row = (position.y - MAP_Y_OFFSET) / TILE_SIZE};
+}
+
+Vector2 map_get_vector_from_grid_center(GridPosition position) {
+  return (Vector2){.x = MAP_X_OFFSET + position.col * TILE_SIZE + TILE_SIZE / 2,
+                   .y =
+                       MAP_Y_OFFSET + position.row * TILE_SIZE + TILE_SIZE / 2};
+}
+
+Vector2 map_get_vector_from_grid(GridPosition position) {
+  return (Vector2){.x = MAP_X_OFFSET + position.col * TILE_SIZE,
+                   .y = MAP_Y_OFFSET + position.row * TILE_SIZE};
+}
+
 void map_init() {
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
@@ -34,6 +50,20 @@ void map_draw(void (*func)(void)) { func(); }
 Image *images;
 Texture2D *textures;
 
+int stage[13][15] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                     {1, 0, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0, 2, 0, 1},
+                     {1, 0, 1, 2, 1, 2, 1, 2, 1, 0, 1, 2, 1, 0, 1},
+                     {1, 2, 2, 0, 2, 2, 2, 0, 2, 2, 0, 2, 2, 2, 1},
+                     {1, 2, 1, 2, 1, 0, 1, 2, 1, 2, 1, 0, 1, 2, 1},
+                     {1, 0, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 0, 2, 1},
+                     {1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1},
+                     {1, 2, 2, 2, 2, 0, 2, 2, 0, 2, 2, 2, 2, 0, 1},
+                     {1, 0, 1, 2, 1, 2, 1, 2, 1, 0, 1, 2, 1, 2, 1},
+                     {1, 2, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0, 2, 2, 1},
+                     {1, 2, 1, 0, 1, 2, 1, 2, 1, 2, 1, 2, 1, 0, 1},
+                     {1, 0, 2, 2, 2, 0, 2, 0, 2, 2, 2, 2, 0, 0, 1},
+                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+
 void map_load_first() {
   char *image_path[] = {"assets/sprites/maps/1/BACKGROUND.png",
                         "assets/sprites/maps/1/GRASS_SHADOW.png",
@@ -51,6 +81,12 @@ void map_load_first() {
     SetTextureFilter(textures[i], TEXTURE_FILTER_POINT);
     UnloadImage(images[i]);
   }
+
+  // for (int i = 0; i < GRID_HEIGHT; i++) {
+  //   for (int j = 0; j < GRID_WIDTH; j++) {
+  //     state.map.grid[i][j] = stage[i][j];
+  //   }
+  // }
 }
 
 void map_draw_first() {

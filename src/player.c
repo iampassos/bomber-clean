@@ -1,7 +1,6 @@
 #include "player.h"
 #include "common.h"
 #include "controller.h"
-#include "map.h"
 #include <SDL2/SDL_gamecontroller.h>
 #include <math.h>
 #include <raylib.h>
@@ -9,6 +8,7 @@
 
 #define SPEED 3.0f
 #define ANIMATION_STEP_MS 500
+#define HEIGHT_TOLERANCE 28.5f
 
 const char *PLAYER_IMAGES_PATH[4][3] = {
     {
@@ -36,6 +36,22 @@ const char *PLAYER_IMAGES_PATH[4][3] = {
 Image PLAYER_IMAGES[4][3];
 Texture2D PLAYER_TEXTURES[4][3];
 
+Vector2 player_get_vector_from_grid_position(Player *player, GridPosition pos) {
+  Vector2 center = map_get_vector_from_grid_center(pos);
+  return (Vector2){center.x - player->width / 2,
+                   center.y - player->height / 2 - HEIGHT_TOLERANCE};
+}
+
+GridPosition player_get_grid_position(Player *player) {
+  Vector2 feet_position = (Vector2){
+      player->position.x + player->width / 2.0f,
+      player->position.y + (player->direction == UP
+                                ? player->height * 1.1f
+                                : player->height * 0.60f + HEIGHT_TOLERANCE)};
+  GridPosition pos = map_get_grid_position(feet_position);
+  return pos;
+}
+
 void player_init() {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 3; j++) {
@@ -57,23 +73,31 @@ void player_new(int id, Vector2 position, float width, float height) {
   player->animation_step = 0;
   player->last_animation_step = 0;
 
-  int col = (position.x - MAP_X_OFFSET) / TILE_SIZE;
-  int row = (position.y - MAP_Y_OFFSET) / TILE_SIZE;
-  col = fmax(1, fmin(col, GRID_WIDTH - 1));
+  GridPosition pos = map_get_grid_position(position);
+  pos.col = fmax(1, fmin(pos.col, GRID_WIDTH - 2));
+  pos.row = fmax(1, fmin(pos.row, GRID_HEIGHT - 2));
 
-  for (int r = row; r < GRID_HEIGHT; r++) {
-    if (state.map.grid[col][r] == TILE_EMPTY) {
-      player->position = (Vector2){MAP_X_OFFSET + col * TILE_SIZE,
-                                   MAP_Y_OFFSET + r * TILE_SIZE};
-      return;
+  if (state.map.grid[pos.row][pos.col] == TILE_EMPTY) {
+    player->position = player_get_vector_from_grid_position(player, pos);
+    return;
+  }
+
+  for (int r = pos.col; r < GRID_HEIGHT - 1; r++) {
+    for (int c = pos.row; c < GRID_WIDTH - 1; c++) {
+      if (state.map.grid[r][c] == TILE_EMPTY) {
+        player->position =
+            player_get_vector_from_grid_position(player, (GridPosition){c, r});
+        return;
+      }
     }
   }
 
-  player->position = (Vector2){MAP_X_OFFSET + col * TILE_SIZE, MAP_Y_OFFSET};
+  player->position =
+      player_get_vector_from_grid_position(player, (GridPosition){1, 1});
 }
 
 int player_can_move(Vector2 projected, float width, float height) {
-  float height_text = 30.0f;
+  float height_text = HEIGHT_TOLERANCE;
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
   int right = (projected.x + width - MAP_X_OFFSET) / TILE_SIZE;
   int top = (projected.y + height_text - MAP_Y_OFFSET) / TILE_SIZE;
@@ -84,12 +108,10 @@ int player_can_move(Vector2 projected, float width, float height) {
   top = fmax(0, fmin(top, GRID_HEIGHT - 1));
   bottom = fmax(0, fmin(bottom, GRID_HEIGHT - 1));
 
-  for (int row = top; row <= bottom; row++) {
-    for (int col = left; col <= right; col++) {
+  for (int row = top; row <= bottom; row++)
+    for (int col = left; col <= right; col++)
       if (state.map.grid[row][col] != TILE_EMPTY)
         return 0;
-    }
-  }
 
   return 1;
 }
@@ -162,6 +184,7 @@ void player_update_all() {
 
 void player_debug_draw() {
   Player *p = &state.players[0];
+  GridPosition pos = player_get_grid_position(p);
   char strBuffer[1000];
   snprintf(strBuffer, sizeof(strBuffer),
            "Player debug\n"
@@ -173,9 +196,7 @@ void player_debug_draw() {
            "direction: %s\n"
            "state: %s\n"
            "animation-step: %d\n",
-           p->id, p->position.x, p->position.y,
-           (int)((p->position.x - MAP_X_OFFSET) / TILE_SIZE),
-           (int)((p->position.y - MAP_Y_OFFSET) / TILE_SIZE), p->width,
+           p->id, p->position.x, p->position.y, pos.col, pos.row, p->width,
            p->height,
            p->direction == UP     ? "UP"
            : p->direction == DOWN ? "DOWN"

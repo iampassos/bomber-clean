@@ -5,10 +5,13 @@
 #include "map.h"
 #include "player.h"
 
+typedef enum { NORMAL, DEBUG } ViewMode;
+
 typedef struct State {
   Map map;
   Player players[MAX_PLAYERS];
   int player_count;
+  ViewMode view_mode;
 } State;
 
 extern State state;

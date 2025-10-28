@@ -22,12 +22,19 @@ int main(void) {
 
   SetTargetFPS(60);
 
+  float last = GetTime();
+
   while (!WindowShouldClose()) {
     delta_time = GetFrameTime();
 
     BeginDrawing();
 
     player_update_all();
+
+    if (IsKeyDown(KEY_F1) && GetTime() - last > 0.25f) {
+      state.view_mode = state.view_mode == DEBUG ? NORMAL : DEBUG;
+      last = GetTime();
+    }
 
     ClearBackground(BLACK);
 
@@ -39,7 +46,20 @@ int main(void) {
                   p->position.x, p->position.y, WHITE);
     }
 
-    player_debug_draw();
+    if (state.view_mode == DEBUG) {
+      for (int i = 0; i <= GRID_WIDTH; i++)
+        DrawLine(MAP_X_OFFSET + i * TILE_SIZE, MAP_Y_OFFSET,
+                 MAP_X_OFFSET + i * TILE_SIZE,
+                 MAP_Y_OFFSET + GRID_HEIGHT * TILE_SIZE,
+                 (Color){128, 128, 128, 128});
+
+      for (int i = 0; i < GRID_HEIGHT; i++)
+        DrawLine(MAP_X_OFFSET, MAP_Y_OFFSET + i * TILE_SIZE,
+                 MAP_X_OFFSET + TILE_SIZE * GRID_WIDTH,
+                 MAP_Y_OFFSET + i * TILE_SIZE, (Color){128, 128, 128, 128});
+
+      player_debug_draw();
+    }
 
     EndDrawing();
   }
