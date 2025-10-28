@@ -46,9 +46,10 @@ void map_load_first() {
 
   for (int i = 0; i < 5; i++) {
     images[i] = LoadImage(image_path[i]);
-    SetTextureFilter(LoadTextureFromImage(images[i]), TEXTURE_FILTER_BILINEAR);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     textures[i] = LoadTextureFromImage(images[i]);
+    SetTextureFilter(textures[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
   }
 }
 

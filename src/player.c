@@ -17,9 +17,9 @@ const char *PLAYER_IMAGES_PATH[4][3] = {
         "assets/sprites/player/BomberManUp3.png",
     },
     {
-        "assets/sprites/player/BomberManBack1.png",
-        "assets/sprites/player/BomberManBack2.png",
-        "assets/sprites/player/BomberManBack3.png",
+        "assets/sprites/player/BomberManDown1.png",
+        "assets/sprites/player/BomberManDown2.png",
+        "assets/sprites/player/BomberManDown3.png",
     },
     {
         "assets/sprites/player/BomberManLeft1.png",
@@ -40,8 +40,10 @@ void player_init() {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 3; j++) {
       PLAYER_IMAGES[i][j] = LoadImage(PLAYER_IMAGES_PATH[i][j]);
-      ImageResize(&PLAYER_IMAGES[i][j], TILE_SIZE - 10, TILE_SIZE - 10);
+      ImageResizeNN(&PLAYER_IMAGES[i][j], TILE_SIZE - 10, TILE_SIZE - 10);
       PLAYER_TEXTURES[i][j] = LoadTextureFromImage(PLAYER_IMAGES[i][j]);
+      SetTextureFilter(PLAYER_TEXTURES[i][j], TEXTURE_FILTER_POINT);
+      UnloadImage(PLAYER_IMAGES[i][j]);
     }
 }
 
