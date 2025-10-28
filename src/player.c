@@ -6,29 +6,29 @@
 #include <raylib.h>
 #include <state.h>
 
-#define SPEED 3.0f
+#define SPEED 3.5f
 #define ANIMATION_STEP_MS 500
 #define HEIGHT_TOLERANCE 28.5f
 
 const char *PLAYER_IMAGES_PATH[4][3] = {
     {
-        "assets/sprites/player/UP2.png",
         "assets/sprites/player/UP1.png",
+        "assets/sprites/player/UP2.png",
         "assets/sprites/player/UP3.png",
     },
     {
-        "assets/sprites/player/DOWN2.png",
         "assets/sprites/player/DOWN1.png",
+        "assets/sprites/player/DOWN2.png",
         "assets/sprites/player/DOWN3.png",
     },
     {
-        "assets/sprites/player/LEFT2.png",
         "assets/sprites/player/LEFT1.png",
+        "assets/sprites/player/LEFT2.png",
         "assets/sprites/player/LEFT3.png",
     },
     {
-        "assets/sprites/player/RIGHT2.png",
         "assets/sprites/player/RIGHT1.png",
+        "assets/sprites/player/RIGHT2.png",
         "assets/sprites/player/RIGHT3.png",
     },
 };
@@ -146,7 +146,7 @@ void player_update(Player *player, float x, float y) {
     player->state = RUNNING;
   } else if (fabs(dy) == 0.0f && fabs(dx) == 0.0f) {
     player->state = IDLE;
-    player->animation_step = 0;
+    player->animation_step = 1;
   }
 
   player->position = new_pos;
@@ -161,7 +161,7 @@ void player_update_all() {
   for (int i = 0; i < state.player_count; i++) {
     Player *p = &state.players[i];
 
-    if (p->state == RUNNING && GetTime() - p->last_animation_step >= 0.1f) {
+    if (p->state == RUNNING && GetTime() - p->last_animation_step >= 0.25f) {
       p->animation_step = (p->animation_step + 1) % 3;
       p->last_animation_step = GetTime();
     }
@@ -207,5 +207,5 @@ void player_debug_draw() {
                                  : "DEAD",
            p->animation_step);
 
-  DrawText(strBuffer, 5, 5, 20, WHITE);
+  DrawText(strBuffer, 30, 30, 20, WHITE);
 }

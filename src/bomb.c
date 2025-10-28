@@ -1,4 +1,5 @@
 #include "bomb.h"
+#include "map.h"
 
 void bombs_create_list(Bombs *list) {
   list->head = NULL;
@@ -8,14 +9,13 @@ void bombs_create_list(Bombs *list) {
 }
 
 // insersão no final de uma bomba
-void bomb_insert(Bombs *list, int col, int row) {
+void bomb_insert(Bombs *list, GridPosition pos) {
   Bomb *newBomb = malloc(sizeof(Bomb));
   if (newBomb == NULL)
     return;
   list->totalCreated++;
   list->currentLength++;
-  newBomb->col=col;
-  newBomb->row=row;
+  newBomb->grid_position = pos;
   newBomb->spawnTime = GetTime();
   newBomb->next = NULL;
 
@@ -50,32 +50,33 @@ void bomb_remove(Bombs *list) {
   free(delete);
 }
 
-//remosão de um no especifico
-bool bomb_node_remove(Bombs *list,Bomb *node){
-    if(node == NULL || list == NULL || list->head == NULL) return false;
-    Bomb *current = list->head;
-    do{
-        if(current==node){
-            //Check de um no
-            if(list->head==list->tail) list->head=list->tail=NULL;
-            else{
-                node->prev->next=node->next;
-                node->next->prev=node->prev;
-
-                if(node == list->head) list->head = node->next;
-                if(node == list->tail) list->tail = node->prev;
-            }
-            list->currentLength--;
-            free(node);
-            return true;
-        }
-        current=current->next;
-    }while(current!=list->head);
+// remosão de um no especifico
+bool bomb_node_remove(Bombs *list, Bomb *node) {
+  if (node == NULL || list == NULL || list->head == NULL)
     return false;
-    
+  Bomb *current = list->head;
+  do {
+    if (current == node) {
+      // Check de um no
+      if (list->head == list->tail)
+        list->head = list->tail = NULL;
+      else {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+
+        if (node == list->head)
+          list->head = node->next;
+        if (node == list->tail)
+          list->tail = node->prev;
+      }
+      list->currentLength--;
+      free(node);
+      return true;
+    }
+    current = current->next;
+  } while (current != list->head);
+  return false;
 }
-
-
 
 void bomb_free_list(Bombs *list) {
   if (list != NULL && list->head != NULL) {
@@ -86,14 +87,15 @@ void bomb_free_list(Bombs *list) {
   }
 }
 
-bool bomb_is_possible_insert_in_map(Bombs *list,int col, int row,
+bool bomb_is_possible_insert_in_map(Bombs *list, GridPosition pos,
                                     TileType tile) {
   if (tile != TILE_EMPTY)
     return false;
   if (list != NULL && list->head != NULL) {
     Bomb *current = list->head;
     do {
-      if (col== current->col && row == current->row)
+      if (pos.col == current->grid_position.col &&
+          pos.row == current->grid_position.row)
         return false;
       current = current->next;
     } while (current != list->head);
@@ -101,28 +103,29 @@ bool bomb_is_possible_insert_in_map(Bombs *list,int col, int row,
   return true;
 }
 
-Bomb *bomb_find_to_explode(Bombs *list){
-    if(list ==NULL || list->head ==NULL) return NULL;
-
-    Bomb *current=list->head;
-    do{
-        if(GetTime()- current->spawnTime >= EXPLODE_DELAY) return current;
-        current=current->next;
-    }while(current!=list->head);
-
+Bomb *bomb_find_to_explode(Bombs *list) {
+  if (list == NULL || list->head == NULL)
     return NULL;
-}
 
+  Bomb *current = list->head;
+  do {
+    if (GetTime() - current->spawnTime >= EXPLODE_DELAY)
+      return current;
+    current = current->next;
+  } while (current != list->head);
+
+  return NULL;
+}
 
 // -- funcão que não sei se iremos usar --
 
-void bombs_increase_time_to_explode(Bombs *list){
-    if(list ==NULL || list->head ==NULL) return;
-    Bomb *current=list->head;
+void bombs_increase_time_to_explode(Bombs *list) {
+  if (list == NULL || list->head == NULL)
+    return;
+  Bomb *current = list->head;
 
-    do{
-      current->spawnTime+=PLUS_EXPLODE_DELAY;
-      current=current->next;
-    }while(current!=list->head);
-
+  do {
+    current->spawnTime += PLUS_EXPLODE_DELAY;
+    current = current->next;
+  } while (current != list->head);
 }
