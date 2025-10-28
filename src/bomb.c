@@ -80,7 +80,7 @@ bool bomb_node_remove(Bombs *list,Bomb *node){
 void bomb_free_list(Bombs *list) {
   if (list != NULL && list->head != NULL) {
     while (list->head != NULL)
-      remove_bomb(list);
+      bomb_remove(list);
     list->currentLength = 0;
     list->totalCreated = 0;
   }
