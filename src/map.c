@@ -1,4 +1,5 @@
 #include "map.h"
+#include "bomb.h"
 #include "common.h"
 #include "state.h"
 #include <raylib.h>
@@ -65,16 +66,21 @@ int stage[13][15] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                      {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
 void map_load_first() {
-  char *image_path[] = {"assets/sprites/maps/1/BACKGROUND.png",
-                        "assets/sprites/maps/1/GRASS_SHADOW.png",
-                        "assets/sprites/maps/1/GRASS.png",
-                        "assets/sprites/maps/1/BRICK.png",
-                        "assets/sprites/maps/1/WALL.png"};
+  char *image_path[] = {
+      "assets/sprites/maps/1/BACKGROUND.png",
+      "assets/sprites/maps/1/GRASS_SHADOW.png",
+      "assets/sprites/maps/1/GRASS.png",
+      "assets/sprites/maps/1/BRICK.png",
+      "assets/sprites/maps/1/WALL.png",
+      "assets/sprites/maps/1/BOMB1.png",
+      "assets/sprites/maps/1/BOMB2.png",
+      "assets/sprites/maps/1/BOMB3.png",
+  };
 
-  images = malloc(sizeof(Image) * 5);
-  textures = malloc(sizeof(Texture2D) * 5);
+  images = malloc(sizeof(Image) * 8);
+  textures = malloc(sizeof(Texture2D) * 8);
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 8; i++) {
     images[i] = LoadImage(image_path[i]);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     textures[i] = LoadTextureFromImage(images[i]);
@@ -97,6 +103,12 @@ void map_draw_first() {
       case TILE_EMPTY:
         text =
             state.map.grid[i - 1][j] != TILE_EMPTY ? textures[1] : textures[2];
+
+        Bomb *bomb = bomb_find_on_grid_position((GridPosition){j, i});
+
+        if (bomb) {
+          text = textures[5 + bomb->animation_step];
+        }
         break;
       case TILE_BRICK:
         text = textures[3];

@@ -1,5 +1,7 @@
 #include "bomb.h"
 #include "map.h"
+#include "state.h"
+#include <raylib.h>
 
 void bombs_create_list(Bombs *list) {
   list->head = NULL;
@@ -17,6 +19,8 @@ void bomb_insert(Bombs *list, GridPosition pos) {
   list->currentLength++;
   newBomb->grid_position = pos;
   newBomb->spawnTime = GetTime();
+  newBomb->animation_step = 0;
+  newBomb->last_animation_step = 0;
   newBomb->next = NULL;
 
   // insersão com um elemento
@@ -103,6 +107,36 @@ bool bomb_is_possible_insert_in_map(Bombs *list, GridPosition pos,
   return true;
 }
 
+Bomb *bomb_find_n(Bombs *list, int n) {
+  if (list == NULL || list->head == NULL)
+    return NULL;
+
+  Bomb *current = list->head;
+  int i = 0;
+  do {
+    if (i == n)
+      return current;
+    current = current->next;
+    i++;
+  } while (current != list->head);
+
+  return NULL;
+}
+
+Bomb *bomb_find_on_grid_position(GridPosition pos) {
+  for (int i = 0; i < state.player_count; i++) {
+    Bombs *bombs = &state.bombs[i];
+    for (int j = 0; j < bombs->currentLength; j++) {
+      Bomb *bomb = bomb_find_n(bombs, j);
+      if (bomb->grid_position.col == pos.col &&
+          bomb->grid_position.row == pos.row)
+        return bomb;
+    }
+  }
+
+  return NULL;
+}
+
 Bomb *bomb_find_to_explode(Bombs *list) {
   if (list == NULL || list->head == NULL)
     return NULL;
@@ -117,8 +151,6 @@ Bomb *bomb_find_to_explode(Bombs *list) {
   return NULL;
 }
 
-// -- funcão que não sei se iremos usar --
-
 void bombs_increase_time_to_explode(Bombs *list) {
   if (list == NULL || list->head == NULL)
     return;
@@ -128,4 +160,19 @@ void bombs_increase_time_to_explode(Bombs *list) {
     current->spawnTime += PLUS_EXPLODE_DELAY;
     current = current->next;
   } while (current != list->head);
+}
+
+void bombs_update_all() {
+  for (int i = 0; i < state.player_count; i++) {
+    Bombs *bombs = &state.bombs[i];
+    for (int j = 0; j < bombs->currentLength; j++) {
+      Bomb *bomb = bomb_find_n(bombs, j);
+      if (GetTime() - bomb->spawnTime >= EXPLODE_DELAY)
+        bomb_node_remove(bombs, bomb);
+      if (GetTime() - bomb->last_animation_step >= EXPLODE_DELAY / 10.0f) {
+        bomb->animation_step = (bomb->animation_step + 1) % 3;
+        bomb->last_animation_step = GetTime();
+      }
+    }
+  }
 }

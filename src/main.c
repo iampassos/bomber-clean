@@ -1,3 +1,4 @@
+#include "bomb.h"
 #include "common.h"
 #include "controller.h"
 #include "map.h"
@@ -30,6 +31,7 @@ int main(void) {
     BeginDrawing();
 
     player_update_all();
+    bombs_update_all();
 
     if (IsKeyDown(KEY_F1) && GetTime() - last > 0.25f) {
       state.view_mode = state.view_mode == DEBUG ? NORMAL : DEBUG;

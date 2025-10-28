@@ -1,6 +1,8 @@
 #include "player.h"
+#include "bomb.h"
 #include "common.h"
 #include "controller.h"
+#include "map.h"
 #include <SDL2/SDL_gamecontroller.h>
 #include <math.h>
 #include <raylib.h>
@@ -98,6 +100,7 @@ void player_new(int id, Vector2 position, float width, float height) {
 
 int player_can_move(Vector2 projected, float width, float height) {
   float height_text = HEIGHT_TOLERANCE;
+
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
   int right = (projected.x + width - MAP_X_OFFSET) / TILE_SIZE;
   int top = (projected.y + height_text - MAP_Y_OFFSET) / TILE_SIZE;
@@ -152,6 +155,8 @@ void player_update(Player *player, float x, float y) {
   player->position = new_pos;
 }
 
+float last = 0;
+
 void player_update_all() {
   SDL_GameControllerUpdate();
 
@@ -179,25 +184,37 @@ void player_update_all() {
                     : IsKeyDown(KEY_S) ? 1.0f
                                        : 0.0f);
     }
+
+    if (IsKeyDown(KEY_SPACE)) {
+      Bombs *bombs = &state.bombs[i];
+      if (bombs->currentLength < MAX_BOMBS && GetTime() - last > 0.25f) {
+        GridPosition pos = player_get_grid_position(p);
+        bomb_insert(bombs, pos);
+        last = GetTime();
+      }
+    }
   }
 }
 
 void player_debug_draw() {
   Player *p = &state.players[0];
   GridPosition pos = player_get_grid_position(p);
+  TileType tile = state.map.grid[pos.col][pos.row];
   char strBuffer[1000];
   snprintf(strBuffer, sizeof(strBuffer),
            "Player debug\n"
            "id: %d\n"
+           "bombs: %d\n"
            "position: (%.2f, %.2f)\n"
            "grid: (%d, %d)\n"
            "width: %.2f\n"
            "height: %.2f\n"
            "direction: %s\n"
            "state: %s\n"
-           "animation-step: %d\n",
-           p->id, p->position.x, p->position.y, pos.col, pos.row, p->width,
-           p->height,
+           "animation-step: %d\n"
+           "standing-on: %s\n",
+           p->id, state.bombs[0].currentLength, p->position.x, p->position.y,
+           pos.col, pos.row, p->width, p->height,
            p->direction == UP     ? "UP"
            : p->direction == DOWN ? "DOWN"
            : p->direction == LEFT ? "LEFT"
@@ -205,7 +222,11 @@ void player_debug_draw() {
            p->state == IDLE      ? "IDLE"
            : p->state == RUNNING ? "RUNNING"
                                  : "DEAD",
-           p->animation_step);
+           p->animation_step,
+           tile == TILE_EMPTY   ? "EMPTY"
+           : tile == TILE_WALL  ? "WALL"
+           : tile == TILE_BRICK ? "BRICK"
+                                : "BOMB");
 
   DrawText(strBuffer, 30, 30, 20, WHITE);
 }
