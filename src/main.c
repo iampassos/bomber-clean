@@ -14,11 +14,9 @@ int controllers_n = 0;
 int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bomber Clean");
 
+  Texture2D top_hud = LoadTexture("assets/hud/TOP_HUD.png");
+
   state_init();
-  player_init();
-
-  map_load_first();
-
   controllers_init(controllers, &controllers_n);
 
   SetTargetFPS(60);
@@ -32,6 +30,7 @@ int main(void) {
 
     player_update_all();
     bombs_update_all();
+    state.map.update();
 
     if (IsKeyDown(KEY_F1) && GetTime() - last > 0.25f) {
       state.view_mode = state.view_mode == DEBUG ? NORMAL : DEBUG;
@@ -52,16 +51,17 @@ int main(void) {
       for (int i = 0; i <= GRID_WIDTH; i++)
         DrawLine(MAP_X_OFFSET + i * TILE_SIZE, MAP_Y_OFFSET,
                  MAP_X_OFFSET + i * TILE_SIZE,
-                 MAP_Y_OFFSET + GRID_HEIGHT * TILE_SIZE,
-                 (Color){128, 128, 128, 128});
+                 MAP_Y_OFFSET + GRID_HEIGHT * TILE_SIZE, WHITE);
 
       for (int i = 0; i < GRID_HEIGHT; i++)
         DrawLine(MAP_X_OFFSET, MAP_Y_OFFSET + i * TILE_SIZE,
                  MAP_X_OFFSET + TILE_SIZE * GRID_WIDTH,
-                 MAP_Y_OFFSET + i * TILE_SIZE, (Color){128, 128, 128, 128});
+                 MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
 
       player_debug_draw();
     }
+
+    DrawTexture(top_hud, 0, 0, WHITE);
 
     EndDrawing();
   }

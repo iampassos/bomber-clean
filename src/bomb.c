@@ -176,3 +176,35 @@ void bombs_update_all() {
     }
   }
 }
+
+
+// DFS (FLOOD FILL)
+
+void bomb_dfs(GridPosition pos, TileType grid[GRID_HEIGHT][GRID_WIDTH], int visited[GRID_HEIGHT][GRID_WIDTH]){
+    if (pos.col < 0 || pos.col >= GRID_WIDTH || pos.row < 0 || pos.row >= GRID_HEIGHT) return;
+
+    if(visited[pos.row][pos.col] == 1|| grid[pos.row][pos.col]!= TILE_EMPTY) return;
+
+    visited[pos.row][pos.col]=1;
+
+    bomb_dfs((GridPosition){pos.col + 1, pos.row}, grid, visited); // direita
+    bomb_dfs((GridPosition){pos.col - 1, pos.row}, grid, visited); // esquerda
+    bomb_dfs((GridPosition){pos.col, pos.row + 1}, grid, visited); // baixo
+    bomb_dfs((GridPosition){pos.col, pos.row - 1}, grid, visited); // cima
+  
+}
+
+int bomb_get_spawnable_positions(GridPosition *bomb_validedd_position_in_grid, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]) {
+    int visited[GRID_HEIGHT][GRID_WIDTH] = {0};
+
+    bomb_dfs(player_position, grid, visited);
+
+    int count = 0;
+    for (int row = 0; row < GRID_HEIGHT; row++) {
+        for (int col = 0; col < GRID_WIDTH; col++) {
+            if(row == player_position.row && col == player_position.col) continue;
+            if (visited[row][col] == 1) bomb_validedd_position_in_grid[count++] = (GridPosition){col, row};
+        }
+    }
+    return count; 
+}
