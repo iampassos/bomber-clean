@@ -11,6 +11,9 @@ const Color TILE_COLORS[3] = {
     [TILE_BRICK] = (Color){58, 58, 58, 255},
 };
 
+Image *images;
+Texture2D *textures;
+
 GridPosition map_get_grid_position(Vector2 position) {
   return (GridPosition){.col = (position.x - MAP_X_OFFSET) / TILE_SIZE,
                         .row = (position.y - MAP_Y_OFFSET) / TILE_SIZE};
@@ -43,6 +46,7 @@ void map_init() {
 
   state.map.stage = STAGE_ONE;
   state.map.draw = map_draw_one;
+  state.map.update = map_update_one;
   map_load(map_load_one);
 }
 
@@ -50,8 +54,7 @@ void map_load(void (*func)(void)) { func(); }
 
 void map_draw(void (*func)(void)) { func(); }
 
-Image *images;
-Texture2D *textures;
+void map_update(void (*func)(void)) { func(); }
 
 void map_load_zero() {
   char *image_path[] = {
@@ -117,6 +120,16 @@ void map_draw_zero() {
   }
 }
 
+float last_brick = 0.0f;
+int brick_animation_step = 0;
+
+void map_update_one() {
+  if (GetTime() - last_brick > 0.1f) {
+    brick_animation_step = (brick_animation_step + 1) % 4;
+    last_brick = GetTime();
+  }
+}
+
 void map_load_one() {
   char *image_path[] = {
       "assets/sprites/maps/1/MAP.png",
@@ -178,8 +191,9 @@ void map_draw_one() {
 
         break;
       case TILE_BRICK:
-        text = state.map.grid[i - 1][j] != TILE_EMPTY ? &textures[5]
-                                                      : &textures[9];
+        text = state.map.grid[i - 1][j] != TILE_EMPTY
+                   ? &textures[5 + brick_animation_step]
+                   : &textures[9 + brick_animation_step];
         break;
 
       case TILE_WALL:
