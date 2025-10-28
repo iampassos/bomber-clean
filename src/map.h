@@ -4,7 +4,7 @@
 #include <common.h>
 #include <raylib.h>
 
-typedef enum { FIRST } Stage;
+typedef enum { STAGE_ZERO, STAGE_ONE } Stage;
 
 typedef enum {
   TILE_EMPTY,
@@ -22,6 +22,7 @@ typedef struct GridPosition {
 typedef struct Map {
   TileType grid[GRID_HEIGHT][GRID_WIDTH];
   Stage stage;
+  int bomb_animation_steps;
   void (*draw)(void);
 } Map;
 
@@ -30,8 +31,10 @@ Vector2 map_get_vector_from_grid_center(GridPosition position);
 Vector2 map_get_vector_from_grid(GridPosition position);
 void map_init();
 void map_load(void (*func)(void));
-void map_load_first();
+void map_load_zero();
+void map_load_one();
 void map_draw(void (*func)(void));
-void map_draw_first();
+void map_draw_zero();
+void map_draw_one();
 
 #endif

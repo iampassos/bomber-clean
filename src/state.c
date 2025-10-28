@@ -15,5 +15,5 @@ void state_init() {
   for (int i = 0; i < MAX_PLAYERS; i++)
     bombs_create_list(&state.bombs[i]);
 
-  state.view_mode = DEBUG;
+  state.view_mode = NORMAL;
 }
