@@ -1,26 +1,4 @@
-#include <map.h>
-#include <raylib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define EXPLODE_DELAY 5.0
-#define PLUS_EXPLODE_DELAY 5.0
-
-typedef struct Bomb {
-  Vector2 posi;
-  double spawnTime;
-
-  struct Bomb *next;
-  struct Bomb *prev;
-} Bomb;
-
-typedef struct Bombs {
-  struct Bomb *head;
-  struct Bomb *tail;
-  int currentLength;
-  int totalCreated;
-} Bombs;
+#include "bomb.h"
 
 void create_bombs_list(Bombs *list) {
   list->head = NULL;
