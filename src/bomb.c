@@ -203,6 +203,7 @@ int bomb_get_spawnable_positions(GridPosition *bomb_validedd_position_in_grid, G
     int count = 0;
     for (int row = 0; row < GRID_HEIGHT; row++) {
         for (int col = 0; col < GRID_WIDTH; col++) {
+            if(row == player_position.row && col == player_position.col) continue;
             if (visited[row][col] == 1) bomb_validedd_position_in_grid[count++] = (GridPosition){col, row};
         }
     }
