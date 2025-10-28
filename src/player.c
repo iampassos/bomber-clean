@@ -40,7 +40,7 @@ void player_init() {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 3; j++) {
       PLAYER_IMAGES[i][j] = LoadImage(PLAYER_IMAGES_PATH[i][j]);
-      ImageResizeNN(&PLAYER_IMAGES[i][j], 64, 90);
+      ImageResizeNN(&PLAYER_IMAGES[i][j], 64, 88);
       PLAYER_TEXTURES[i][j] = LoadTextureFromImage(PLAYER_IMAGES[i][j]);
       SetTextureFilter(PLAYER_TEXTURES[i][j], TEXTURE_FILTER_POINT);
       UnloadImage(PLAYER_IMAGES[i][j]);
@@ -73,7 +73,7 @@ void player_new(int id, Vector2 position, float width, float height) {
 }
 
 int player_can_move(Vector2 projected, float width, float height) {
-  float height_text = 32.0f;
+  float height_text = 30.0f;
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
   int right = (projected.x + width - MAP_X_OFFSET) / TILE_SIZE;
   int top = (projected.y + height_text - MAP_Y_OFFSET) / TILE_SIZE;
@@ -167,12 +167,16 @@ void player_debug_draw() {
            "Player debug\n"
            "id: %d\n"
            "position: (%.2f, %.2f)\n"
+           "grid: (%d, %d)\n"
            "width: %.2f\n"
            "height: %.2f\n"
            "direction: %s\n"
            "state: %s\n"
            "animation-step: %d\n",
-           p->id, p->position.x, p->position.y, p->width, p->height,
+           p->id, p->position.x, p->position.y,
+           (int)((p->position.x - MAP_X_OFFSET) / TILE_SIZE),
+           (int)((p->position.y - MAP_Y_OFFSET) / TILE_SIZE), p->width,
+           p->height,
            p->direction == UP     ? "UP"
            : p->direction == DOWN ? "DOWN"
            : p->direction == LEFT ? "LEFT"
