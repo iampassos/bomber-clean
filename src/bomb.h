@@ -12,6 +12,9 @@
 #define PLUS_EXPLODE_DELAY 5.0f
 
 // Estruturas
+
+extern GridPosition bomb_validedd_position_in_grid[GRID_HEIGHT*GRID_WIDTH]; // vetor com todas as possisoes possiveis para as bombas
+
 typedef struct Bomb {
   GridPosition grid_position;
   double spawnTime;
@@ -41,5 +44,8 @@ Bomb *bomb_find_n(Bombs *list, int n);
 Bomb *bomb_find_to_explode(Bombs *list);
 void bombs_increase_time_to_explode(Bombs *list);
 void bombs_update_all();
+
+int bomb_get_spawnable_positions(GridPosition *out_positions, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]); //retorna indicies validos do arry
+
 
 #endif
