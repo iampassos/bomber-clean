@@ -4,13 +4,13 @@ CC = gcc
 # Nome do executável
 TARGET = main.exe
 
-# Caminhos padrão de include e lib do MSYS2
-INCLUDE_PATH = C:/msys64/mingw64/include
-LIB_PATH = C:/msys64/mingw64/lib
+# Caminhos padrão de include e lib do MSYS2 (UCRT)
+INCLUDE_PATH = C:/msys64/ucrt64/include
+LIB_PATH = C:/msys64/ucrt64/lib
 
 # Flags de compilação
 CFLAGS = -Wall -std=c99 -Isrc -I$(INCLUDE_PATH) -Isrc/libs
-LIBS = -L$(LIB_PATH) -lraylib -lopengl32 -lgdi32 -lwinmm
+LIBS = -L$(LIB_PATH) -lraylib -lSDL2main -lSDL2 -lopengl32 -lgdi32 -lwinmm
 
 # Todos os arquivos fonte em src/ e subpastas (Windows)
 SRC = $(shell dir /b /s src\*.c)
