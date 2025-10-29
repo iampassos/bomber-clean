@@ -6,46 +6,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "common.h"
 
-// Constantes
+#define MAX_BOMBS 50
 #define EXPLODE_DELAY 2.0f
 #define PLUS_EXPLODE_DELAY 5.0f
 
-// Estruturas
+extern GridPosition bomb_validedd_position_in_grid[GRID_SIZE]; // vetor com todas as posições possíveis para bombas
 
-extern GridPosition bomb_validedd_position_in_grid[GRID_HEIGHT*GRID_WIDTH]; // vetor com todas as possisoes possiveis para as bombas
-
-typedef struct Bomb {
-  GridPosition grid_position;
-  double spawnTime;
-  int animation_step;
-  float last_animation_step;
-  struct Bomb *next;
-  struct Bomb *prev;
+typedef struct {
+    GridPosition grid_position;
+    double spawn_time;
+    int animation_step;
+    float last_animation_step;
 } Bomb;
 
-typedef struct Bombs {
-  struct Bomb *head;
-  struct Bomb *tail;
-  int currentLength;
-  int totalCreated;
-} Bombs;
+typedef struct {
+    Bomb bombs[MAX_BOMBS];
+    int current_length;
+} ArrayBomb;
 
-// Funções principais
-void bombs_create_list(Bombs *list);
-void bomb_insert(Bombs *list, GridPosition pos);
-void bomb_remove(Bombs *list);
-bool bomb_node_remove(Bombs *list, Bomb *node);
-void bomb_free_list(Bombs *list);
-bool bomb_is_possible_insert_in_map(Bombs *list, GridPosition pos,
-                                    TileType tile);
-Bomb *bomb_find_on_grid_position(GridPosition pos);
-Bomb *bomb_find_n(Bombs *list, int n);
-Bomb *bomb_find_to_explode(Bombs *list);
-void bombs_increase_time_to_explode(Bombs *list);
-void bombs_update_all();
+void bomb_insert(ArrayBomb *array, GridPosition pos);
+void bomb_clear_all(ArrayBomb *array);
+void bomb_remove_per_idx(ArrayBomb *array, int idx_remove);
+Bomb *bomb_find_idx(ArrayBomb *array, int idx);
+bool bomb_remove_by_grid_position(ArrayBomb *array, GridPosition pos);
+Bomb *bomb_find_on_grid_position(ArrayBomb *array, GridPosition pos);
+void bombs_increase_time_to_explode(ArrayBomb *array);
+int bomb_find_to_explode(ArrayBomb *array);
+void bombs_update_all(ArrayBomb *array);
 
-int bomb_get_spawnable_positions(GridPosition *out_positions, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]); //retorna indicies validos do arry: bomb_validedd_position_in_grid
-
+// Funções para spawn de bombas
+//void bomb_dfs(GridPosition pos, TileType grid[GRID_HEIGHT][GRID_WIDTH], int visited[GRID_HEIGHT][GRID_WIDTH]);
+int bomb_get_spawnable_positions(GridPosition *bomb_validedd_position_in_grid, GridPosition player_position, TileType grid[GRID_HEIGHT][GRID_WIDTH]);
 
 #endif

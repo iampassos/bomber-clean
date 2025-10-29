@@ -1,184 +1,93 @@
 #include "bomb.h"
-#include "map.h"
-#include "state.h"
-#include <raylib.h>
 
-void bombs_create_list(Bombs *list) {
-  list->head = NULL;
-  list->tail = NULL;
-  list->currentLength = 0;
-  list->totalCreated = 0;
+void bomb_insert(ArrayBomb *array,GridPosition pos){
+    if(array->current_length >= MAX_BOMBS) return;
+
+    Bomb newBomb;
+    newBomb.grid_position=pos;
+    newBomb.spawn_time=GetTime();
+    newBomb.animation_step=0;
+    newBomb.last_animation_step=0.0f;
+    array->bombs[(array->current_length)++]=newBomb;
 }
 
-// insersão no final de uma bomba
-void bomb_insert(Bombs *list, GridPosition pos) {
-  Bomb *newBomb = malloc(sizeof(Bomb));
-  if (newBomb == NULL)
-    return;
-  list->totalCreated++;
-  list->currentLength++;
-  newBomb->grid_position = pos;
-  newBomb->spawnTime = GetTime();
-  newBomb->animation_step = 0;
-  newBomb->last_animation_step = 0;
-  newBomb->next = NULL;
-
-  // insersão com um elemento
-  if (list->head == NULL) {
-    newBomb->next = newBomb->prev = newBomb;
-    list->head = list->tail = newBomb;
-  } else {
-    list->tail->next = newBomb;
-    newBomb->prev = list->tail;
-    list->tail = newBomb;
-    newBomb->next = list->head;
-    list->head->prev = newBomb;
-  }
+void bomb_clear_all(ArrayBomb *array){
+    array->current_length=0;
 }
 
-// remosao no final de bomba
-void bomb_remove(Bombs *list) {
-  if (list == NULL || list->head == NULL)
-    return;
+void bomb_remove_per_idx(ArrayBomb *array, int idx_remove){
+    if(idx_remove <0 || idx_remove>=array->current_length) return;
 
-  list->currentLength--;
-  Bomb *delete = list->tail;
-
-  if (list->head == list->tail)
-    list->head = list->tail = NULL;
-  else {
-    list->tail = list->tail->prev;
-    list->tail->next = list->head;
-    list->head->prev = list->tail;
-  }
-  free(delete);
+    for(int i= idx_remove; i < array->current_length-1; i++){
+        array->bombs[i]=array->bombs[i+1];
+    }
+    array->current_length--;
 }
 
-// remosão de um no especifico
-bool bomb_node_remove(Bombs *list, Bomb *node) {
-  if (node == NULL || list == NULL || list->head == NULL)
+Bomb *bomb_find_idx(ArrayBomb *arry,int idx){
+    if(idx<0 || idx>=arry->current_length) return NULL;
+    return &arry->bombs[idx];
+}
+
+bool bomb_remove_by_grid_position(ArrayBomb *array, GridPosition pos){
+    if(array->current_length==0) return false;
+
+    for(int i=0;i<array->current_length;i++){
+        if(array->bombs[i].grid_position.col == pos.col && array->bombs[i].grid_position.row==pos.row) {
+            bomb_remove_per_idx(array,i);
+            return true;
+        }
+    }
     return false;
-  Bomb *current = list->head;
-  do {
-    if (current == node) {
-      // Check de um no
-      if (list->head == list->tail)
-        list->head = list->tail = NULL;
-      else {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
+}
 
-        if (node == list->head)
-          list->head = node->next;
-        if (node == list->tail)
-          list->tail = node->prev;
-      }
-      list->currentLength--;
-      free(node);
-      return true;
+Bomb *bomb_find_on_grid_position(ArrayBomb *array, GridPosition pos){
+    
+    if(array->current_length==0) return NULL;
+
+    for (int i=0; i<array->current_length;i++){
+        if(array->bombs[i].grid_position.row == pos.row && array->bombs[i].grid_position.col == pos.col) return &array->bombs[i];
     }
-    current = current->next;
-  } while (current != list->head);
-  return false;
-}
 
-void bomb_free_list(Bombs *list) {
-  if (list != NULL && list->head != NULL) {
-    while (list->head != NULL)
-      bomb_remove(list);
-    list->currentLength = 0;
-    list->totalCreated = 0;
-  }
-}
-
-bool bomb_is_possible_insert_in_map(Bombs *list, GridPosition pos,
-                                    TileType tile) {
-  if (tile != TILE_EMPTY)
-    return false;
-  if (list != NULL && list->head != NULL) {
-    Bomb *current = list->head;
-    do {
-      if (pos.col == current->grid_position.col &&
-          pos.row == current->grid_position.row)
-        return false;
-      current = current->next;
-    } while (current != list->head);
-  }
-  return true;
-}
-
-Bomb *bomb_find_n(Bombs *list, int n) {
-  if (list == NULL || list->head == NULL)
     return NULL;
-
-  Bomb *current = list->head;
-  int i = 0;
-  do {
-    if (i == n)
-      return current;
-    current = current->next;
-    i++;
-  } while (current != list->head);
-
-  return NULL;
 }
 
-Bomb *bomb_find_on_grid_position(GridPosition pos) {
-  for (int i = 0; i < state.player_count; i++) {
-    Bombs *bombs = &state.bombs[i];
-    for (int j = 0; j < bombs->currentLength; j++) {
-      Bomb *bomb = bomb_find_n(bombs, j);
-      if (bomb->grid_position.col == pos.col &&
-          bomb->grid_position.row == pos.row)
-        return bomb;
+void bombs_increase_time_to_explode(ArrayBomb *array) {
+    for (int i = 0; i < array->current_length; i++) {
+        array->bombs[i].spawn_time += PLUS_EXPLODE_DELAY;
     }
-  }
-
-  return NULL;
 }
 
-Bomb *bomb_find_to_explode(Bombs *list) {
-  if (list == NULL || list->head == NULL)
-    return NULL;
 
-  Bomb *current = list->head;
-  do {
-    if (GetTime() - current->spawnTime >= EXPLODE_DELAY)
-      return current;
-    current = current->next;
-  } while (current != list->head);
 
-  return NULL;
-}
-
-void bombs_increase_time_to_explode(Bombs *list) {
-  if (list == NULL || list->head == NULL)
-    return;
-  Bomb *current = list->head;
-
-  do {
-    current->spawnTime += PLUS_EXPLODE_DELAY;
-    current = current->next;
-  } while (current != list->head);
-}
-
-void bombs_update_all() {
-  for (int i = 0; i < state.player_count; i++) {
-    Bombs *bombs = &state.bombs[i];
-    for (int j = 0; j < bombs->currentLength; j++) {
-      Bomb *bomb = bomb_find_n(bombs, j);
-      if (GetTime() - bomb->spawnTime >= EXPLODE_DELAY)
-        bomb_node_remove(bombs, bomb);
-      if (GetTime() - bomb->last_animation_step >= EXPLODE_DELAY / 10.0f) {
-        bomb->animation_step = (bomb->animation_step + 1) % 3;
-        bomb->last_animation_step = GetTime();
-      }
+int bomb_find_to_explode(ArrayBomb *array) {
+    for (int i = 0; i < array->current_length; i++) {
+        if (GetTime() - array->bombs[i].spawn_time >= EXPLODE_DELAY)
+            return i;
     }
-  }
+    return -1;
+}
+
+void bombs_update_all(ArrayBomb *array) {
+
+    int idx;
+    while (1) {
+    idx = bomb_find_to_explode(array);
+    
+    if (idx == -1) break; //sem bomba para explodir
+    bomb_remove(array, idx);
+    }
+
+    for (int i = 0; i < array->current_length; i++) {  //Atualiza as animacoes da bomba
+        if (GetTime() - array->bombs[i].last_animation_step >= EXPLODE_DELAY / 10.0f) {
+            array->bombs[i].animation_step = (array->bombs[i].animation_step + 1) % 3;
+            array->bombs[i].last_animation_step = GetTime();
+        }
+    }
 }
 
 
-// DFS (FLOOD FILL)
+//DFS 
 
 void bomb_dfs(GridPosition pos, TileType grid[GRID_HEIGHT][GRID_WIDTH], int visited[GRID_HEIGHT][GRID_WIDTH]){
     if (pos.col < 0 || pos.col >= GRID_WIDTH || pos.row < 0 || pos.row >= GRID_HEIGHT) return;
