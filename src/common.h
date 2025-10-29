@@ -15,6 +15,7 @@
 #define MAP_Y_OFFSET (SCREEN_HEIGHT - GRID_HEIGHT * TILE_SIZE + TILE_SIZE / 2)
 
 #define MAX_PLAYERS 1
+#define DEFAULT_SPEED 3.5f
 
 extern SDL_GameController *controllers[MAX_PLAYERS];
 extern int controllers_n;

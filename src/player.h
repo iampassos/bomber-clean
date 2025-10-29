@@ -16,6 +16,9 @@ typedef struct Player {
   float height;
   Direction direction;
   PlayerState state;
+  int bomb_capacity;
+  float speed;
+  int alive;
   int animation_step;
   float last_animation_step;
 } Player;

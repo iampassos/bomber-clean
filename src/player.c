@@ -8,7 +8,6 @@
 #include <raylib.h>
 #include <state.h>
 
-#define SPEED 3.5f
 #define ANIMATION_STEP_MS 500
 #define HEIGHT_TOLERANCE 28.5f
 
@@ -72,6 +71,9 @@ void player_new(int id, Vector2 position, float width, float height) {
   player->height = height;
   player->direction = DOWN;
   player->state = IDLE;
+  player->bomb_capacity = 3;
+  player->alive = 1;
+  player->speed = DEFAULT_SPEED;
   player->animation_step = 0;
   player->last_animation_step = 0;
 
@@ -123,10 +125,10 @@ void player_update(Player *player, float x, float y) {
   Vector2 projected = player->position;
 
   if (x)
-    projected.x = fmax(MAP_X_OFFSET, player->position.x + SPEED * x);
+    projected.x = fmax(MAP_X_OFFSET, player->position.x + player->speed * x);
 
   if (y)
-    projected.y = fmax(MAP_Y_OFFSET, player->position.y + SPEED * y);
+    projected.y = fmax(MAP_Y_OFFSET, player->position.y + player->speed * y);
 
   Vector2 new_pos = player->position;
 
@@ -187,7 +189,8 @@ void player_update_all() {
 
     if (IsKeyDown(KEY_SPACE)) {
       Bombs *bombs = &state.bombs[i];
-      if (bombs->current_length < MAX_BOMBS && GetTime() - last > 0.25f) {
+      if (bombs->current_length < state.players.entries[i].bomb_capacity &&
+          GetTime() - last > 0.25f) {
         GridPosition pos = player_get_grid_position(p);
         bomb_insert(bombs, pos);
         last = GetTime();
@@ -203,17 +206,20 @@ void player_debug_draw(Player *p) {
   snprintf(strBuffer, sizeof(strBuffer),
            "Player debug\n"
            "id: %d\n"
-           "bombs: %d\n"
            "position: (%.2f, %.2f)\n"
            "grid: (%d, %d)\n"
            "width: %.2f\n"
            "height: %.2f\n"
            "direction: %s\n"
            "state: %s\n"
+           "bomb-capacity: %d\n"
+           "bombs: %d\n"
+           "speed: %.2f\n"
+           "alive: %s\n"
            "animation-step: %d\n"
            "standing-on: %s",
-           p->id, state.bombs[p->id].current_length, p->position.x,
-           p->position.y, pos.col, pos.row, p->width, p->height,
+           p->id, p->position.x, p->position.y, pos.col, pos.row, p->width,
+           p->height,
            p->direction == UP     ? "UP"
            : p->direction == DOWN ? "DOWN"
            : p->direction == LEFT ? "LEFT"
@@ -221,7 +227,8 @@ void player_debug_draw(Player *p) {
            p->state == IDLE      ? "IDLE"
            : p->state == RUNNING ? "RUNNING"
                                  : "DEAD",
-           p->animation_step,
+           p->bomb_capacity, state.bombs[p->id].current_length, p->speed,
+           p->alive ? "yes" : "no", p->animation_step,
            tile == TILE_EMPTY   ? "EMPTY"
            : tile == TILE_WALL  ? "WALL"
            : tile == TILE_BRICK ? "BRICK"
