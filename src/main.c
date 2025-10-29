@@ -42,8 +42,8 @@ int main(void) {
 
     state.map.draw();
 
-    for (int i = 0; i < state.player_count; i++) {
-      Player *p = &state.players[i];
+    for (int i = 0; i < state.players.count; i++) {
+      Player *p = &state.players.entries[i];
       DrawTexture(PLAYER_TEXTURES[p->direction][p->animation_step],
                   p->position.x, p->position.y, WHITE);
     }
@@ -76,8 +76,8 @@ int main(void) {
         }
       }
 
-      for (int i = 0; i < state.player_count; i++)
-        player_debug_draw(&state.players[i]);
+      for (int i = 0; i < state.players.count; i++)
+        player_debug_draw(&state.players.entries[i]);
     }
 
     EndDrawing();

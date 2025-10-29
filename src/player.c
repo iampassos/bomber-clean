@@ -66,7 +66,7 @@ void player_init() {
 }
 
 void player_new(int id, Vector2 position, float width, float height) {
-  Player *player = &state.players[state.player_count++];
+  Player *player = &state.players.entries[state.players.count++];
   player->id = id;
   player->width = width;
   player->height = height;
@@ -163,8 +163,8 @@ void player_update_all() {
   SDL_GameController *controller = controllers[0];
   ControllerInput input = controller_input(controller);
 
-  for (int i = 0; i < state.player_count; i++) {
-    Player *p = &state.players[i];
+  for (int i = 0; i < state.players.count; i++) {
+    Player *p = &state.players.entries[i];
 
     if (p->state == RUNNING && GetTime() - p->last_animation_step >= 0.25f) {
       p->animation_step = (p->animation_step + 1) % 3;

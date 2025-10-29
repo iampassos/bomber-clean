@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "common.h"
 #include "map.h"
 #include <raylib.h>
 
@@ -18,6 +19,11 @@ typedef struct Player {
   int animation_step;
   float last_animation_step;
 } Player;
+
+typedef struct Players {
+  Player entries[MAX_PLAYERS];
+  int count;
+} Players;
 
 extern const char *PLAYER_IMAGES_PATH[4][3];
 extern Texture2D PLAYER_TEXTURES[4][3];

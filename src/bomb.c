@@ -32,7 +32,7 @@ Bomb *bomb_find_idx(Bombs *array, int idx) {
 }
 
 bool bomb_remove_by_grid_position(GridPosition pos) {
-  for (int i = 0; i < state.player_count; i++) {
+  for (int i = 0; i < state.players.count; i++) {
     Bombs *array = &state.bombs[i];
     for (int j = 0; j < array->current_length; j++) {
       if (array->bombs[j].grid_position.col == pos.col &&
@@ -47,7 +47,7 @@ bool bomb_remove_by_grid_position(GridPosition pos) {
 }
 
 Bomb *bomb_find_on_grid_position(GridPosition pos) {
-  for (int i = 0; i < state.player_count; i++) {
+  for (int i = 0; i < state.players.count; i++) {
     Bombs *array = &state.bombs[i];
     for (int j = 0; j < array->current_length; j++) {
       if (array->bombs[j].grid_position.col == pos.col &&
@@ -75,7 +75,7 @@ int bomb_find_to_explode(Bombs *array) {
 }
 
 void bombs_update_all() {
-  for (int i = 0; i < state.player_count; i++) {
+  for (int i = 0; i < state.players.count; i++) {
     Bombs *array = &state.bombs[i];
     int idx = bomb_find_to_explode(array);
 

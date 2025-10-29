@@ -10,8 +10,7 @@ typedef enum { NORMAL, DEBUG } ViewMode;
 
 typedef struct State {
   Map map;
-  Player players[MAX_PLAYERS];
-  int player_count;
+  Players players;
   ViewMode view_mode;
   Bombs bombs[MAX_PLAYERS];
 } State;
