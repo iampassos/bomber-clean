@@ -12,12 +12,14 @@
 #define EXPLODE_DELAY 2.0f
 #define PLUS_EXPLODE_DELAY 5.0f
 
+
 extern GridPosition
     bomb_validedd_position_in_grid[GRID_SIZE]; // vetor com todas as posições
                                                // possíveis para bombas
 
 typedef struct {
   GridPosition grid_position;
+  int explosion_radius;
   double spawn_time;
   int animation_step;
   float last_animation_step;
@@ -27,6 +29,7 @@ typedef struct {
   Bomb bombs[MAX_BOMBS];
   int current_length;
 } Bombs;
+
 
 void bomb_insert(Bombs *array, GridPosition pos);
 void bomb_clear_all(Bombs *array);

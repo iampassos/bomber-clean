@@ -7,6 +7,7 @@ void bomb_insert(Bombs *array, GridPosition pos) {
 
   Bomb newBomb;
   newBomb.grid_position = pos;
+  newBomb.explosion_radius = 3; // Por hora fixo como 3 Grid de explosao
   newBomb.spawn_time = GetTime();
   newBomb.animation_step = 0;
   newBomb.last_animation_step = 0.0f;
