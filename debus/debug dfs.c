@@ -101,7 +101,7 @@ int main(){
     // + muro quebradico
     // *posicao possiveis
 
-    GridPosition player_pos = {1,1};
+    GridPosition player_pos = {13,11};
     // Garante que o player não começa em parede/tijolo
     grid[player_pos.row][player_pos.col] = TILE_EMPTY;
 
