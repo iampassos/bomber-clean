@@ -30,7 +30,7 @@ Vector2 map_get_vector_from_grid(GridPosition position) {
                    .y = MAP_Y_OFFSET + position.row * TILE_SIZE};
 }
 
-void map_init() {
+void map_init(MapType type) {
   srand((unsigned)time(NULL));
 
   for (int i = 0; i < GRID_HEIGHT; i++) {
@@ -44,10 +44,20 @@ void map_init() {
     }
   }
 
-  state.map.stage = STAGE_ONE;
-  state.map.draw = map_draw_one;
-  state.map.update = map_update_one;
-  map_load(map_load_one);
+  switch (type) {
+  case MAP_BATTLE_STAGE_1:
+    state.map.stage = MAP_BATTLE_STAGE_1;
+    state.map.draw = map_draw_battle_stage_one;
+    state.map.update = map_update_battle_stage_one;
+    map_load(map_load_battle_stage_one);
+    break;
+  case MAP_STAGE_1:
+    state.map.stage = MAP_STAGE_1;
+    state.map.draw = map_draw_stage_one;
+    state.map.update = map_update_stage_one;
+    map_load(map_load_stage_one);
+    break;
+  }
 }
 
 void map_load(void (*func)(void)) { func(); }
@@ -56,16 +66,16 @@ void map_draw(void (*func)(void)) { func(); }
 
 void map_update(void (*func)(void)) { func(); }
 
-void map_load_zero() {
+void map_load_battle_stage_one() {
   char *image_path[] = {
-      "assets/sprites/maps/0/MAP.png",
-      "assets/sprites/maps/0/GRASS_SHADOW.png",
-      "assets/sprites/maps/0/GRASS.png",
-      "assets/sprites/maps/0/BRICK.png",
-      "assets/sprites/maps/0/WALL.png",
-      "assets/sprites/maps/0/BOMB1.png",
-      "assets/sprites/maps/0/BOMB2.png",
-      "assets/sprites/maps/0/BOMB3.png",
+      "assets/sprites/maps/battle_stage_one/MAP.png",
+      "assets/sprites/maps/battle_stage_one/GRASS_SHADOW.png",
+      "assets/sprites/maps/battle_stage_one/GRASS.png",
+      "assets/sprites/maps/battle_stage_one/BRICK.png",
+      "assets/sprites/maps/battle_stage_one/WALL.png",
+      "assets/sprites/maps/battle_stage_one/BOMB1.png",
+      "assets/sprites/maps/battle_stage_one/BOMB2.png",
+      "assets/sprites/maps/battle_stage_one/BOMB3.png",
   };
 
   int size = sizeof(image_path) / sizeof(image_path[0]);
@@ -88,7 +98,9 @@ void map_load_zero() {
   }
 }
 
-void map_draw_zero() {
+void map_update_battle_stage_one() {}
+
+void map_draw_battle_stage_one() {
   DrawTexture(textures[0], MAP_X_OFFSET - TILE_SIZE, MAP_Y_OFFSET, WHITE);
 
   for (int i = 0; i < GRID_HEIGHT; i++) {
@@ -123,31 +135,31 @@ void map_draw_zero() {
 float last_brick = 0.0f;
 int brick_animation_step = 0;
 
-void map_update_one() {
+void map_update_stage_one() {
   if (GetTime() - last_brick > 0.1f) {
     brick_animation_step = (brick_animation_step + 1) % 4;
     last_brick = GetTime();
   }
 }
 
-void map_load_one() {
+void map_load_stage_one() {
   char *image_path[] = {
-      "assets/sprites/maps/1/MAP.png",
-      "assets/sprites/maps/1/GRASS.png",
-      "assets/sprites/maps/1/GRASS_SHADOW.png",
-      "assets/sprites/maps/1/GRASS_SHADOW_BOMB.png",
-      "assets/sprites/maps/1/BRICK.png",
-      "assets/sprites/maps/1/BRICK_SHADOW1.png",
-      "assets/sprites/maps/1/BRICK_SHADOW2.png",
-      "assets/sprites/maps/1/BRICK_SHADOW3.png",
-      "assets/sprites/maps/1/BRICK_SHADOW4.png",
-      "assets/sprites/maps/1/BRICK1.png",
-      "assets/sprites/maps/1/BRICK2.png",
-      "assets/sprites/maps/1/BRICK3.png",
-      "assets/sprites/maps/1/BRICK4.png",
-      "assets/sprites/maps/1/BOMB1.png",
-      "assets/sprites/maps/1/BOMB2.png",
-      "assets/sprites/maps/1/BOMB3.png",
+      "assets/sprites/maps/stage_one/MAP.png",
+      "assets/sprites/maps/stage_one/GRASS.png",
+      "assets/sprites/maps/stage_one/GRASS_SHADOW.png",
+      "assets/sprites/maps/stage_one/GRASS_SHADOW_BOMB.png",
+      "assets/sprites/maps/stage_one/BRICK.png",
+      "assets/sprites/maps/stage_one/BRICK_SHADOW1.png",
+      "assets/sprites/maps/stage_one/BRICK_SHADOW2.png",
+      "assets/sprites/maps/stage_one/BRICK_SHADOW3.png",
+      "assets/sprites/maps/stage_one/BRICK_SHADOW4.png",
+      "assets/sprites/maps/stage_one/BRICK1.png",
+      "assets/sprites/maps/stage_one/BRICK2.png",
+      "assets/sprites/maps/stage_one/BRICK3.png",
+      "assets/sprites/maps/stage_one/BRICK4.png",
+      "assets/sprites/maps/stage_one/BOMB1.png",
+      "assets/sprites/maps/stage_one/BOMB2.png",
+      "assets/sprites/maps/stage_one/BOMB3.png",
   };
 
   int size = sizeof(image_path) / sizeof(image_path[0]);
@@ -170,7 +182,7 @@ void map_load_one() {
   }
 }
 
-void map_draw_one() {
+void map_draw_stage_one() {
   DrawTexture(textures[0], MAP_X_OFFSET - TILE_SIZE, MAP_Y_OFFSET, WHITE);
 
   for (int i = 0; i < GRID_HEIGHT; i++) {

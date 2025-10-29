@@ -5,6 +5,7 @@
 #include "player.h"
 #include "state.h"
 #include <raylib.h>
+#include <stdio.h>
 
 float delta_time = 0;
 
@@ -47,6 +48,8 @@ int main(void) {
                   p->position.x, p->position.y, WHITE);
     }
 
+    DrawTexture(top_hud, 0, 0, WHITE);
+
     if (state.view_mode == DEBUG) {
       for (int i = 0; i <= GRID_WIDTH; i++)
         DrawLine(MAP_X_OFFSET + i * TILE_SIZE, MAP_Y_OFFSET,
@@ -58,10 +61,24 @@ int main(void) {
                  MAP_X_OFFSET + TILE_SIZE * GRID_WIDTH,
                  MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
 
-      player_debug_draw();
-    }
+      for (int i = 0; i < GRID_HEIGHT; i++) {
+        for (int j = 0; j < GRID_WIDTH; j++) {
+          Vector2 center =
+              map_get_vector_from_grid_center((GridPosition){j, i});
+          char buff[3];
+          snprintf(buff, sizeof(buff), "%d", state.map.grid[i][j]);
 
-    DrawTexture(top_hud, 0, 0, WHITE);
+          Vector2 textSize = MeasureTextEx(GetFontDefault(), buff, 20, 1.0f);
+          DrawTextEx(GetFontDefault(), buff,
+                     (Vector2){center.x - textSize.x / 2.0f,
+                               center.y - textSize.y / 2.0f},
+                     20, 1.0f, WHITE);
+        }
+      }
+
+      for (int i = 0; i < state.player_count; i++)
+        player_debug_draw(&state.players[i]);
+    }
 
     EndDrawing();
   }

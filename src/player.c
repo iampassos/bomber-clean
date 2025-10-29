@@ -196,8 +196,7 @@ void player_update_all() {
   }
 }
 
-void player_debug_draw() {
-  Player *p = &state.players[0];
+void player_debug_draw(Player *p) {
   GridPosition pos = player_get_grid_position(p);
   TileType tile = state.map.grid[pos.col][pos.row];
   char strBuffer[1000];
@@ -212,7 +211,7 @@ void player_debug_draw() {
            "direction: %s\n"
            "state: %s\n"
            "animation-step: %d\n"
-           "standing-on: %s\n",
+           "standing-on: %s",
            p->id, state.bombs[0].currentLength, p->position.x, p->position.y,
            pos.col, pos.row, p->width, p->height,
            p->direction == UP     ? "UP"
@@ -228,5 +227,18 @@ void player_debug_draw() {
            : tile == TILE_BRICK ? "BRICK"
                                 : "BOMB");
 
-  DrawText(strBuffer, 30, 30, 20, WHITE);
+  Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
+
+  float x = 15;
+  float y = SCREEN_HEIGHT / 2.0f - textSize.y / 2.0f;
+
+  DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
+                (Color){196, 196, 196, 200});
+
+  DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
+
+  Vector2 grid = map_get_vector_from_grid(pos);
+
+  DrawRectangle(grid.x, grid.y, TILE_SIZE, TILE_SIZE,
+                (Color){128, 128, 128, 128});
 }

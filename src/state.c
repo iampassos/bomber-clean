@@ -7,7 +7,7 @@
 State state;
 
 void state_init() {
-  map_init();
+  map_init(MAP_STAGE_1);
   player_init();
 
   player_new(0, map_get_vector_from_grid((GridPosition){1, 1}), TILE_SIZE - 6,
