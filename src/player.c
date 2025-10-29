@@ -187,7 +187,7 @@ void player_update_all() {
 
     if (IsKeyDown(KEY_SPACE)) {
       Bombs *bombs = &state.bombs[i];
-      if (bombs->currentLength < MAX_BOMBS && GetTime() - last > 0.25f) {
+      if (bombs->current_length < MAX_BOMBS && GetTime() - last > 0.25f) {
         GridPosition pos = player_get_grid_position(p);
         bomb_insert(bombs, pos);
         last = GetTime();
@@ -212,8 +212,8 @@ void player_debug_draw(Player *p) {
            "state: %s\n"
            "animation-step: %d\n"
            "standing-on: %s",
-           p->id, state.bombs[0].currentLength, p->position.x, p->position.y,
-           pos.col, pos.row, p->width, p->height,
+           p->id, state.bombs[p->id].current_length, p->position.x,
+           p->position.y, pos.col, pos.row, p->width, p->height,
            p->direction == UP     ? "UP"
            : p->direction == DOWN ? "DOWN"
            : p->direction == LEFT ? "LEFT"

@@ -6,8 +6,6 @@
 #include "map.h"
 #include "player.h"
 
-#define MAX_BOMBS 3
-
 typedef enum { NORMAL, DEBUG } ViewMode;
 
 typedef struct State {
