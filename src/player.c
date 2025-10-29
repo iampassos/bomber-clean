@@ -1,4 +1,5 @@
 #include "player.h"
+#include "animation.h"
 #include "bomb.h"
 #include "common.h"
 #include "controller.h"
@@ -74,8 +75,7 @@ void player_new(int id, Vector2 position, float width, float height) {
   player->bomb_capacity = 3;
   player->alive = 1;
   player->speed = DEFAULT_SPEED;
-  player->animation_step = 0;
-  player->last_animation_step = 0;
+  player->walk_animation = animation_new(3, 0.25f, 1, NULL, NULL, NULL);
 
   GridPosition pos = map_get_grid_position(position);
   pos.col = fmax(1, fmin(pos.col, GRID_WIDTH - 2));
@@ -151,7 +151,7 @@ void player_update(Player *player, float x, float y) {
     player->state = RUNNING;
   } else if (fabs(dy) == 0.0f && fabs(dx) == 0.0f) {
     player->state = IDLE;
-    player->animation_step = 1;
+    player->walk_animation.current_step = 1;
   }
 
   player->position = new_pos;
@@ -168,10 +168,8 @@ void player_update_all() {
   for (int i = 0; i < state.players.count; i++) {
     Player *p = &state.players.entries[i];
 
-    if (p->state == RUNNING && GetTime() - p->last_animation_step >= 0.25f) {
-      p->animation_step = (p->animation_step + 1) % 3;
-      p->last_animation_step = GetTime();
-    }
+    if (p->state == RUNNING)
+      animation_update(&p->walk_animation);
 
     if (controller) {
       player_update(p, fabs(input.leftAxis.x) > 0.1f ? input.leftAxis.x : 0.0f,
@@ -201,7 +199,7 @@ void player_update_all() {
 
 void player_debug_draw(Player *p) {
   GridPosition pos = player_get_grid_position(p);
-  TileType tile = state.map.grid[pos.col][pos.row];
+  TileType tile = state.map.grid[pos.row][pos.col];
   char strBuffer[1000];
   snprintf(strBuffer, sizeof(strBuffer),
            "Player debug\n"
@@ -228,7 +226,7 @@ void player_debug_draw(Player *p) {
            : p->state == RUNNING ? "RUNNING"
                                  : "DEAD",
            p->bomb_capacity, state.bombs[p->id].current_length, p->speed,
-           p->alive ? "yes" : "no", p->animation_step,
+           p->alive ? "yes" : "no", p->walk_animation.current_step,
            tile == TILE_EMPTY   ? "EMPTY"
            : tile == TILE_WALL  ? "WALL"
            : tile == TILE_BRICK ? "BRICK"

@@ -1,6 +1,7 @@
 #ifndef BOMB_H
 #define BOMB_H
 
+#include "animation.h"
 #include "common.h"
 #include <map.h>
 #include <raylib.h>
@@ -21,8 +22,7 @@ typedef struct {
   GridPosition grid_position;
   int explosion_radius;
   double spawn_time;
-  int animation_step;
-  float last_animation_step;
+  Animation animation;
 } Bomb;
 
 typedef struct {

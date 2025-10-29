@@ -1,4 +1,5 @@
 #include "map.h"
+#include "animation.h"
 #include "bomb.h"
 #include "common.h"
 #include "state.h"
@@ -112,7 +113,7 @@ void map_draw_battle_stage_one() {
         Bomb *bomb = bomb_find_on_grid_position((GridPosition){j, i});
 
         if (bomb)
-          text = &textures[5 + bomb->animation_step];
+          text = &textures[5 + bomb->animation.current_step];
         else
           text = state.map.grid[i - 1][j] != TILE_EMPTY ? &textures[1]
                                                         : &textures[2];
@@ -132,15 +133,9 @@ void map_draw_battle_stage_one() {
   }
 }
 
-float last_brick = 0.0f;
-int brick_animation_step = 0;
+Animation brick_animation;
 
-void map_update_stage_one() {
-  if (GetTime() - last_brick > 0.1f) {
-    brick_animation_step = (brick_animation_step + 1) % 4;
-    last_brick = GetTime();
-  }
-}
+void map_update_stage_one() { animation_update(&brick_animation); }
 
 void map_load_stage_one() {
   char *image_path[] = {
@@ -180,6 +175,8 @@ void map_load_stage_one() {
     SetTextureFilter(textures[i], TEXTURE_FILTER_POINT);
     UnloadImage(images[i]);
   }
+
+  brick_animation = animation_new(4, 0.1f, 1, NULL, NULL, NULL);
 }
 
 void map_draw_stage_one() {
@@ -194,7 +191,7 @@ void map_draw_stage_one() {
         Bomb *bomb = bomb_find_on_grid_position((GridPosition){j, i});
 
         if (bomb)
-          text = &textures[13 + bomb->animation_step];
+          text = &textures[13 + bomb->animation.current_step];
         else
           text = state.map.grid[i - 1][j] != TILE_EMPTY
                      ? state.map.grid[i - 1][j] == TILE_BRICK ? &textures[3]
@@ -204,8 +201,8 @@ void map_draw_stage_one() {
         break;
       case TILE_BRICK:
         text = state.map.grid[i - 1][j] != TILE_EMPTY
-                   ? &textures[5 + brick_animation_step]
-                   : &textures[9 + brick_animation_step];
+                   ? &textures[5 + brick_animation.current_step]
+                   : &textures[9 + brick_animation.current_step];
         break;
 
       case TILE_WALL:

@@ -44,7 +44,7 @@ int main(void) {
 
     for (int i = 0; i < state.players.count; i++) {
       Player *p = &state.players.entries[i];
-      DrawTexture(PLAYER_TEXTURES[p->direction][p->animation_step],
+      DrawTexture(PLAYER_TEXTURES[p->direction][p->walk_animation.current_step],
                   p->position.x, p->position.y, WHITE);
     }
 

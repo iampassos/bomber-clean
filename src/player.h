@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "animation.h"
 #include "common.h"
 #include "map.h"
 #include <raylib.h>
@@ -19,8 +20,7 @@ typedef struct Player {
   int bomb_capacity;
   float speed;
   int alive;
-  int animation_step;
-  float last_animation_step;
+  Animation walk_animation;
 } Player;
 
 typedef struct Players {

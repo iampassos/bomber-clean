@@ -1,4 +1,5 @@
 #include "bomb.h"
+#include "animation.h"
 #include "state.h"
 
 void bomb_insert(Bombs *array, GridPosition pos) {
@@ -9,8 +10,8 @@ void bomb_insert(Bombs *array, GridPosition pos) {
   newBomb.grid_position = pos;
   newBomb.explosion_radius = 3; // Por hora fixo como 3 Grid de explosao
   newBomb.spawn_time = GetTime();
-  newBomb.animation_step = 0;
-  newBomb.last_animation_step = 0.0f;
+  newBomb.animation =
+      animation_new(3, EXPLODE_DELAY / 10.0f, 1, NULL, NULL, NULL);
   array->bombs[(array->current_length)++] = newBomb;
 }
 
@@ -83,15 +84,8 @@ void bombs_update_all() {
     if (idx != -1)
       bomb_remove_per_idx(array, idx);
 
-    for (int i = 0; i < array->current_length;
-         i++) { // Atualiza as animacoes da bomba
-      if (GetTime() - array->bombs[i].last_animation_step >=
-          EXPLODE_DELAY / 10.0f) {
-        array->bombs[i].animation_step =
-            (array->bombs[i].animation_step + 1) % 3;
-        array->bombs[i].last_animation_step = GetTime();
-      }
-    }
+    for (int i = 0; i < array->current_length; i++)
+      animation_update(&array->bombs[i].animation);
   }
 }
 
