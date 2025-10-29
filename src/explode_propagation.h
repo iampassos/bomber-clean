@@ -1,5 +1,5 @@
-#ifndef EXPLODE_PROPRAGRETION_H
-#define EXPLODE_PROPRAGRETION_H
+#ifndef EXPLODE_PROPAGATION_H
+#define EXPLODE_PROPAGATION_H
 
 #include "bomb.h"
 #include "common.h"

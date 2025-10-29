@@ -6,6 +6,9 @@ Bombpropagation bomb_check_explode_propagation(Bombs *array,int idx){
     int bomb_radius=array->bombs[idx].explosion_radius;
     GridPosition bomb_posi=array->bombs[idx].grid_position;
 
+    //Adicionado a propia posicao da bomba como uma animacao de destruicao
+    explode_propagation.grid_explode_animetion[explode_propagation.lenght_grid_explode_animetion++] = (GridPosition) {bomb_posi.row,bomb_posi.col};
+
     //Para baixo
     for(int r=1 ; r <= bomb_radius;r++){
         int row=bomb_posi.row+r;
