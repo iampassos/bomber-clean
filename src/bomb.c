@@ -75,7 +75,7 @@ void bombs_update_all(ArrayBomb *array) {
     idx = bomb_find_to_explode(array);
     
     if (idx == -1) break; //sem bomba para explodir
-    bomb_remove(array, idx);
+    bomb_remove_per_idx(array, idx);
     }
 
     for (int i = 0; i < array->current_length; i++) {  //Atualiza as animacoes da bomba
