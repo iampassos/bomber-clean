@@ -91,7 +91,7 @@ void asset_manager_load_map_textures(MapType map_type) {
   asset_manager.map_background = LoadTextureFromImage(images[0]);
   UnloadImage(images[0]);
 
-  for (int i = 1; i < 3; i++) {
+  for (int i = 1; i <= 3; i++) {
     images[i] = LoadImage(image_path[i]);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.bomb[i - 1] = LoadTextureFromImage(images[i]);

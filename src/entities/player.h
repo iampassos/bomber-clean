@@ -1,7 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "core/animation.h"
 #include "entity.h"
+#include "render/input_manager.h"
 
 typedef enum { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT } Direction;
 
@@ -14,6 +16,8 @@ typedef struct {
   PlayerState state;
   int bomb_capacity;
   float speed;
+  PlayerInput input;
+  Animation walk_animation;
 } Player;
 
 Player *player_create(int id, Vector2 position);

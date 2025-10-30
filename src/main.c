@@ -1,10 +1,10 @@
 #include "core/asset_manager.h"
 #include "core/common.h"
 #include "core/map.h"
-#include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entities/player.h"
 #include "game/game_manager.h"
+#include "render/input_manager.h"
 #include "render/renderer.h"
 #include <raylib.h>
 
@@ -12,6 +12,7 @@ int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "BomberClean");
 
   entities_manager_init();
+  input_manager_init();
   game_manager_init();
 
   map_init(&game_manager.map, MAP_STAGE_1);
@@ -22,20 +23,19 @@ int main(void) {
 
   player_create(0, (Vector2){0, 0});
 
-  bomb_create(0, map_grid_to_world((GridPosition){1, 2}), 3.0f);
-
   SetTargetFPS(60);
 
   while (!WindowShouldClose()) {
     float dt = GetFrameTime();
+
+    input_manager_update();
+    game_manager_update();
 
     BeginDrawing();
 
     ClearBackground(BLACK);
 
     renderer_draw_game();
-
-    entities_manager_draw_all();
 
     EndDrawing();
   }

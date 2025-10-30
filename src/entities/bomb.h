@@ -1,6 +1,7 @@
 #ifndef BOMB_H
 #define BOMB_H
 
+#include "core/animation.h"
 #include "entities/entity.h"
 
 typedef struct {
@@ -8,6 +9,8 @@ typedef struct {
   int player_id;
   float radius;
   float spawn_time;
+  Animation tick_animation;
+  Animation explosion_animation;
 } Bomb;
 
 Bomb *bomb_create(int player_id, Vector2 position, float radius);
