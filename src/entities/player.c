@@ -111,14 +111,19 @@ void player_update(Entity *self) {
   if (fabs(dx) > fabs(dy)) {
     player->direction = dx > 0 ? DIR_RIGHT : DIR_LEFT;
     player->state = STATE_RUNNING;
-    animation_update(&player->walk_animation);
   } else if (fabs(dy) > 0.0f) {
     player->direction = dy > 0 ? DIR_DOWN : DIR_UP;
     player->state = STATE_RUNNING;
-    animation_update(&player->walk_animation);
   } else if (fabs(dy) == 0.0f && fabs(dx) == 0.0f) {
     player->state = STATE_IDLE;
+  }
+
+  if (player->state == STATE_RUNNING) {
+    animation_update(&player->walk_animation);
+    animation_play(&player->walk_animation);
+  } else {
     player->walk_animation.current_frame = 1;
+    animation_pause(&player->walk_animation);
   }
 
   player->entity.position = new_pos;
