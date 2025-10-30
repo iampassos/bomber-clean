@@ -19,7 +19,7 @@ LDFLAGS = $(RAYLIB_LDFLAGS)
 
 SRC := $(shell find src -type f -name '*.c')
 
-OUT := game
+OUT := game.out
 
 .PHONY: all clean
 
