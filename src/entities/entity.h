@@ -5,8 +5,11 @@
 
 typedef enum { ENTITY_PLAYER, ENTITY_BOMB } EntityType;
 
+typedef enum { LAYER_PLAYERS, LAYER_BOMBS } EntityLayer;
+
 typedef struct Entity {
   EntityType type;
+  EntityLayer layer;
   Vector2 position;
   float width;
   float height;

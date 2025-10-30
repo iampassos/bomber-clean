@@ -18,6 +18,7 @@ void entities_manager_add(Entity *entity);
 void entities_manager_remove(Entity *entity);
 void entities_manager_update_all();
 void entities_manager_draw_all();
+void entities_manager_draw_all_layer(EntityLayer layer);
 void entities_manager_debug_all();
 void entities_manager_clear();
 

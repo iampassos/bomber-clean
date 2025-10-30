@@ -51,6 +51,15 @@ void entities_manager_draw_all() {
   }
 }
 
+void entities_manager_draw_all_layer(EntityLayer layer) {
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity->layer == layer && entity->draw != NULL)
+      entity->draw(entity);
+  }
+}
+
 void entities_manager_debug_all() {
   for (int i = 0; i < entities_manager.count; i++) {
     Entity *entity = entities_manager.entries[i];

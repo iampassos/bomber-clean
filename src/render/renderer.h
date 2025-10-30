@@ -3,7 +3,5 @@
 
 void renderer_draw_game();
 void renderer_hud();
-void renderer_map_background();
-void renderer_map_debug();
 
 #endif

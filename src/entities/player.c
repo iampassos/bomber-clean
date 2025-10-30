@@ -37,6 +37,7 @@ GridPosition player_world_to_grid(Player *player) {
 Player *player_create(int id, Vector2 position) {
   Entity entity;
   entity.type = ENTITY_PLAYER;
+  entity.layer = LAYER_PLAYERS;
   entity.position = position;
   entity.width = TILE_SIZE - 10;
   entity.height = TILE_SIZE - 10;
