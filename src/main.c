@@ -7,13 +7,13 @@
 #include <raylib.h>
 
 int main(void) {
-  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "BomberClean");
+  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bomber Clean");
 
   entities_manager_init();
   input_manager_init();
   game_manager_init();
-
   asset_manager_init();
+
   asset_manager_load_all();
 
   game_manager_start_stage();

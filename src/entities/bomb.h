@@ -13,7 +13,6 @@ typedef struct {
   float spawn_time;
   float explosion_time;
   Animation tick_animation;
-  Animation explosion_animation;
 } Bomb;
 
 Bomb *bomb_create(int player_id, Vector2 position, float radius);

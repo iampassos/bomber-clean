@@ -9,7 +9,6 @@ GameManager game_manager = {0};
 void game_manager_init() {}
 
 void game_manager_update(float dt) {
-
   for (int i = 0; i < game_manager.player_count; i++) {
     PlayerInput input = input_manager_get_player_input(i);
 
