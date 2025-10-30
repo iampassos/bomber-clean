@@ -24,13 +24,12 @@ typedef struct {
 
 Player *player_create(int id, Vector2 position);
 
-Vector2 player_grid_to_world(Player *player, GridPosition pos);
-GridPosition player_world_to_grid(Player *player);
-
 void player_update(Entity *self);
 void player_draw(Entity *self);
 void player_debug(Entity *self);
 
+Vector2 player_grid_to_world(Player *player, GridPosition pos);
+GridPosition player_world_to_grid(Player *player);
 int player_get_all_bombs(Player *player, Entity **out);
 
 #endif
