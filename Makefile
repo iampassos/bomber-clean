@@ -17,7 +17,8 @@ endif
 CFLAGS += $(RAYLIB_CFLAGS)
 LDFLAGS = $(RAYLIB_LDFLAGS)
 
-SRC := $(wildcard src/*.c src/libs/*.c)
+SRC := $(shell find src -type f -name '*.c')
+
 OUT := game
 
 .PHONY: all clean
