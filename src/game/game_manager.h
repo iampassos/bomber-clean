@@ -7,13 +7,15 @@
 
 typedef struct {
   Map map;
-  Player players[MAX_PLAYERS];
+  Player *players[MAX_PLAYERS];
   int player_count;
 } GameManager;
 
 extern GameManager game_manager;
 
 void game_manager_init();
-void game_manager_update();
+void game_manager_update(float dt);
+
+void game_manager_start_stage();
 
 #endif

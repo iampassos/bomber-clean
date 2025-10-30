@@ -3,7 +3,7 @@
 
 #include "core/animation.h"
 #include "entity.h"
-#include "render/input_manager.h"
+#include "input/input_manager.h"
 
 typedef enum { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT } Direction;
 

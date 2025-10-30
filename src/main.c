@@ -1,10 +1,8 @@
 #include "core/asset_manager.h"
 #include "core/common.h"
-#include "core/map.h"
 #include "entities/entities_manager.h"
-#include "entities/player.h"
 #include "game/game_manager.h"
-#include "render/input_manager.h"
+#include "input/input_manager.h"
 #include "render/renderer.h"
 #include <raylib.h>
 
@@ -15,13 +13,10 @@ int main(void) {
   input_manager_init();
   game_manager_init();
 
-  map_init(&game_manager.map, MAP_STAGE_1);
-
   asset_manager_init();
   asset_manager_load_all();
-  asset_manager_load_map_textures(game_manager.map.stage);
 
-  player_create(0, (Vector2){0, 0});
+  game_manager_start_stage();
 
   SetTargetFPS(60);
 
@@ -29,7 +24,7 @@ int main(void) {
     float dt = GetFrameTime();
 
     input_manager_update();
-    game_manager_update();
+    game_manager_update(dt);
 
     BeginDrawing();
 

@@ -4,10 +4,11 @@
 #include "core/common.h"
 #include "core/map.h"
 #include "core/physics.h"
+#include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entity.h"
 #include "game/game_manager.h"
-#include "render/input_manager.h"
+#include "input/input_manager.h"
 #include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
@@ -80,7 +81,9 @@ Player *player_create(int id, Vector2 position) {
 
 void player_update(Entity *self) {
   Player *player = (Player *)self;
-  player->input = game_manager.players[0].input;
+
+  if (player->input.place_bomb)
+    bomb_create(player->id, map_grid_to_world(player_grid(player)), 3.0f);
 
   Vector2 projected = player->entity.position;
 
