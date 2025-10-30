@@ -12,4 +12,6 @@ typedef struct {
 
 extern GameManager game_manager;
 
+void game_manager_init();
+
 #endif

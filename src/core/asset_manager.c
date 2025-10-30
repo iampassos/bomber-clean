@@ -46,13 +46,13 @@ void asset_manager_load_map_textures(MapType map_type) {
   case MAP_BATTLE_STAGE_1: {
     static const char *paths[] = {
         "assets/sprites/maps/battle_stage_one/MAP.png",
+        "assets/sprites/maps/battle_stage_one/BOMB1.png",
+        "assets/sprites/maps/battle_stage_one/BOMB2.png",
+        "assets/sprites/maps/battle_stage_one/BOMB3.png",
         "assets/sprites/maps/battle_stage_one/GRASS_SHADOW.png",
         "assets/sprites/maps/battle_stage_one/GRASS.png",
         "assets/sprites/maps/battle_stage_one/BRICK.png",
         "assets/sprites/maps/battle_stage_one/WALL.png",
-        "assets/sprites/maps/battle_stage_one/BOMB1.png",
-        "assets/sprites/maps/battle_stage_one/BOMB2.png",
-        "assets/sprites/maps/battle_stage_one/BOMB3.png",
     };
     image_path = paths;
     size = sizeof(paths) / sizeof(paths[0]);
@@ -61,6 +61,9 @@ void asset_manager_load_map_textures(MapType map_type) {
   case MAP_STAGE_1: {
     static const char *paths[] = {
         "assets/sprites/maps/stage_one/MAP.png",
+        "assets/sprites/maps/stage_one/BOMB1.png",
+        "assets/sprites/maps/stage_one/BOMB2.png",
+        "assets/sprites/maps/stage_one/BOMB3.png",
         "assets/sprites/maps/stage_one/GRASS.png",
         "assets/sprites/maps/stage_one/GRASS_SHADOW.png",
         "assets/sprites/maps/stage_one/GRASS_SHADOW_BOMB.png",
@@ -73,9 +76,6 @@ void asset_manager_load_map_textures(MapType map_type) {
         "assets/sprites/maps/stage_one/BRICK2.png",
         "assets/sprites/maps/stage_one/BRICK3.png",
         "assets/sprites/maps/stage_one/BRICK4.png",
-        "assets/sprites/maps/stage_one/BOMB1.png",
-        "assets/sprites/maps/stage_one/BOMB2.png",
-        "assets/sprites/maps/stage_one/BOMB3.png",
     };
     image_path = paths;
     size = sizeof(paths) / sizeof(paths[0]);
@@ -91,7 +91,15 @@ void asset_manager_load_map_textures(MapType map_type) {
   asset_manager.map_background = LoadTextureFromImage(images[0]);
   UnloadImage(images[0]);
 
-  for (int i = 1; i < size; i++) {
+  for (int i = 1; i < 3; i++) {
+    images[i] = LoadImage(image_path[i]);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.bomb[i - 1] = LoadTextureFromImage(images[i]);
+    SetTextureFilter(asset_manager.map_tiles[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
+  }
+
+  for (int i = 4; i < size; i++) {
     images[i] = LoadImage(image_path[i]);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.map_tiles[i] = LoadTextureFromImage(images[i]);
@@ -106,6 +114,10 @@ Texture2D *asset_manager_get_map_background_texture() {
 
 Texture2D *asset_manager_get_map_tiles_textures() {
   return asset_manager.map_tiles;
+}
+
+Texture2D *asset_manager_get_bomb_texture(int frame) {
+  return &asset_manager.bomb[frame];
 }
 
 void asset_manager_load_hud_textures() {

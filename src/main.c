@@ -1,6 +1,7 @@
 #include "core/asset_manager.h"
 #include "core/common.h"
 #include "core/map.h"
+#include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entities/player.h"
 #include "game/game_manager.h"
@@ -13,13 +14,15 @@ int main(void) {
   entities_manager_init();
   game_manager_init();
 
-  map_init(&game_manager.map, MAP_BATTLE_STAGE_1);
+  map_init(&game_manager.map, MAP_STAGE_1);
 
   asset_manager_init();
   asset_manager_load_all();
   asset_manager_load_map_textures(game_manager.map.stage);
 
   player_create(0, (Vector2){0, 0});
+
+  bomb_create(0, map_grid_to_world((GridPosition){1, 2}), 3.0f);
 
   SetTargetFPS(60);
 
