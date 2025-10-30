@@ -16,6 +16,7 @@ void renderer_draw_game() {
   if (game_manager.view_mode == VIEW_DEBUG) {
     map_renderer_debug();
     entities_manager_debug_all();
+    entities_manager_debug();
   }
 }
 

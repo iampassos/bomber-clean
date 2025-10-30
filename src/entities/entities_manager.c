@@ -1,6 +1,7 @@
 #include "entities_manager.h"
 #include "core/map.h"
 #include "entities/entity.h"
+#include <stdio.h>
 #include <string.h>
 
 EntitiesManager entities_manager = {0};
@@ -111,4 +112,22 @@ int entities_manager_get_all_from_type(EntityType type, Entity **out,
   }
 
   return count;
+}
+
+void entities_manager_debug() {
+  char strBuffer[1000];
+  snprintf(strBuffer, sizeof(strBuffer),
+           "Entities Manager debug\n"
+           "entities: %d",
+           entities_manager.count);
+
+  Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
+
+  float x = 15;
+  float y = SCREEN_HEIGHT / 4.0f - textSize.y / 2.0f;
+
+  DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
+                (Color){196, 196, 196, 200});
+
+  DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
 }

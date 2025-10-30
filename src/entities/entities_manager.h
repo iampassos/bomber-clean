@@ -27,4 +27,6 @@ int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
 int entities_manager_get_all_from_type(EntityType type, Entity **out,
                                        int max_out);
 
+void entities_manager_debug();
+
 #endif
