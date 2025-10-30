@@ -3,9 +3,10 @@
 
 #include <raylib.h>
 
-typedef enum { ENTITY_PLAYER, ENTITY_BOMB } EntityType;
+typedef enum { ENTITY_PLAYER, ENTITY_BOMB,ENTITY_EXPLOSION} EntityType;
 
 typedef enum { LAYER_PLAYERS, LAYER_BOMBS } EntityLayer;
+
 
 typedef struct Entity {
   EntityType type;

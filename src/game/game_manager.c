@@ -38,4 +38,25 @@ void game_manager_start_stage() {
   game_manager.player_count++;
 }
 
-void game_manager_on_bomb_exploded(Bomb *bomb) {}
+// void game_manager_on_bomb_exploded(GridPosition center, int radius) {
+//   GridPosition affected[4][GRID_WIDTH];
+//   GridPosition destroyed[4][GRID_WIDTH];
+//   // 0 -> CIMA
+//   // 1-> BAIXO
+//   // 2-> ESQUERDA
+//   // 3-> DIREITA
+
+//   for(int r = 1 ; r <= radius; r++){ //Cima
+//     int row = center.row + r;
+//     int col = center.col;
+    
+//     TileType tile = game_manager.map.grid[row][col];
+
+//     if(tile ==  TILE_EMPTY){
+//       affected[0][r-1]
+//     }
+//   }
+  
+
+
+// }

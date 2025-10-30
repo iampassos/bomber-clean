@@ -8,6 +8,7 @@
 #include "game/game_manager.h"
 #include <raylib.h>
 #include <stdlib.h>
+#include "explosion.h"
 
 Bomb *bomb_create(int player_id, Vector2 position, float radius) {
   Entity entity;
@@ -42,7 +43,7 @@ void bomb_update(Entity *self) {
   if (GetTime() - bomb->spawn_time >= bomb->explosion_time) {
     bomb->exploded = true;
 
-    game_manager_on_bomb_exploded(bomb);
+    explosion_create(bomb->radius, bomb->entity.position);
 
     entities_manager_remove(self);
   }
