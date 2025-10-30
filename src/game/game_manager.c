@@ -38,3 +38,5 @@ void game_manager_start_stage() {
       player_create(0, (Vector2){0, 0});
   game_manager.player_count++;
 }
+
+void game_manager_on_bomb_exploded(Bomb *bomb) {}

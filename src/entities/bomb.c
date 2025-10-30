@@ -3,6 +3,7 @@
 #include "core/asset_manager.h"
 #include "core/common.h"
 #include "entities/entities_manager.h"
+#include "game/game_manager.h"
 #include <raylib.h>
 #include <stdlib.h>
 
@@ -21,8 +22,9 @@ Bomb *bomb_create(int player_id, Vector2 position, float radius) {
   bomb->player_id = player_id;
   bomb->radius = radius;
   bomb->spawn_time = GetTime();
+  bomb->explosion_time = 2.0f;
 
-  animation_init(&bomb->tick_animation, 3, 1.0f, 1);
+  animation_init(&bomb->tick_animation, 3, bomb->explosion_time / 10.0f, 1);
   animation_play(&bomb->tick_animation);
 
   entities_manager_add((Entity *)bomb);
@@ -32,6 +34,13 @@ Bomb *bomb_create(int player_id, Vector2 position, float radius) {
 
 void bomb_update(Entity *self) {
   Bomb *bomb = (Bomb *)self;
+
+  if (GetTime() - bomb->spawn_time >= bomb->explosion_time) {
+    game_manager_on_bomb_exploded(bomb);
+
+    entities_manager_remove(self);
+  }
+
   animation_update(&bomb->tick_animation);
 }
 

@@ -1,6 +1,5 @@
 #include "entities_manager.h"
 #include "core/map.h"
-#include "entities/bomb.h"
 #include "entities/entity.h"
 #include <string.h>
 
@@ -16,19 +15,22 @@ void entities_manager_add(Entity *entity) {
 }
 
 void entities_manager_remove(Entity *entity) {
-  if (entities_manager.count >= MAX_ENTITIES)
-    return;
-
   int idx = -1;
-  for (int i = 0; i < entities_manager.count; i++)
-    if (entities_manager.entries[i] == entity)
+  for (int i = 0; i < entities_manager.count; i++) {
+    if (entities_manager.entries[i] == entity) {
       idx = i;
+      break;
+    }
+  }
 
   if (idx == -1)
     return;
 
   for (int i = idx; i < entities_manager.count - 1; i++)
     entities_manager.entries[i] = entities_manager.entries[i + 1];
+
+  entities_manager.count--;
+  entities_manager.entries[entities_manager.count] = NULL;
 }
 
 void entities_manager_update_all() {

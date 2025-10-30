@@ -9,6 +9,7 @@ typedef struct {
   int player_id;
   float radius;
   float spawn_time;
+  float explosion_time;
   Animation tick_animation;
   Animation explosion_animation;
 } Bomb;
