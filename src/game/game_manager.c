@@ -19,6 +19,13 @@ void game_manager_update(float dt) {
         input.place_bomb ? GetTime() : input_manager.last_bomb_input[i];
 
     game_manager.players[i]->input = input;
+
+    game_manager.view_mode =
+        input.debug && GetTime() - input_manager.last_view_input[i] >= 0.25f
+            ? game_manager.view_mode == VIEW_NORMAL ? VIEW_DEBUG : VIEW_NORMAL
+            : game_manager.view_mode;
+    input_manager.last_view_input[i] =
+        input.debug ? GetTime() : input_manager.last_view_input[i];
   }
 
   entities_manager_update_all();

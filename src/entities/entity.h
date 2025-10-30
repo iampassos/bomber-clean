@@ -3,13 +3,17 @@
 
 #include <raylib.h>
 
+typedef enum { ENTITY_PLAYER, ENTITY_BOMB } EntityType;
+
 typedef struct Entity {
+  EntityType type;
   Vector2 position;
   float width;
   float height;
 
   void (*update)(struct Entity *self);
   void (*draw)(struct Entity *self);
+  void (*debug)(struct Entity *self);
 } Entity;
 
 #endif

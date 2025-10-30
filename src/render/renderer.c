@@ -11,7 +11,11 @@ void renderer_draw_game() {
   renderer_map_background();
   renderer_hud();
   entities_manager_draw_all();
-  renderer_map_debug();
+
+  if (game_manager.view_mode == VIEW_DEBUG) {
+    renderer_map_debug();
+    entities_manager_debug_all();
+  }
 }
 
 void renderer_map_background() {

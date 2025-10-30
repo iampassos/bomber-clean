@@ -5,10 +5,13 @@
 #include "core/map.h"
 #include "entities/player.h"
 
+typedef enum { VIEW_NORMAL, VIEW_DEBUG } ViewMode;
+
 typedef struct {
   Map map;
   Player *players[MAX_PLAYERS];
   int player_count;
+  ViewMode view_mode;
 } GameManager;
 
 extern GameManager game_manager;

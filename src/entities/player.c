@@ -8,9 +8,11 @@
 #include "entities/entities_manager.h"
 #include "entity.h"
 #include "game/game_manager.h"
+#include "game/rules.h"
 #include "input/input_manager.h"
 #include <math.h>
 #include <raylib.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #define HEIGHT_TOLERANCE 28.5f
@@ -34,15 +36,18 @@ GridPosition player_grid(Player *player) {
 
 Player *player_create(int id, Vector2 position) {
   Entity entity;
+  entity.type = ENTITY_PLAYER;
   entity.position = position;
   entity.width = TILE_SIZE - 10;
   entity.height = TILE_SIZE - 10;
   entity.update = player_update;
   entity.draw = player_draw;
+  entity.debug = player_debug;
 
   Player *player = malloc(sizeof(Player));
   player->entity = entity;
   player->id = id;
+  player->alive = true;
   player->bomb_capacity = 3;
   player->direction = DIR_DOWN;
   player->speed = 3.0f;
@@ -82,7 +87,7 @@ Player *player_create(int id, Vector2 position) {
 void player_update(Entity *self) {
   Player *player = (Player *)self;
 
-  if (player->input.place_bomb)
+  if (player->input.place_bomb && rules_can_place_bomb(player))
     bomb_create(player->id, map_grid_to_world(player_grid(player)), 3.0f);
 
   Vector2 projected = player->entity.position;
@@ -137,4 +142,59 @@ void player_draw(Entity *self) {
 
   DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
               WHITE);
+}
+
+void player_debug(Entity *self) {
+  Player *player = (Player *)self;
+
+  GridPosition pos = player_grid(player);
+  TileType tile = map_get_tile(&game_manager.map, pos);
+  Entity *out[player->bomb_capacity];
+  int bombs = entities_manager_get_all_player_bombs(player, out);
+  char strBuffer[1000];
+  snprintf(strBuffer, sizeof(strBuffer),
+           "Player debug\n"
+           "id: %d\n"
+           "position: (%.2f, %.2f)\n"
+           "grid: (%d, %d)\n"
+           "width: %.2f\n"
+           "height: %.2f\n"
+           "direction: %s\n"
+           "state: %s\n"
+           "bomb-capacity: %d\n"
+           "bombs: %d\n"
+           "speed: %.2f\n"
+           "alive: %s\n"
+           "animation-step: %d\n"
+           "standing-on: %s",
+           player->id, player->entity.position.x, player->entity.position.y,
+           pos.col, pos.row, player->entity.width, player->entity.height,
+           player->direction == DIR_UP     ? "UP"
+           : player->direction == DIR_DOWN ? "DOWN"
+           : player->direction == DIR_LEFT ? "LEFT"
+                                           : "RIGHT",
+           player->state == STATE_IDLE      ? "IDLE"
+           : player->state == STATE_RUNNING ? "RUNNING"
+                                            : "DEAD",
+           player->bomb_capacity, bombs, player->speed,
+           player->alive ? "yes" : "no", player->walk_animation.current_frame,
+           tile == TILE_EMPTY   ? "EMPTY"
+           : tile == TILE_WALL  ? "WALL"
+           : tile == TILE_BRICK ? "BRICK"
+                                : "BOMB");
+
+  Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
+
+  float x = 15;
+  float y = SCREEN_HEIGHT / 2.0f - textSize.y / 2.0f;
+
+  DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
+                (Color){196, 196, 196, 200});
+
+  DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
+
+  Vector2 grid = map_grid_to_world(pos);
+
+  DrawRectangle(grid.x, grid.y, TILE_SIZE, TILE_SIZE,
+                (Color){128, 128, 128, 128});
 }

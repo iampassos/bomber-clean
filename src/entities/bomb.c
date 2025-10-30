@@ -8,11 +8,13 @@
 
 Bomb *bomb_create(int player_id, Vector2 position, float radius) {
   Entity entity;
+  entity.type = ENTITY_BOMB;
   entity.position = position;
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
   entity.update = bomb_update;
   entity.draw = bomb_draw;
+  entity.debug = NULL;
 
   Bomb *bomb = malloc(sizeof(Bomb));
   bomb->entity = entity;

@@ -14,6 +14,7 @@ void input_manager_update() {
     input->move.x = IsKeyDown(KEY_A) ? -1.0 : IsKeyDown(KEY_D) ? 1.0f : 0.0f;
     input->move.y = IsKeyDown(KEY_W) ? -1.0 : IsKeyDown(KEY_S) ? 1.0f : 0.0f;
     input->place_bomb = IsKeyDown(KEY_SPACE);
+    input->debug = IsKeyDown(KEY_F1);
   }
 }
 
