@@ -23,7 +23,7 @@ Vector2 player_grid_to_world(Player *player, GridPosition pos) {
                    center.y - player->entity.height / 2 - HEIGHT_TOLERANCE};
 }
 
-GridPosition player_grid(Player *player) {
+GridPosition player_world_to_grid(Player *player) {
   Vector2 feet_position =
       (Vector2){player->entity.position.x + player->entity.width / 2.0f,
                 player->entity.position.y +
@@ -88,7 +88,8 @@ void player_update(Entity *self) {
   Player *player = (Player *)self;
 
   if (player->input.place_bomb && rules_can_place_bomb(player))
-    bomb_create(player->id, map_grid_to_world(player_grid(player)), 3.0f);
+    bomb_create(player->id, map_grid_to_world(player_world_to_grid(player)),
+                3.0f);
 
   Vector2 projected = player->entity.position;
 
@@ -147,10 +148,8 @@ void player_draw(Entity *self) {
 void player_debug(Entity *self) {
   Player *player = (Player *)self;
 
-  GridPosition pos = player_grid(player);
+  GridPosition pos = player_world_to_grid(player);
   TileType tile = map_get_tile(&game_manager.map, pos);
-  Entity *out[player->bomb_capacity];
-  int bombs = entities_manager_get_all_player_bombs(player, out);
   char strBuffer[1000];
   snprintf(strBuffer, sizeof(strBuffer),
            "Player debug\n"
@@ -176,8 +175,9 @@ void player_debug(Entity *self) {
            player->state == STATE_IDLE      ? "IDLE"
            : player->state == STATE_RUNNING ? "RUNNING"
                                             : "DEAD",
-           player->bomb_capacity, bombs, player->speed,
-           player->alive ? "yes" : "no", player->walk_animation.current_frame,
+           player->bomb_capacity, player_get_all_bombs(player, NULL),
+           player->speed, player->alive ? "yes" : "no",
+           player->walk_animation.current_frame,
            tile == TILE_EMPTY   ? "EMPTY"
            : tile == TILE_WALL  ? "WALL"
            : tile == TILE_BRICK ? "BRICK"
@@ -197,4 +197,24 @@ void player_debug(Entity *self) {
 
   DrawRectangle(grid.x, grid.y, TILE_SIZE, TILE_SIZE,
                 (Color){128, 128, 128, 128});
+}
+
+int player_get_all_bombs(Player *player, Entity **out) {
+  int count = 0;
+  for (int i = 0; i < MAX_ENTITIES && count <= player->bomb_capacity; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity == NULL)
+      break;
+
+    Bomb *bomb = (Bomb *)entity;
+
+    if (entity->type == ENTITY_BOMB && bomb->player_id == player->id) {
+      if (out != NULL)
+        out[count] = entity;
+      count++;
+    }
+  }
+
+  return count;
 }

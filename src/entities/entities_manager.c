@@ -62,8 +62,8 @@ void entities_manager_clear() {
   memset(entities_manager.entries, 0, sizeof(entities_manager.entries));
 };
 
-int entities_manager_get_all_at_grid(GridPosition grid, EntityType type,
-                                     Entity **out, int max_out) {
+int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
+                                     int max_out) {
   int count = 0;
   for (int i = 0; i < MAX_ENTITIES && count < max_out; i++) {
     Entity *entity = entities_manager.entries[i];
@@ -73,8 +73,11 @@ int entities_manager_get_all_at_grid(GridPosition grid, EntityType type,
 
     GridPosition pos = map_world_to_grid(entity->position);
 
-    if (entity->type == type && pos.col == grid.col && pos.row == grid.row)
-      out[count++] = entity;
+    if (pos.col == grid.col && pos.row == grid.row) {
+      if (out != NULL)
+        out[count] = entity;
+      count++;
+    }
   }
 
   return count;
@@ -89,25 +92,11 @@ int entities_manager_get_all_from_type(EntityType type, Entity **out,
     if (entity == NULL)
       break;
 
-    if (entity->type == type)
-      out[count++] = entity;
-  }
-
-  return count;
-}
-
-int entities_manager_get_all_player_bombs(Player *player, Entity **out) {
-  int count = 0;
-  for (int i = 0; i < MAX_ENTITIES && count <= player->bomb_capacity; i++) {
-    Entity *entity = entities_manager.entries[i];
-
-    if (entity == NULL)
-      break;
-
-    Bomb *bomb = (Bomb *)entity;
-
-    if (entity->type == ENTITY_BOMB && bomb->player_id == player->id)
-      out[count++] = entity;
+    if (entity->type == type) {
+      if (out != NULL)
+        out[count] = entity;
+      count++;
+    }
   }
 
   return count;
