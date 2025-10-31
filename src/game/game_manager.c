@@ -100,7 +100,8 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
     if (entity->type != ENTITY_EXPLOSION_TILE) {
       if (entity->type == ENTITY_PLAYER &&
           rules_can_kill_player((Player *)entity)) {
-            entity->position = player_grid_to_world((Player *) entity, (GridPosition) {1, 1});
+        Player *player = (Player *)entity;
+        player->alive = false;
       }
     }
   }

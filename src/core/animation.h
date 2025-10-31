@@ -10,6 +10,7 @@ typedef struct {
   float last_frame;
   bool loop;
   bool playing;
+  bool ended;
 } Animation;
 
 void animation_init(Animation *animation, int total_frames,
@@ -23,5 +24,6 @@ void animation_pause(Animation *animation);
 
 int animation_get_frame(Animation *animation);
 bool animation_is_playing(Animation *animation);
+bool animation_ended(Animation *animation);
 
 #endif

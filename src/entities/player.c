@@ -54,6 +54,7 @@ Player *player_create(int id, Vector2 position) {
   player->speed = 3.0f;
   player->input = (PlayerInput){{0}, false};
 
+  animation_init(&player->death_animation, 7, 0.3f, 0);
   animation_init(&player->walk_animation, 3, 0.25f, 1);
   animation_play(&player->walk_animation);
 
@@ -87,6 +88,19 @@ Player *player_create(int id, Vector2 position) {
 
 void player_update(Entity *self) {
   Player *player = (Player *)self;
+
+  if (!player->alive) {
+    if (!animation_is_playing(&player->death_animation) &&
+        !animation_ended(&player->death_animation)) {
+      animation_play(&player->death_animation);
+    } else if (!animation_ended(&player->death_animation)) {
+      animation_update(&player->death_animation);
+    } else {
+      entities_manager_remove(self);
+    }
+
+    return;
+  }
 
   if (player->input.place_bomb && rules_can_place_bomb(player))
     bomb_create(player->id, map_grid_to_world(player_world_to_grid(player)),
@@ -139,11 +153,19 @@ void player_update(Entity *self) {
 void player_draw(Entity *self) {
   Player *player = (Player *)self;
 
-  Texture2D *texture = asset_manager_get_player_walk_texture(
-      player->entity.direction, animation_get_frame(&player->walk_animation));
+  if (animation_is_playing(&player->death_animation)) {
+    Texture2D *texture = asset_manager_get_player_death_texture(
+        animation_get_frame(&player->death_animation));
 
-  DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
-              WHITE);
+    DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
+                WHITE);
+  } else {
+    Texture2D *texture = asset_manager_get_player_walk_texture(
+        player->entity.direction, animation_get_frame(&player->walk_animation));
+
+    DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
+                WHITE);
+  }
 }
 
 void player_debug(Entity *self) {

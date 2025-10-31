@@ -6,7 +6,6 @@
 #include "entity.h"
 #include "input/input_manager.h"
 
-
 typedef enum { STATE_IDLE, STATE_RUNNING, STATE_DEAD } PlayerState;
 
 typedef struct {
@@ -18,6 +17,7 @@ typedef struct {
   float speed;
   PlayerInput input;
   Animation walk_animation;
+  Animation death_animation;
 } Player;
 
 Player *player_create(int id, Vector2 position);
