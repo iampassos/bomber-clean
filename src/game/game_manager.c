@@ -3,10 +3,13 @@
 #include "core/map.h"
 #include "entities/entities_manager.h"
 #include "entities/explosion_tile.h"
+#include "entities/power_up.h"
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
 #include "rules.h"
 #include <raylib.h>
+#include <stdlib.h>
+#include <time.h>
 
 GameManager game_manager = {0};
 
@@ -104,5 +107,13 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
         player->alive = false;
       }
     }
+  }
+
+  srand(time(NULL));
+  int spawn = rand() % 100 < 100;
+
+  if (spawn) {
+    srand(time(NULL));
+    power_up_create(map_grid_to_world(center), rand() % 3);
   }
 }

@@ -16,6 +16,9 @@ void entities_manager_add(Entity *entity) {
 }
 
 void entities_manager_remove(Entity *entity) {
+  if (!entity || entities_manager.count <= 0)
+    return;
+
   int idx = -1;
   for (int i = 0; i < entities_manager.count; i++) {
     if (entities_manager.entries[i] == entity) {
@@ -31,7 +34,9 @@ void entities_manager_remove(Entity *entity) {
     entities_manager.entries[i] = entities_manager.entries[i + 1];
 
   entities_manager.count--;
-  entities_manager.entries[entities_manager.count] = NULL;
+
+  if (entities_manager.count >= 0)
+    entities_manager.entries[entities_manager.count] = NULL;
 }
 
 void entities_manager_update_all() {

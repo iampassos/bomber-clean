@@ -1,5 +1,5 @@
 #include "asset_manager.h"
-#include "core/map.h"
+#include "core/common.h"
 #include <raylib.h>
 #include <stdlib.h>
 
@@ -10,6 +10,27 @@ void asset_manager_init() {}
 void asset_manager_load_all() {
   asset_manager_load_player_textures();
   asset_manager_load_hud_textures();
+  asset_manager_load_power_ups_textures();
+}
+
+void asset_manager_load_power_ups_textures() {
+  const char *paths[3] = {
+      "assets/sprites/power_ups/LIFE.png",
+      "assets/sprites/power_ups/SPEED_UP.png",
+      "assets/sprites/power_ups/BOMB.png",
+  };
+
+  for (int frame = 0; frame < 3; frame++) {
+    Image img = LoadImage(paths[frame]);
+    ImageResizeNN(&img, TILE_SIZE, TILE_SIZE);
+    asset_manager.power_ups[frame] = LoadTextureFromImage(img);
+    SetTextureFilter(asset_manager.power_ups[frame], TEXTURE_FILTER_POINT);
+    UnloadImage(img);
+  }
+}
+
+Texture2D *asset_manager_get_power_up_texture(PowerUpType type) {
+  return &asset_manager.power_ups[type];
 }
 
 void asset_manager_load_player_textures() {

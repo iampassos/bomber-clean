@@ -3,6 +3,7 @@
 
 #include "core/map.h"
 #include "entities/entity.h"
+#include "entities/power_up.h"
 
 #include <raylib.h>
 
@@ -11,6 +12,8 @@ typedef struct {
   Texture2D player_death[7];
   Texture2D bomb[3];
   Texture2D brick_destruction[6];
+
+  Texture2D power_ups[3];
 
   Texture2D map_background;
   Texture2D *map_tiles;
@@ -22,6 +25,9 @@ extern AssetManager asset_manager;
 
 void asset_manager_init();
 void asset_manager_load_all();
+
+void asset_manager_load_power_ups_textures();
+Texture2D *asset_manager_get_power_up_texture(PowerUpType type);
 
 void asset_manager_load_player_textures();
 void asset_manager_load_player_walk_textures();
