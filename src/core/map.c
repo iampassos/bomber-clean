@@ -18,6 +18,10 @@ void map_init(Map *map, MapType map_type) {
     }
   }
 
+  //garantir que tenha laterais empyt no spawn do bomber man
+  map->grid[1][2]=TILE_EMPTY;
+  map->grid[2][1]=TILE_EMPTY;
+
   map->stage = map_type;
 }
 
