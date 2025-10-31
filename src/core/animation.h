@@ -11,11 +11,16 @@ typedef struct {
   bool loop;
   bool playing;
   bool ended;
+
+  bool end_and_reverse;
+  bool reached_end;
 } Animation;
 
 void animation_init(Animation *animation, int total_frames,
-                    float frame_duration, bool loop);
+                    float frame_duration, bool loop, bool end_and_reverse);
 void animation_update(Animation *animation);
+void animation_advance(Animation *animation);
+void animation_reverse(Animation *animation);
 
 void animation_play(Animation *animation);
 void animation_stop(Animation *animation);

@@ -1,16 +1,17 @@
 #include "power_up.h"
 #include "core/asset_manager.h"
+#include "entities/entity.h"
 #include "entities_manager.h"
 #include "game/game_manager.h"
 #include "player.h"
 #include <raylib.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   Entity entity;
   entity.type = ENTITY_POWER_UP;
-  entity.layer = LAYER_BOMBS;
+  entity.layer = LAYER_POWER_UPS;
   entity.position = position;
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
@@ -23,7 +24,7 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   power_up->power_up_type = type;
   power_up->spawn_time = GetTime();
 
-  animation_init(&power_up->tick_animation, 10, 0.1f, 0);
+  animation_init(&power_up->tick_animation, 10, 0.1f, 0, false);
 
   entities_manager_add((Entity *)power_up);
 

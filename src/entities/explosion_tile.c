@@ -1,6 +1,8 @@
 #include "explosion_tile.h"
+#include "core/animation.h"
 #include "core/asset_manager.h"
 #include "entities_manager.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 ExplosionTile *explosion_tile_create(Vector2 position,
@@ -22,6 +24,9 @@ ExplosionTile *explosion_tile_create(Vector2 position,
   explosion_tile->lifetime = 1.0f;
   explosion_tile->spawn_time = GetTime();
 
+  animation_init(&explosion_tile->explosion_animation, 5, 0.1f, false, true);
+  animation_play(&explosion_tile->explosion_animation);
+
   entities_manager_add((Entity *)explosion_tile);
 
   return explosion_tile;
@@ -30,16 +35,24 @@ ExplosionTile *explosion_tile_create(Vector2 position,
 void explosion_tile_update(Entity *self) {
   ExplosionTile *explosion_tile = (ExplosionTile *)self;
 
-  if (GetTime() - explosion_tile->spawn_time >= explosion_tile->lifetime)
+  animation_update(&explosion_tile->explosion_animation);
+
+  if (GetTime() - explosion_tile->spawn_time >= explosion_tile->lifetime) {
     entities_manager_remove(self);
+    return;
+  }
 }
 
 void explosion_tile_draw(Entity *self) {
   ExplosionTile *explosion_tile = (ExplosionTile *)self;
 
-  // DrawTexture(*asset_manager_get_explosion_texture(0),
-  //             explosion_tile->entity.position.x,
-  //             explosion_tile->entity.position.y, WHITE);
+  if (explosion_tile->center) {
+    Texture2D *texture = asset_manager_get_explosion_center_texture(
+        explosion_tile->explosion_animation.current_frame);
+
+    DrawTexture(*texture, explosion_tile->entity.position.x,
+                explosion_tile->entity.position.y, WHITE);
+  }
 }
 
 ExplosionTile *explosion_tile_at_grid(GridPosition grid) {

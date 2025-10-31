@@ -28,7 +28,7 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   bomb->spawn_time = GetTime();
   bomb->explosion_time = 2.0f;
 
-  animation_init(&bomb->tick_animation, 3, 0.2f, 1);
+  animation_init(&bomb->tick_animation, 3, 0.2f, 1, false);
   animation_play(&bomb->tick_animation);
 
   entities_manager_add((Entity *)bomb);

@@ -55,8 +55,8 @@ Player *player_create(int id, Vector2 position) {
   player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
 
-  animation_init(&player->death_animation, 7, 0.3f, 0);
-  animation_init(&player->walk_animation, 3, 0.25f, 1);
+  animation_init(&player->death_animation, 7, 0.3f, false, false);
+  animation_init(&player->walk_animation, 3, 0.25f, true, false);
   animation_play(&player->walk_animation);
 
   GridPosition pos = map_world_to_grid(position);

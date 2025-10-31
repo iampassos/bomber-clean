@@ -11,7 +11,43 @@ void asset_manager_load_all() {
   asset_manager_load_player_textures();
   asset_manager_load_hud_textures();
   asset_manager_load_power_ups_textures();
+  asset_manager_load_explosion_textures();
 }
+
+void asset_manager_load_explosion_textures() {
+  asset_manager_load_explosion_center_textures();
+  asset_manager_load_explosion_middle_textures();
+  asset_manager_load_explosion_final_textures();
+}
+
+void asset_manager_load_explosion_center_textures() {
+  const char *paths[5] = {"assets/sprites/explosion/EXPLOSION_CENTER_1.png",
+                          "assets/sprites/explosion/EXPLOSION_CENTER_2.png",
+                          "assets/sprites/explosion/EXPLOSION_CENTER_3.png",
+                          "assets/sprites/explosion/EXPLOSION_CENTER_4.png",
+                          "assets/sprites/explosion/EXPLOSION_CENTER_5.png"};
+
+  for (int frame = 0; frame < 5; frame++) {
+    Image img = LoadImage(paths[frame]);
+    ImageResizeNN(&img, TILE_SIZE, TILE_SIZE);
+    asset_manager.explosion_center[frame] = LoadTextureFromImage(img);
+    SetTextureFilter(asset_manager.explosion_center[frame],
+                     TEXTURE_FILTER_POINT);
+    UnloadImage(img);
+  }
+}
+void asset_manager_load_explosion_middle_textures() {}
+void asset_manager_load_explosion_final_textures() {}
+
+Texture2D *asset_manager_get_explosion_center_texture(int frame) {
+  return &asset_manager.explosion_center[frame];
+}
+
+Texture2D *asset_manager_get_explosion_middle_texture(EntityDirection direction,
+                                                      int frame) {}
+
+Texture2D *asset_manager_get_explosion_final_texture(EntityDirection direction,
+                                                     int frame) {}
 
 void asset_manager_load_power_ups_textures() {
   const char *paths[3] = {

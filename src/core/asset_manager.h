@@ -13,6 +13,10 @@ typedef struct {
   Texture2D bomb[3];
   Texture2D brick_destruction[6];
 
+  Texture2D explosion_center[5];
+  Texture2D explosion_middle[2][5];
+  Texture2D explosion_final[4][5];
+
   Texture2D power_ups[3];
 
   Texture2D map_background;
@@ -25,6 +29,17 @@ extern AssetManager asset_manager;
 
 void asset_manager_init();
 void asset_manager_load_all();
+
+void asset_manager_load_explosion_textures();
+void asset_manager_load_explosion_center_textures();
+void asset_manager_load_explosion_middle_textures();
+void asset_manager_load_explosion_final_textures();
+
+Texture2D *asset_manager_get_explosion_center_texture(int frame);
+Texture2D *asset_manager_get_explosion_middle_texture(EntityDirection direction,
+                                                      int frame);
+Texture2D *asset_manager_get_explosion_final_texture(EntityDirection direction,
+                                                     int frame);
 
 void asset_manager_load_power_ups_textures();
 Texture2D *asset_manager_get_power_up_texture(PowerUpType type);

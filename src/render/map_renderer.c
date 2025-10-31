@@ -38,7 +38,7 @@ void map_renderer_background() {
 
 void map_renderer_brick_animation() {
   if (!animation_is_playing(&brick_animation)) {
-    animation_init(&brick_animation, 4, 0.1f, true);
+    animation_init(&brick_animation, 4, 0.1f, true, false);
     animation_play(&brick_animation);
   } else {
     animation_update(&brick_animation);
@@ -71,7 +71,7 @@ void map_renderer_brick_destruction() {
 
 void map_renderer_animate_brick_destruction(GridPosition grid) {
   animation_init(&brick_destruction_animation[brick_destruction_length], 6,
-                 0.125f, false);
+                 0.125f, false, false);
   animation_play(&brick_destruction_animation[brick_destruction_length]);
   brick_destruction_position[brick_destruction_length++] = grid;
 }

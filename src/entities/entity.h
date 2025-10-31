@@ -10,9 +10,14 @@ typedef enum {
   ENTITY_POWER_UP
 } EntityType;
 
-typedef enum { LAYER_PLAYERS, LAYER_BOMBS } EntityLayer;
+typedef enum { LAYER_PLAYERS, LAYER_BOMBS, LAYER_POWER_UPS } EntityLayer;
 
-typedef enum { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT } EntityDirection;
+typedef enum {
+  DIR_UP,
+  DIR_DOWN,
+  DIR_LEFT,
+  DIR_RIGHT,
+} EntityDirection;
 
 typedef struct Entity {
   EntityType type;

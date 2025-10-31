@@ -6,9 +6,9 @@
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
 #include "rules.h"
+#include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
-#include <math.h>
 #include <time.h>
 
 GameManager game_manager = {0};
@@ -127,7 +127,8 @@ void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
     player->lives++;
     break;
   case POWER_UP_SPEED:
-    player->speed = fmin(MAX_PLAYER_SPEED, player->speed + POWER_UP_SPEED_INCREASE);
+    player->speed =
+        fmin(MAX_PLAYER_SPEED, player->speed + POWER_UP_SPEED_INCREASE);
     break;
   case POWER_UP_BOMB:
     player->bomb_capacity++;
