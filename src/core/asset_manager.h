@@ -29,6 +29,7 @@ Texture2D *asset_manager_get_map_background_texture();
 Texture2D *asset_manager_get_map_tiles_textures();
 
 Texture2D *asset_manager_get_bomb_texture(int frame);
+Texture2D *asset_manager_get_explosion_texture(int frame);
 
 void asset_manager_load_hud_textures();
 Texture2D *asset_manager_get_hud_texture();

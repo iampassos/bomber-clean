@@ -1,7 +1,7 @@
 #include "game_manager.h"
 #include "core/asset_manager.h"
 #include "entities/entities_manager.h"
-#include "entities/explosion.h"
+#include "entities/explosion_tile.h"
 #include "input/input_manager.h"
 #include <math.h>
 #include <raylib.h>
@@ -41,10 +41,7 @@ void game_manager_start_stage() {
   game_manager.player_count++;
 }
 
-void game_manager_on_bomb_exploded(Explosion *explosion) {
-  int radius = explosion->radius;
-  GridPosition center = map_world_to_grid(explosion->entity.position);
-
+void game_manager_on_bomb_exploded(GridPosition center, int radius) {
   GridPosition affected[4 * GRID_WIDTH] = {0};
   GridPosition destroyed[4 * GRID_WIDTH] = {0};
 
@@ -55,58 +52,36 @@ void game_manager_on_bomb_exploded(Explosion *explosion) {
 
   affected[affected_length++] = center;
 
-  for (int i = 1; i <= radius; i++) {
-    GridPosition new = (GridPosition){center.col, center.row + i};
-    TileType tile = map_get_tile(&game_manager.map, new);
+  int directions[4][2] = {
+      {0, 1},  // up
+      {0, -1}, // down
+      {-1, 0}, // left
+      {1, 0}   // right
+  };
 
-    if (tile == TILE_EMPTY)
-      affected[affected_length++] = new;
-    else if (tile == TILE_BRICK) {
-      destroyed[destroyed_length++] = new;
-      break;
-    } else
-      break;
-  }
+  for (int d = 0; d < 4; d++) {
+    int dx = directions[d][0]; // coluna up or down
+    int dy = directions[d][1]; // linha  left or right
 
-  for (int i = 1; i <= radius; i++) {
-    GridPosition new = (GridPosition){center.col, center.row - i};
-    TileType tile = map_get_tile(&game_manager.map, new);
+    for (int i = 1; i <= radius; i++) {
+      GridPosition new = {center.col + dx * i, center.row + dy * i};
 
-    if (tile == TILE_EMPTY)
-      affected[affected_length++] = new;
-    else if (tile == TILE_BRICK) {
-      destroyed[destroyed_length++] = new;
-      break;
-    } else
-      break;
-  }
+      TileType tile = map_get_tile(&game_manager.map, new);
 
-  for (int i = 1; i <= radius; i++) {
-    GridPosition new = (GridPosition){center.col - i, center.row};
-    TileType tile = map_get_tile(&game_manager.map, new);
-
-    if (tile == TILE_EMPTY)
-      affected[affected_length++] = new;
-    else if (tile == TILE_BRICK) {
-      destroyed[destroyed_length++] = new;
-      break;
-    } else
-      break;
-  }
-
-  for (int i = 1; i <= radius; i++) {
-    GridPosition new = (GridPosition){center.col + i, center.row};
-    TileType tile = map_get_tile(&game_manager.map, new);
-
-    if (tile == TILE_EMPTY)
-      affected[affected_length++] = new;
-    else if (tile == TILE_BRICK) {
-      destroyed[destroyed_length++] = new;
-      break;
-    } else
-      break;
+      if (tile == TILE_EMPTY) {
+        affected[affected_length++] = new;
+      } else if (tile == TILE_BRICK) {
+        destroyed[destroyed_length++] = new;
+        break;
+      } else {
+        break;
+      }
+    }
   }
 
   for (int i = 0; i < destroyed_length; i++)
     map_set_tile(&game_manager.map, destroyed[i], TILE_EMPTY);
+
+  for (int i = 0; i < affected_length; i++)
+    explosion_tile_create(map_grid_to_world(affected[i]));
 }

@@ -76,6 +76,7 @@ void asset_manager_load_map_textures(MapType map_type) {
         "assets/sprites/maps/stage_one/BRICK2.png",
         "assets/sprites/maps/stage_one/BRICK3.png",
         "assets/sprites/maps/stage_one/BRICK4.png",
+        "assets/sprites/maps/stage_one/EXPLOSION_CENTER.png",
     };
     image_path = paths;
     size = sizeof(paths) / sizeof(paths[0]);
@@ -118,6 +119,10 @@ Texture2D *asset_manager_get_map_tiles_textures() {
 
 Texture2D *asset_manager_get_bomb_texture(int frame) {
   return &asset_manager.bomb[frame];
+}
+
+Texture2D *asset_manager_get_explosion_texture(int frame) {
+  return &asset_manager.map_tiles[16 + frame];
 }
 
 void asset_manager_load_hud_textures() {

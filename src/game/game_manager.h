@@ -4,7 +4,6 @@
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/bomb.h"
-#include "entities/explosion.h"
 #include "entities/player.h"
 
 typedef enum { VIEW_NORMAL, VIEW_DEBUG } ViewMode;
@@ -23,6 +22,6 @@ void game_manager_update(float dt);
 
 void game_manager_start_stage();
 
-void game_manager_on_bomb_exploded(Explosion *explosion);
+void game_manager_on_bomb_exploded(GridPosition center, int radius);
 
 #endif
