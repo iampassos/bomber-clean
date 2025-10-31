@@ -9,7 +9,11 @@
 #include <raylib.h>
 #include <stdio.h>
 
-Animation stage_one_brick_animation;
+Animation brick_animation;
+
+GridPosition brick_destruction_position[4];
+Animation brick_destruction_animation[4];
+int brick_destruction_length = 0;
 
 void map_renderer() {
   map_renderer_background();
@@ -19,18 +23,57 @@ void map_renderer() {
     map_renderer_battle_stage_one_tiles();
     break;
   case MAP_STAGE_1:
-    if (!animation_is_playing(&stage_one_brick_animation)) {
-      animation_init(&stage_one_brick_animation, 4, 0.1f, true);
-      animation_play(&stage_one_brick_animation);
-    }
     map_renderer_stage_one_tiles();
     break;
   }
+
+  map_renderer_brick_destruction();
+  map_renderer_brick_animation();
 }
 
 void map_renderer_background() {
   DrawTexture(*asset_manager_get_map_background_texture(),
               MAP_X_OFFSET - TILE_SIZE, MAP_Y_OFFSET, WHITE);
+}
+
+void map_renderer_brick_animation() {
+  if (!animation_is_playing(&brick_animation)) {
+    animation_init(&brick_animation, 4, 0.1f, true);
+    animation_play(&brick_animation);
+  } else {
+    animation_update(&brick_animation);
+  }
+}
+
+void map_renderer_brick_destruction() {
+  for (int i = 0; i < brick_destruction_length;) {
+    Animation *anim = &brick_destruction_animation[i];
+
+    if (animation_is_playing(anim)) {
+      Vector2 pos = map_grid_to_world(brick_destruction_position[i]);
+
+      DrawTexture(
+          *asset_manager_get_brick_destruction_texture(anim->current_frame),
+          pos.x, pos.y, WHITE);
+
+      animation_update(anim);
+      i++;
+    } else {
+      brick_destruction_length--;
+
+      brick_destruction_animation[i] =
+          brick_destruction_animation[brick_destruction_length];
+      brick_destruction_position[i] =
+          brick_destruction_position[brick_destruction_length];
+    }
+  }
+}
+
+void map_renderer_animate_brick_destruction(GridPosition grid) {
+  animation_init(&brick_destruction_animation[brick_destruction_length], 6,
+                 0.125f, false);
+  animation_play(&brick_destruction_animation[brick_destruction_length]);
+  brick_destruction_position[brick_destruction_length++] = grid;
 }
 
 void map_renderer_battle_stage_one_tiles() {
@@ -45,10 +88,10 @@ void map_renderer_battle_stage_one_tiles() {
 
       switch (tile) {
       case TILE_EMPTY:
-        text = upper_tile != TILE_EMPTY ? &textures[4] : NULL;
+        text = upper_tile != TILE_EMPTY ? &textures[10] : NULL;
         break;
       case TILE_BRICK:
-        text = &textures[6];
+        text = &textures[12];
         break;
       case TILE_WALL:
         break;
@@ -77,14 +120,14 @@ void map_renderer_stage_one_tiles() {
 
         if (!bomb)
           text = upper_tile != TILE_EMPTY
-                     ? upper_tile == TILE_BRICK ? &textures[6] : &textures[5]
+                     ? upper_tile == TILE_BRICK ? &textures[12] : &textures[11]
                      : NULL;
 
         break;
       case TILE_BRICK:
         text = upper_tile != TILE_EMPTY
-                   ? &textures[8 + stage_one_brick_animation.current_frame]
-                   : &textures[12 + stage_one_brick_animation.current_frame];
+                   ? &textures[14 + brick_animation.current_frame]
+                   : &textures[18 + brick_animation.current_frame];
         break;
       case TILE_WALL:
         break;
@@ -95,8 +138,6 @@ void map_renderer_stage_one_tiles() {
                     MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
     }
   }
-
-  animation_update(&stage_one_brick_animation);
 }
 
 void map_renderer_debug() {

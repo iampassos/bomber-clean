@@ -2,16 +2,13 @@
 #define EXPLOSION_H
 
 #include "core/animation.h"
-#include "core/map.h"
 #include "entity.h"
 #include <raylib.h>
-
-// cima direita baixo esquerda
 
 typedef struct {
   Entity entity;
   float lifetime;
-  float spawned;
+  float spawn_time;
   Animation explosion_animation;
 } ExplosionTile;
 

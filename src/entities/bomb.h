@@ -9,13 +9,13 @@ typedef struct {
   Entity entity;
   int player_id;
   bool exploded;
-  float radius;
+  int radius;
   float spawn_time;
   float explosion_time;
   Animation tick_animation;
 } Bomb;
 
-Bomb *bomb_create(int player_id, Vector2 position, float radius);
+Bomb *bomb_create(int player_id, Vector2 position, int radius);
 
 void bomb_update(Entity *self);
 void bomb_draw(Entity *self);

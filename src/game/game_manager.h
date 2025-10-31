@@ -3,7 +3,6 @@
 
 #include "core/common.h"
 #include "core/map.h"
-#include "entities/bomb.h"
 #include "entities/player.h"
 
 typedef enum { VIEW_NORMAL, VIEW_DEBUG } ViewMode;

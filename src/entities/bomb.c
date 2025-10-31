@@ -9,7 +9,7 @@
 #include <raylib.h>
 #include <stdlib.h>
 
-Bomb *bomb_create(int player_id, Vector2 position, float radius) {
+Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   Entity entity;
   entity.type = ENTITY_BOMB;
   entity.layer = LAYER_BOMBS;

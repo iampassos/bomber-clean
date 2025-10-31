@@ -49,6 +49,12 @@ void asset_manager_load_map_textures(MapType map_type) {
         "assets/sprites/maps/battle_stage_one/BOMB1.png",
         "assets/sprites/maps/battle_stage_one/BOMB2.png",
         "assets/sprites/maps/battle_stage_one/BOMB3.png",
+        "assets/sprites/maps/battle_stage_one/BRICK_DESTRUCTION_1.png",
+        "assets/sprites/maps/battle_stage_one/BRICK_DESTRUCTION_2.png",
+        "assets/sprites/maps/battle_stage_one/BRICK_DESTRUCTION_3.png",
+        "assets/sprites/maps/battle_stage_one/BRICK_DESTRUCTION_4.png",
+        "assets/sprites/maps/battle_stage_one/BRICK_DESTRUCTION_5.png",
+        "assets/sprites/maps/battle_stage_one/BRICK_DESTRUCTION_6.png",
         "assets/sprites/maps/battle_stage_one/GRASS_SHADOW.png",
         "assets/sprites/maps/battle_stage_one/GRASS.png",
         "assets/sprites/maps/battle_stage_one/BRICK.png",
@@ -64,6 +70,12 @@ void asset_manager_load_map_textures(MapType map_type) {
         "assets/sprites/maps/stage_one/BOMB1.png",
         "assets/sprites/maps/stage_one/BOMB2.png",
         "assets/sprites/maps/stage_one/BOMB3.png",
+        "assets/sprites/maps/stage_one/BRICK_DESTRUCTION_1.png",
+        "assets/sprites/maps/stage_one/BRICK_DESTRUCTION_2.png",
+        "assets/sprites/maps/stage_one/BRICK_DESTRUCTION_3.png",
+        "assets/sprites/maps/stage_one/BRICK_DESTRUCTION_4.png",
+        "assets/sprites/maps/stage_one/BRICK_DESTRUCTION_5.png",
+        "assets/sprites/maps/stage_one/BRICK_DESTRUCTION_6.png",
         "assets/sprites/maps/stage_one/GRASS.png",
         "assets/sprites/maps/stage_one/GRASS_SHADOW.png",
         "assets/sprites/maps/stage_one/GRASS_SHADOW_BOMB.png",
@@ -90,20 +102,26 @@ void asset_manager_load_map_textures(MapType map_type) {
   images[0] = LoadImage(image_path[0]);
   ImageResizeNN(&images[0], 272 * 4, 208 * 4);
   asset_manager.map_background = LoadTextureFromImage(images[0]);
-  UnloadImage(images[0]);
 
   for (int i = 1; i <= 3; i++) {
     images[i] = LoadImage(image_path[i]);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.bomb[i - 1] = LoadTextureFromImage(images[i]);
-    SetTextureFilter(asset_manager.map_tiles[i], TEXTURE_FILTER_POINT);
-    UnloadImage(images[i]);
   }
 
-  for (int i = 4; i < size; i++) {
+  for (int i = 4; i <= 9; i++) {
+    images[i] = LoadImage(image_path[i]);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.brick_destruction[i - 4] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 10; i < size; i++) {
     images[i] = LoadImage(image_path[i]);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.map_tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 0; i < size; i++) {
     SetTextureFilter(asset_manager.map_tiles[i], TEXTURE_FILTER_POINT);
     UnloadImage(images[i]);
   }
@@ -121,8 +139,12 @@ Texture2D *asset_manager_get_bomb_texture(int frame) {
   return &asset_manager.bomb[frame];
 }
 
+Texture2D *asset_manager_get_brick_destruction_texture(int frame) {
+  return &asset_manager.brick_destruction[frame];
+}
+
 Texture2D *asset_manager_get_explosion_texture(int frame) {
-  return &asset_manager.map_tiles[16 + frame];
+  return &asset_manager.map_tiles[frame];
 }
 
 void asset_manager_load_hud_textures() {
