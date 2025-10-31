@@ -22,10 +22,10 @@ ExplosionTile *explosion_tile_create(Vector2 position,
   ExplosionTile *explosion_tile = malloc(sizeof(ExplosionTile));
   explosion_tile->entity = entity;
   explosion_tile->tile_type = tile_type;
-  explosion_tile->lifetime = 5.0f;
+  explosion_tile->lifetime = 1.0f;
   explosion_tile->spawn_time = GetTime();
 
-  animation_init(&explosion_tile->explosion_animation, 5, 0.5f, false, true);
+  animation_init(&explosion_tile->explosion_animation, 5, 0.1f, false, true);
   animation_play(&explosion_tile->explosion_animation);
 
   entities_manager_add((Entity *)explosion_tile);
