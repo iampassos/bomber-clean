@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-typedef enum { ENTITY_PLAYER, ENTITY_BOMB,ENTITY_EXPLOSION_TILE } EntityType;
+typedef enum { ENTITY_PLAYER, ENTITY_BOMB,ENTITY_EXPLOSION_TILE, ENTITY_POWER_UP} EntityType;
 
 typedef enum { LAYER_PLAYERS, LAYER_BOMBS } EntityLayer;
 
