@@ -50,6 +50,7 @@ Player *player_create(int id, Vector2 position) {
   player->entity = entity;
   player->id = id;
   player->alive = true;
+  player->lives = 3;
   player->bomb_capacity = 3;
   player->speed = 3.0f;
   player->input = (PlayerInput){{0}, false};
@@ -96,7 +97,16 @@ void player_update(Entity *self) {
     } else if (!animation_ended(&player->death_animation)) {
       animation_update(&player->death_animation);
     } else {
-      entities_manager_remove(self);
+      player->lives--;
+
+      if (player->lives <= 0)
+        entities_manager_remove(self);
+      else {
+        player->alive = true;
+        animation_stop(&player->death_animation);
+        player->entity.position =
+            player_grid_to_world(player, (GridPosition){1, 1});
+      }
     }
 
     return;
@@ -187,6 +197,7 @@ void player_debug(Entity *self) {
            "bombs: %d\n"
            "speed: %.2f\n"
            "alive: %s\n"
+           "lives: %d\n"
            "animation-step: %d\n"
            "standing-on: %s",
            player->id, player->entity.position.x, player->entity.position.y,
@@ -199,7 +210,7 @@ void player_debug(Entity *self) {
            : player->state == STATE_RUNNING ? "RUNNING"
                                             : "DEAD",
            player->bomb_capacity, player_get_all_bombs(player, NULL),
-           player->speed, player->alive ? "yes" : "no",
+           player->speed, player->alive ? "yes" : "no", player->lives,
            player->walk_animation.current_frame,
            tile == TILE_EMPTY   ? "EMPTY"
            : tile == TILE_WALL  ? "WALL"

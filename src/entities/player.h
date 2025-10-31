@@ -12,6 +12,7 @@ typedef struct {
   Entity entity;
   int id;
   bool alive;
+  int lives;
   PlayerState state;
   int bomb_capacity;
   float speed;

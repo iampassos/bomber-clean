@@ -14,7 +14,7 @@ void map_init(Map *map, MapType map_type) {
         map->grid[i][j] = TILE_WALL;
       } else
         map->grid[i][j] =
-            (i != 1 || j != 1) && rand() % 100 < 40 ? TILE_BRICK : TILE_EMPTY;
+            (i != 1 || j != 1) && rand() % 100 < 25 ? TILE_BRICK : TILE_EMPTY;
     }
   }
 

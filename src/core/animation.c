@@ -40,18 +40,18 @@ void animation_play(Animation *animation) {
 
 void animation_stop(Animation *animation) {
   animation->playing = false;
+  animation->ended = false;
   animation->current_frame = 0;
   animation->last_frame = GetTime();
 }
 
 void animation_restart(Animation *animation) {
+  animation_play(animation);
   animation->current_frame = 0;
   animation->last_frame = GetTime();
-  animation->playing = 1;
-  animation->ended = false;
 }
 
-void animation_pause(Animation *animation) { animation->playing = 0; }
+void animation_pause(Animation *animation) { animation->playing = false; }
 
 int animation_get_frame(Animation *animation) {
   return animation->current_frame;
