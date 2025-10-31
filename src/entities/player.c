@@ -139,7 +139,7 @@ void player_update(Entity *self) {
 void player_draw(Entity *self) {
   Player *player = (Player *)self;
 
-  Texture2D *texture = asset_manager_get_player_texture(
+  Texture2D *texture = asset_manager_get_player_walk_texture(
       player->entity.direction, animation_get_frame(&player->walk_animation));
 
   DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
@@ -172,7 +172,7 @@ void player_debug(Entity *self) {
            player->entity.direction == DIR_UP     ? "UP"
            : player->entity.direction == DIR_DOWN ? "DOWN"
            : player->entity.direction == DIR_LEFT ? "LEFT"
-                                           : "RIGHT",
+                                                  : "RIGHT",
            player->state == STATE_IDLE      ? "IDLE"
            : player->state == STATE_RUNNING ? "RUNNING"
                                             : "DEAD",

@@ -7,7 +7,8 @@
 #include <raylib.h>
 
 typedef struct {
-  Texture2D player[4][3];
+  Texture2D player_walk[4][3];
+  Texture2D player_death[7];
   Texture2D bomb[3];
   Texture2D brick_destruction[6];
 
@@ -23,7 +24,11 @@ void asset_manager_init();
 void asset_manager_load_all();
 
 void asset_manager_load_player_textures();
-Texture2D *asset_manager_get_player_texture(EntityDirection direction, int frame);
+void asset_manager_load_player_walk_textures();
+void asset_manager_load_player_death_textures();
+Texture2D *asset_manager_get_player_walk_texture(EntityDirection direction,
+                                                 int frame);
+Texture2D *asset_manager_get_player_death_texture(int frame);
 
 void asset_manager_load_map_textures(MapType map_type);
 Texture2D *asset_manager_get_map_background_texture();

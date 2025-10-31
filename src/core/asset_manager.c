@@ -13,6 +13,11 @@ void asset_manager_load_all() {
 }
 
 void asset_manager_load_player_textures() {
+  asset_manager_load_player_walk_textures();
+  asset_manager_load_player_death_textures();
+}
+
+void asset_manager_load_player_walk_textures() {
   const char *paths[4][3] = {
       {"assets/sprites/player/UP1.png", "assets/sprites/player/UP2.png",
        "assets/sprites/player/UP3.png"},
@@ -27,15 +32,41 @@ void asset_manager_load_player_textures() {
     for (int frame = 0; frame < 3; frame++) {
       Image img = LoadImage(paths[dir][frame]);
       ImageResizeNN(&img, 64, 88);
-      asset_manager.player[dir][frame] = LoadTextureFromImage(img);
-      SetTextureFilter(asset_manager.player[dir][frame], TEXTURE_FILTER_POINT);
+      asset_manager.player_walk[dir][frame] = LoadTextureFromImage(img);
+      SetTextureFilter(asset_manager.player_walk[dir][frame],
+                       TEXTURE_FILTER_POINT);
       UnloadImage(img);
     }
   }
 }
 
-Texture2D *asset_manager_get_player_texture(EntityDirection direction, int frame) {
-  return &asset_manager.player[direction][frame];
+void asset_manager_load_player_death_textures() {
+  const char *paths[7] = {
+      "assets/sprites/player/PLAYER_DEATH_1.png",
+      "assets/sprites/player/PLAYER_DEATH_2.png",
+      "assets/sprites/player/PLAYER_DEATH_3.png",
+      "assets/sprites/player/PLAYER_DEATH_4.png",
+      "assets/sprites/player/PLAYER_DEATH_5.png",
+      "assets/sprites/player/PLAYER_DEATH_6.png",
+      "assets/sprites/player/PLAYER_DEATH_7.png",
+  };
+
+  for (int frame = 0; frame < 7; frame++) {
+    Image img = LoadImage(paths[frame]);
+    ImageResizeNN(&img, 64, 88);
+    asset_manager.player_death[frame] = LoadTextureFromImage(img);
+    SetTextureFilter(asset_manager.player_death[frame], TEXTURE_FILTER_POINT);
+    UnloadImage(img);
+  }
+}
+
+Texture2D *asset_manager_get_player_walk_texture(EntityDirection direction,
+                                                 int frame) {
+  return &asset_manager.player_walk[direction][frame];
+}
+
+Texture2D *asset_manager_get_player_death_texture(int frame) {
+  return &asset_manager.player_death[frame];
 }
 
 void asset_manager_load_map_textures(MapType map_type) {
