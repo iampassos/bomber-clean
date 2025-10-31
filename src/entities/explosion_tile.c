@@ -6,7 +6,8 @@
 #include <stdlib.h>
 
 ExplosionTile *explosion_tile_create(Vector2 position,
-                                     EntityDirection direction, bool center) {
+                                     EntityDirection direction,
+                                     ExplosionTileType tile_type) {
   Entity entity;
   entity.type = ENTITY_EXPLOSION_TILE;
   entity.layer = LAYER_BOMBS;
@@ -20,11 +21,11 @@ ExplosionTile *explosion_tile_create(Vector2 position,
 
   ExplosionTile *explosion_tile = malloc(sizeof(ExplosionTile));
   explosion_tile->entity = entity;
-  explosion_tile->center = center;
-  explosion_tile->lifetime = 1.0f;
+  explosion_tile->tile_type = tile_type;
+  explosion_tile->lifetime = 5.0f;
   explosion_tile->spawn_time = GetTime();
 
-  animation_init(&explosion_tile->explosion_animation, 5, 0.1f, false, true);
+  animation_init(&explosion_tile->explosion_animation, 5, 0.5f, false, true);
   animation_play(&explosion_tile->explosion_animation);
 
   entities_manager_add((Entity *)explosion_tile);
@@ -46,13 +47,24 @@ void explosion_tile_update(Entity *self) {
 void explosion_tile_draw(Entity *self) {
   ExplosionTile *explosion_tile = (ExplosionTile *)self;
 
-  if (explosion_tile->center) {
-    Texture2D *texture = asset_manager_get_explosion_center_texture(
+  Texture2D *texture;
+
+  if (explosion_tile->tile_type == EXPLOSION_CENTER) {
+    texture = asset_manager_get_explosion_center_texture(
         explosion_tile->explosion_animation.current_frame);
 
-    DrawTexture(*texture, explosion_tile->entity.position.x,
-                explosion_tile->entity.position.y, WHITE);
+  } else if (explosion_tile->tile_type == EXPLOSION_MIDDLE) {
+    texture = asset_manager_get_explosion_middle_texture(
+        explosion_tile->entity.direction,
+        explosion_tile->explosion_animation.current_frame);
+  } else {
+    texture = asset_manager_get_explosion_final_texture(
+        explosion_tile->entity.direction,
+        explosion_tile->explosion_animation.current_frame);
   }
+
+  DrawTexture(*texture, explosion_tile->entity.position.x,
+              explosion_tile->entity.position.y, WHITE);
 }
 
 ExplosionTile *explosion_tile_at_grid(GridPosition grid) {

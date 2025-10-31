@@ -1,5 +1,6 @@
 #include "asset_manager.h"
 #include "core/common.h"
+#include "entities/entity.h"
 #include <raylib.h>
 #include <stdlib.h>
 
@@ -36,18 +37,83 @@ void asset_manager_load_explosion_center_textures() {
     UnloadImage(img);
   }
 }
-void asset_manager_load_explosion_middle_textures() {}
-void asset_manager_load_explosion_final_textures() {}
+void asset_manager_load_explosion_middle_textures() {
+  const char *paths[2][5] = {
+      {"assets/sprites/explosion/EXPLOSION_MIDDLE_VERTICAL_1.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_VERTICAL_2.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_VERTICAL_3.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_VERTICAL_4.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_VERTICAL_5.png"},
+      {"assets/sprites/explosion/EXPLOSION_MIDDLE_HORIZONTAL_1.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_HORIZONTAL_2.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_HORIZONTAL_3.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_HORIZONTAL_4.png",
+       "assets/sprites/explosion/EXPLOSION_MIDDLE_HORIZONTAL_5.png"},
+  };
+
+  for (int dir = 0; dir < 2; dir++) {
+    for (int frame = 0; frame < 5; frame++) {
+      Image img = LoadImage(paths[dir][frame]);
+      ImageResizeNN(&img, TILE_SIZE, TILE_SIZE);
+      asset_manager.explosion_middle[dir][frame] = LoadTextureFromImage(img);
+      SetTextureFilter(asset_manager.explosion_middle[dir][frame],
+                       TEXTURE_FILTER_POINT);
+      UnloadImage(img);
+    }
+  }
+}
+
+void asset_manager_load_explosion_final_textures() {
+  const char *paths[4][5] = {
+      {"assets/sprites/explosion/EXPLOSION_TOP_1.png",
+       "assets/sprites/explosion/EXPLOSION_TOP_2.png",
+       "assets/sprites/explosion/EXPLOSION_TOP_3.png",
+       "assets/sprites/explosion/EXPLOSION_TOP_4.png",
+       "assets/sprites/explosion/EXPLOSION_TOP_5.png"},
+      {"assets/sprites/explosion/EXPLOSION_BOTTOM_1.png",
+       "assets/sprites/explosion/EXPLOSION_BOTTOM_2.png",
+       "assets/sprites/explosion/EXPLOSION_BOTTOM_3.png",
+       "assets/sprites/explosion/EXPLOSION_BOTTOM_4.png",
+       "assets/sprites/explosion/EXPLOSION_BOTTOM_5.png"},
+      {"assets/sprites/explosion/EXPLOSION_LEFT_1.png",
+       "assets/sprites/explosion/EXPLOSION_LEFT_2.png",
+       "assets/sprites/explosion/EXPLOSION_LEFT_3.png",
+       "assets/sprites/explosion/EXPLOSION_LEFT_4.png",
+       "assets/sprites/explosion/EXPLOSION_LEFT_5.png"},
+      {"assets/sprites/explosion/EXPLOSION_RIGHT_1.png",
+       "assets/sprites/explosion/EXPLOSION_RIGHT_2.png",
+       "assets/sprites/explosion/EXPLOSION_RIGHT_3.png",
+       "assets/sprites/explosion/EXPLOSION_RIGHT_4.png",
+       "assets/sprites/explosion/EXPLOSION_RIGHT_5.png"},
+
+  };
+
+  for (int dir = 0; dir < 4; dir++) {
+    for (int frame = 0; frame < 5; frame++) {
+      Image img = LoadImage(paths[dir][frame]);
+      ImageResizeNN(&img, TILE_SIZE, TILE_SIZE);
+      asset_manager.explosion_final[dir][frame] = LoadTextureFromImage(img);
+      SetTextureFilter(asset_manager.explosion_final[dir][frame],
+                       TEXTURE_FILTER_POINT);
+      UnloadImage(img);
+    }
+  }
+}
 
 Texture2D *asset_manager_get_explosion_center_texture(int frame) {
   return &asset_manager.explosion_center[frame];
 }
 
 Texture2D *asset_manager_get_explosion_middle_texture(EntityDirection direction,
-                                                      int frame) {}
+                                                      int frame) {
+  return &asset_manager.explosion_middle
+              [direction == DIR_UP || direction == DIR_DOWN ? 0 : 1][frame];
+}
 
 Texture2D *asset_manager_get_explosion_final_texture(EntityDirection direction,
-                                                     int frame) {}
+                                                     int frame) {
+  return &asset_manager.explosion_final[direction][frame];
+}
 
 void asset_manager_load_power_ups_textures() {
   const char *paths[3] = {

@@ -78,17 +78,24 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
     }
   }
 
-  explosion_tile_create(map_grid_to_world(affected[0]), DIR_DOWN, true);
+  explosion_tile_create(map_grid_to_world(affected[0]), DIR_DOWN,
+                        EXPLOSION_CENTER);
 
   for (int i = 1; i < affected_length; i++) {
     if (affected[i].row == center.row) {
       explosion_tile_create(map_grid_to_world(affected[i]),
                             affected[i].col > center.col ? DIR_RIGHT : DIR_LEFT,
-                            false);
+                            affected[i].col == center.col + radius ||
+                                    affected[i].col == center.col - radius
+                                ? EXPLOSION_FINAL
+                                : EXPLOSION_MIDDLE);
     } else {
       explosion_tile_create(map_grid_to_world(affected[i]),
-                            affected[i].row > center.row ? DIR_UP : DIR_DOWN,
-                            false);
+                            affected[i].row < center.row ? DIR_UP : DIR_DOWN,
+                            affected[i].row == center.row + radius ||
+                                    affected[i].row == center.row - radius
+                                ? EXPLOSION_FINAL
+                                : EXPLOSION_MIDDLE);
     }
   }
 

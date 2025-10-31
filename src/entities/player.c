@@ -114,7 +114,7 @@ void player_update(Entity *self) {
 
   if (player->input.place_bomb && rules_can_place_bomb(player))
     bomb_create(player->id, map_grid_to_world(player_world_to_grid(player)),
-                3.0f);
+                DEFAULT_BOMB_RADIUS);
 
   Vector2 projected = player->entity.position;
 

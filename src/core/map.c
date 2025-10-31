@@ -14,7 +14,7 @@ void map_init(Map *map, MapType map_type) {
         map->grid[i][j] = TILE_WALL;
       } else
         map->grid[i][j] =
-            (i != 1 || j != 1) && rand() % 100 < 25 ? TILE_BRICK : TILE_EMPTY;
+            (i != 1 || j != 1) && rand() % 100 < 0 ? TILE_BRICK : TILE_EMPTY;
     }
   }
 
@@ -45,7 +45,6 @@ GridPosition map_world_to_grid(Vector2 position) {
   return (GridPosition){.col = (position.x - MAP_X_OFFSET) / TILE_SIZE,
                         .row = (position.y - MAP_Y_OFFSET) / TILE_SIZE};
 }
-
 
 Vector2 map_grid_to_world(GridPosition position) {
   return (Vector2){.x = MAP_X_OFFSET + position.col * TILE_SIZE,
