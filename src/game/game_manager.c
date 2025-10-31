@@ -42,25 +42,17 @@ void game_manager_start_stage() {
 }
 
 void game_manager_on_bomb_exploded(GridPosition center, int radius) {
-  GridPosition affected_center = center;
-
-  GridPosition affected_up[4 * GRID_WIDTH] = {0};
-  GridPosition affected_down[4 * GRID_WIDTH] = {0};
-  GridPosition affected_left[4 * GRID_WIDTH] = {0};
-  GridPosition affected_right[4 * GRID_WIDTH] = {0};
-
+  GridPosition affected[4 * GRID_WIDTH] = {0};
   GridPosition destroyed[4 * GRID_WIDTH] = {0};
 
-  int affected_length_up = 0;
-  int affected_length_down = 0;
-  int affected_length_left = 0;
-  int affected_length_right = 0;
-
+  int affected_length = 0;
   int destroyed_length = 0;
 
   // 0 = up, 1 = down, 2 = left, 3 = right
   int row_direction[4] = {-1, 1, 0, 0};
   int col_direction[4] = {0, 0, -1, 1};
+
+  affected[affected_length++] = center; // idx = 0 center
 
   for (int i = 0; i < 4; i++) {
     for (int j = 1; j <= radius; j++) {
@@ -72,14 +64,7 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
       TileType tile = map_get_tile(&game_manager.map, new_grid_position);
 
       if (tile == TILE_EMPTY) {
-        if (i == 0)
-          affected_up[affected_length_up++] = new_grid_position;
-        else if (i == 1)
-          affected_down[affected_length_down++] = new_grid_position;
-        else if (i == 2)
-          affected_left[affected_length_left++] = new_grid_position;
-        else if (i == 3)
-          affected_right[affected_length_right++] = new_grid_position;
+        affected[affected_length++] = new_grid_position;
       } else if (tile == TILE_BRICK) {
         destroyed[destroyed_length++] = new_grid_position;
         break;
@@ -89,23 +74,22 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
     }
   }
 
+  explosion_tile_create(map_grid_to_world(affected[0]), DIR_DOWN, true);
+
+  for (int i = 1; i < affected_length; i++) {
+    if (affected[i].row == center.row) {
+      explosion_tile_create(map_grid_to_world(affected[i]),
+                            affected[i].col > center.col ? DIR_RIGHT : DIR_LEFT,
+                            false);
+    } else {
+      explosion_tile_create(map_grid_to_world(affected[i]),
+                            affected[i].row > center.row ? DIR_UP : DIR_DOWN,
+                            false);
+    }
+  }
+
   for (int i = 0; i < destroyed_length; i++) {
     map_set_tile(&game_manager.map, destroyed[i], TILE_EMPTY);
     map_renderer_animate_brick_destruction(destroyed[i]);
   }
-
-  // empty animetion
-  explosion_tile_create(map_grid_to_world(center));
-
-  for (int i = 0; i < affected_length_up; i++)
-    explosion_tile_create(map_grid_to_world(affected_up[i]));
-
-  for (int i = 0; i < affected_length_down; i++)
-    explosion_tile_create(map_grid_to_world(affected_down[i]));
-
-  for (int i = 0; i < affected_length_left; i++)
-    explosion_tile_create(map_grid_to_world(affected_left[i]));
-
-  for (int i = 0; i < affected_length_right; i++)
-    explosion_tile_create(map_grid_to_world(affected_right[i]));
 }

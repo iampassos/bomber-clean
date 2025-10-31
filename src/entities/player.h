@@ -6,7 +6,6 @@
 #include "entity.h"
 #include "input/input_manager.h"
 
-typedef enum { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT } Direction;
 
 typedef enum { STATE_IDLE, STATE_RUNNING, STATE_DEAD } PlayerState;
 
@@ -14,7 +13,6 @@ typedef struct {
   Entity entity;
   int id;
   bool alive;
-  Direction direction;
   PlayerState state;
   int bomb_capacity;
   float speed;

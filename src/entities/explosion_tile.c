@@ -3,10 +3,11 @@
 #include "entities_manager.h"
 #include <stdlib.h>
 
-ExplosionTile *explosion_tile_create(Vector2 position) {
+ExplosionTile *explosion_tile_create(Vector2 position, EntityDirection direction, bool center) {
   Entity entity;
   entity.type = ENTITY_EXPLOSION;
   entity.layer = LAYER_BOMBS;
+  entity.direction = direction;
   entity.position = position;
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
@@ -16,6 +17,7 @@ ExplosionTile *explosion_tile_create(Vector2 position) {
 
   ExplosionTile *explosion_tile = malloc(sizeof(ExplosionTile));
   explosion_tile->entity = entity;
+  explosion_tile->center = center;
   explosion_tile->lifetime = 1.0f;
   explosion_tile->spawn_time = GetTime();
 

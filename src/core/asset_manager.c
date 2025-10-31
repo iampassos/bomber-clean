@@ -34,7 +34,7 @@ void asset_manager_load_player_textures() {
   }
 }
 
-Texture2D *asset_manager_get_player_texture(Direction direction, int frame) {
+Texture2D *asset_manager_get_player_texture(EntityDirection direction, int frame) {
   return &asset_manager.player[direction][frame];
 }
 

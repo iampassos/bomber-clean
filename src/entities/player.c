@@ -27,7 +27,7 @@ GridPosition player_world_to_grid(Player *player) {
   Vector2 feet_position =
       (Vector2){player->entity.position.x + player->entity.width / 2.0f,
                 player->entity.position.y +
-                    (player->direction == DIR_UP
+                    (player->entity.direction == DIR_UP
                          ? player->entity.height * 1.1f
                          : player->entity.height * 0.60f + HEIGHT_TOLERANCE)};
   GridPosition pos = map_world_to_grid(feet_position);
@@ -38,6 +38,7 @@ Player *player_create(int id, Vector2 position) {
   Entity entity;
   entity.type = ENTITY_PLAYER;
   entity.layer = LAYER_PLAYERS;
+  entity.direction = DIR_DOWN;
   entity.position = position;
   entity.width = TILE_SIZE - 10;
   entity.height = TILE_SIZE - 10;
@@ -50,7 +51,6 @@ Player *player_create(int id, Vector2 position) {
   player->id = id;
   player->alive = true;
   player->bomb_capacity = 3;
-  player->direction = DIR_DOWN;
   player->speed = 3.0f;
   player->input = (PlayerInput){{0}, false};
 
@@ -116,10 +116,10 @@ void player_update(Entity *self) {
   float dy = new_pos.y - player->entity.position.y;
 
   if (fabs(dx) > fabs(dy)) {
-    player->direction = dx > 0 ? DIR_RIGHT : DIR_LEFT;
+    player->entity.direction = dx > 0 ? DIR_RIGHT : DIR_LEFT;
     player->state = STATE_RUNNING;
   } else if (fabs(dy) > 0.0f) {
-    player->direction = dy > 0 ? DIR_DOWN : DIR_UP;
+    player->entity.direction = dy > 0 ? DIR_DOWN : DIR_UP;
     player->state = STATE_RUNNING;
   } else if (fabs(dy) == 0.0f && fabs(dx) == 0.0f) {
     player->state = STATE_IDLE;
@@ -140,7 +140,7 @@ void player_draw(Entity *self) {
   Player *player = (Player *)self;
 
   Texture2D *texture = asset_manager_get_player_texture(
-      player->direction, animation_get_frame(&player->walk_animation));
+      player->entity.direction, animation_get_frame(&player->walk_animation));
 
   DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
               WHITE);
@@ -169,9 +169,9 @@ void player_debug(Entity *self) {
            "standing-on: %s",
            player->id, player->entity.position.x, player->entity.position.y,
            pos.col, pos.row, player->entity.width, player->entity.height,
-           player->direction == DIR_UP     ? "UP"
-           : player->direction == DIR_DOWN ? "DOWN"
-           : player->direction == DIR_LEFT ? "LEFT"
+           player->entity.direction == DIR_UP     ? "UP"
+           : player->entity.direction == DIR_DOWN ? "DOWN"
+           : player->entity.direction == DIR_LEFT ? "LEFT"
                                            : "RIGHT",
            player->state == STATE_IDLE      ? "IDLE"
            : player->state == STATE_RUNNING ? "RUNNING"
