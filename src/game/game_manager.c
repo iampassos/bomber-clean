@@ -5,6 +5,7 @@
 #include "entities/explosion_tile.h"
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
+#include "rules.h"
 #include <raylib.h>
 
 GameManager game_manager = {0};
@@ -91,5 +92,16 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
   for (int i = 0; i < destroyed_length; i++) {
     map_set_tile(&game_manager.map, destroyed[i], TILE_EMPTY);
     map_renderer_animate_brick_destruction(destroyed[i]);
+  }
+
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity->type != ENTITY_EXPLOSION_TILE) {
+      if (entity->type == ENTITY_PLAYER &&
+          rules_can_kill_player((Player *)entity)) {
+            entity->position = player_grid_to_world((Player *) entity, (GridPosition) {1, 1});
+      }
+    }
   }
 }

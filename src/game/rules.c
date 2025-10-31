@@ -1,6 +1,7 @@
 #include "rules.h"
 #include "core/map.h"
 #include "entities/entities_manager.h"
+#include "entities/explosion_tile.h"
 #include "entities/player.h"
 #include "game/game_manager.h"
 #include <stdlib.h>
@@ -21,4 +22,13 @@ bool rules_can_place_bomb(Player *player) {
     return false;
 
   return true;
+}
+
+bool rules_can_kill_player(Player *player) {
+  GridPosition pos = player_world_to_grid(player);
+
+  if (explosion_tile_at_grid(pos) != NULL)
+    return true;
+
+  return false;
 }

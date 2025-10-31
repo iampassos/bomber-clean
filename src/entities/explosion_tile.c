@@ -3,9 +3,10 @@
 #include "entities_manager.h"
 #include <stdlib.h>
 
-ExplosionTile *explosion_tile_create(Vector2 position, EntityDirection direction, bool center) {
+ExplosionTile *explosion_tile_create(Vector2 position,
+                                     EntityDirection direction, bool center) {
   Entity entity;
-  entity.type = ENTITY_EXPLOSION;
+  entity.type = ENTITY_EXPLOSION_TILE;
   entity.layer = LAYER_BOMBS;
   entity.direction = direction;
   entity.position = position;
@@ -39,4 +40,23 @@ void explosion_tile_draw(Entity *self) {
   // DrawTexture(*asset_manager_get_explosion_texture(0),
   //             explosion_tile->entity.position.x,
   //             explosion_tile->entity.position.y, WHITE);
+}
+
+ExplosionTile *explosion_tile_at_grid(GridPosition grid) {
+  for (int i = 0; i < MAX_ENTITIES; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity == NULL)
+      break;
+
+    ExplosionTile *explosion_tile = (ExplosionTile *)entity;
+
+    if (entity->type == ENTITY_EXPLOSION_TILE) {
+      GridPosition pos = map_world_to_grid(explosion_tile->entity.position);
+      if (pos.col == grid.col && pos.row == grid.row)
+        return explosion_tile;
+    }
+  }
+
+  return NULL;
 }
