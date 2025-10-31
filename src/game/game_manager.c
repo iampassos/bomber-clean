@@ -3,12 +3,12 @@
 #include "core/map.h"
 #include "entities/entities_manager.h"
 #include "entities/explosion_tile.h"
-#include "entities/power_up.h"
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
 #include "rules.h"
 #include <raylib.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 
 GameManager game_manager = {0};
@@ -116,4 +116,23 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
     srand(time(NULL));
     power_up_create(map_grid_to_world(center), rand() % 3);
   }
+}
+
+void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
+  if (!rules_player_can_consume_power_up(player, power_up))
+    return;
+
+  switch (power_up->power_up_type) {
+  case POWER_UP_LIFE:
+    player->lives++;
+    break;
+  case POWER_UP_SPEED:
+    player->speed = fmin(MAX_PLAYER_SPEED, player->speed + POWER_UP_SPEED_INCREASE);
+    break;
+  case POWER_UP_BOMB:
+    player->bomb_capacity++;
+    break;
+  }
+
+  entities_manager_remove((Entity *)power_up);
 }

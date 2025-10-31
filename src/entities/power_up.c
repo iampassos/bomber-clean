@@ -1,6 +1,8 @@
 #include "power_up.h"
 #include "core/asset_manager.h"
 #include "entities_manager.h"
+#include "game/game_manager.h"
+#include "player.h"
 #include <raylib.h>
 #include <stdlib.h>
 
@@ -24,7 +26,16 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   return power_up;
 }
 
-void power_up_update(Entity *self) { PowerUp *power_up = (PowerUp *)self; }
+void power_up_update(Entity *self) {
+  PowerUp *power_up = (PowerUp *)self;
+
+  Player *player = player_on_grid(map_world_to_grid(power_up->entity.position));
+
+  if (player) {
+    game_manager_on_power_up_press(player, power_up);
+    return;
+  }
+}
 
 void power_up_draw(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;

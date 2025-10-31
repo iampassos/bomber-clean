@@ -17,8 +17,8 @@
 
 #define HEIGHT_TOLERANCE 28.5f
 
-Vector2 player_grid_to_world(Player *player, GridPosition pos) {
-  Vector2 center = map_grid_to_world_center(pos);
+Vector2 player_grid_to_world(Player *player, GridPosition grid) {
+  Vector2 center = map_grid_to_world_center(grid);
   return (Vector2){center.x - player->entity.width / 2,
                    center.y - player->entity.height / 2 - HEIGHT_TOLERANCE};
 }
@@ -52,7 +52,7 @@ Player *player_create(int id, Vector2 position) {
   player->alive = true;
   player->lives = 3;
   player->bomb_capacity = 3;
-  player->speed = 3.0f;
+  player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
 
   animation_init(&player->death_animation, 7, 0.3f, 0);
@@ -251,4 +251,17 @@ int player_get_all_bombs(Player *player, Entity **out) {
   }
 
   return count;
+}
+
+Player *player_on_grid(GridPosition grid) {
+  for (int i = 0; i < game_manager.player_count; i++) {
+    Player *player = (Player *)game_manager.players[i];
+
+    GridPosition grid2 = player_world_to_grid(player);
+
+    if (map_is_same_grid(grid, grid2))
+      return player;
+  }
+
+  return NULL;
 }
