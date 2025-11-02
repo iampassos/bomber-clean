@@ -15,6 +15,7 @@ typedef enum {
 
 typedef struct {
   Entity entity;
+  bool active;
   PowerUpType power_up_type;
   Animation tick_animation;
 } PowerUp;

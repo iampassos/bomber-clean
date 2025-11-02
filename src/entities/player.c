@@ -122,7 +122,10 @@ void player_update(Entity *self) {
     animation_stop(&player->invencible_animation);
     player->invencible = false;
   } else {
-    animation_update(&player->invencible_animation);
+    if (animation_is_playing(&player->invencible_animation))
+      animation_update(&player->invencible_animation);
+    else
+      animation_play(&player->invencible_animation);
   }
 
   if (player->input.place_bomb && rules_can_place_bomb(player))

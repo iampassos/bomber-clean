@@ -31,6 +31,9 @@ bool rules_can_kill_player(Player *player) {
   if (explosion_tile_at_grid(pos) != NULL)
     return true;
 
+  if (!player->invencible)
+    return true;
+
   return false;
 }
 

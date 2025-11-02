@@ -11,12 +11,15 @@
 // Aleatoriedade para windows ou mac/linux
 
 #if defined(_WIN32) || defined(_WIN64)
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <process.h>
 #include <windows.h>
 #else
 #include <sys/time.h>
 #include <unistd.h>
 #endif
+#include <stdlib.h>
 
 void seed_rng() {
 #if defined(_WIN32) || defined(_WIN64)

@@ -22,6 +22,7 @@ void game_manager_update(float dt);
 
 void game_manager_start_stage();
 
+void game_manager_on_entity_exploded(Entity *entity);
 void game_manager_on_bomb_exploded(GridPosition center, int radius);
 void game_manager_on_power_up_press(Player *player, PowerUp *power_up);
 

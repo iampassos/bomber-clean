@@ -3,6 +3,7 @@
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/entities_manager.h"
+#include "entities/entity.h"
 #include "entities/explosion_tile.h"
 #include "entities/power_up.h"
 #include "input/input_manager.h"
@@ -40,11 +41,28 @@ void game_manager_update(float dt) {
 }
 
 void game_manager_start_stage() {
-  map_init(&game_manager.map, MAP_BATTLE_STAGE_1);
+  map_init(&game_manager.map, MAP_STAGE_1);
   asset_manager_load_map_textures(game_manager.map.stage);
   game_manager.players[game_manager.player_count] =
       player_create(0, (Vector2){0, 0});
   game_manager.player_count++;
+}
+
+void game_manager_on_entity_exploded(Entity *entity) {
+  switch (entity->type) {
+  case ENTITY_PLAYER:
+    Player *player = (Player *)entity;
+
+    if (rules_can_kill_player(player))
+      player->alive = false;
+    break;
+  case ENTITY_POWER_UP:
+    PowerUp *power_up = (PowerUp *)entity;
+    power_up->active = false;
+    break;
+  default:
+    break;
+  }
 }
 
 void game_manager_on_bomb_exploded(GridPosition center, int radius) {
@@ -108,14 +126,7 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
 
   for (int i = 0; i < entities_manager.count; i++) {
     Entity *entity = entities_manager.entries[i];
-
-    if (entity->type != ENTITY_EXPLOSION_TILE) {
-      if (entity->type == ENTITY_PLAYER &&
-          rules_can_kill_player((Player *)entity)) {
-        Player *player = (Player *)entity;
-        player->alive = false;
-      }
-    }
+    game_manager_on_entity_exploded(entity);
   }
 
   if (rules_can_spawn_power_up()) {
@@ -130,30 +141,29 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
 }
 
 void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
-  if (!rules_player_can_consume_power_up(player, power_up))
-    return;
-
-  switch (power_up->power_up_type) {
-  case POWER_UP_LIFE:
-    player->lives++;
-    break;
-  case POWER_UP_SPEED:
-    player->speed =
-        fmin(MAX_PLAYER_SPEED, player->speed + POWER_UP_SPEED_INCREASE);
-    break;
-  case POWER_UP_BOMB:
-    player->bomb_capacity++;
-    break;
-  case POWER_UP_RADIUS:
-    player->bomb_radius++;
-    break;
-  case POWER_UP_MAXIMUM_RADIUS:
-    player->bomb_radius = MAX_BOMB_RADIUS;
-    break;
-  case POWER_UP_INVENCIBLE:
-    player->invencible = true;
-    player->invencibility_start = GetTime();
-    break;
+  if (rules_player_can_consume_power_up(player, power_up)) {
+    switch (power_up->power_up_type) {
+    case POWER_UP_LIFE:
+      player->lives++;
+      break;
+    case POWER_UP_SPEED:
+      player->speed =
+          fmin(MAX_PLAYER_SPEED, player->speed + POWER_UP_SPEED_INCREASE);
+      break;
+    case POWER_UP_BOMB:
+      player->bomb_capacity++;
+      break;
+    case POWER_UP_RADIUS:
+      player->bomb_radius++;
+      break;
+    case POWER_UP_MAXIMUM_RADIUS:
+      player->bomb_radius = MAX_BOMB_RADIUS;
+      break;
+    case POWER_UP_INVENCIBLE:
+      player->invencible = true;
+      player->invencibility_start = GetTime();
+      break;
+    }
   }
 
   entities_manager_remove((Entity *)power_up);

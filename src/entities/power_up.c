@@ -23,6 +23,7 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   entity.debug = power_up_debug;
 
   PowerUp *power_up = malloc(sizeof(PowerUp));
+  power_up->active = true;
   power_up->entity = entity;
   power_up->power_up_type = type;
 
@@ -36,6 +37,10 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
 
 void power_up_update(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;
+
+  if (!power_up->active) {
+    return;
+  }
 
   Player *player = player_on_grid(map_world_to_grid(power_up->entity.position));
 
