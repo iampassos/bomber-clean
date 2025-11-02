@@ -22,8 +22,8 @@ void map_renderer() {
   case MAP_BATTLE_STAGE_1:
     map_renderer_battle_stage_one_tiles();
     break;
-  case MAP_STAGE_1:
-    map_renderer_stage_one_tiles();
+  case MAP_PEACE_TOWN:
+    map_renderer_peace_town_tiles();
     break;
   }
 
@@ -104,7 +104,7 @@ void map_renderer_battle_stage_one_tiles() {
   }
 }
 
-void map_renderer_stage_one_tiles() {
+void map_renderer_peace_town_tiles() {
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
       Texture2D *textures = asset_manager_get_map_tiles_textures();

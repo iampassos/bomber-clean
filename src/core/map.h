@@ -4,7 +4,7 @@
 #include "common.h"
 #include <raylib.h>
 
-typedef enum { MAP_BATTLE_STAGE_1, MAP_STAGE_1 } MapType;
+typedef enum { MAP_BATTLE_STAGE_1, MAP_PEACE_TOWN } MapType;
 
 typedef enum {
   TILE_EMPTY,

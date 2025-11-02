@@ -41,7 +41,7 @@ void game_manager_update(float dt) {
 }
 
 void game_manager_start_stage() {
-  map_init(&game_manager.map, MAP_STAGE_1);
+  map_init(&game_manager.map, MAP_PEACE_TOWN);
   asset_manager_load_map_textures(game_manager.map.stage);
   game_manager.players[game_manager.player_count] =
       player_create(0, (Vector2){0, 0});

@@ -1,5 +1,6 @@
 #include "asset_manager.h"
 #include "core/common.h"
+#include "core/map.h"
 #include "entities/entity.h"
 #include <raylib.h>
 #include <stdio.h>
@@ -150,8 +151,8 @@ void asset_manager_load_map_textures(MapType map_type) {
     size = sizeof(paths) / sizeof(paths[0]);
     break;
   }
-  case MAP_STAGE_1: {
-    strcpy(map_path, "assets/sprites/maps/stage_one/");
+  case MAP_PEACE_TOWN: {
+    strcpy(map_path, "assets/sprites/maps/peace_town/");
     static const char *paths[] = {
         "MAP.png",
         "BOMB1.png",
