@@ -52,13 +52,13 @@ void game_manager_on_entity_exploded(Entity *entity) {
   switch (entity->type) {
   case ENTITY_PLAYER:
     Player *player = (Player *)entity;
-
     if (rules_can_kill_player(player))
       player->alive = false;
     break;
   case ENTITY_POWER_UP:
     PowerUp *power_up = (PowerUp *)entity;
-    power_up->active = false;
+    if (rules_can_kill_power_up(power_up))
+      power_up->active = false;
     break;
   default:
     break;
@@ -128,14 +128,15 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
     Entity *entity = entities_manager.entries[i];
     game_manager_on_entity_exploded(entity);
   }
+}
 
+void game_manager_on_explosion_end(Vector2 position) {
   if (rules_can_spawn_power_up()) {
     int spawn = rand() % 100 < POWER_UP_PROBABILITY;
 
     if (spawn) {
       float probabilities[6] = {2.5f, 27.5f, 27.5f, 27.5f, 1.0f, 14};
-      power_up_create(map_grid_to_world(center),
-                      weighted_average(6, probabilities));
+      power_up_create(position, weighted_average(6, probabilities));
     }
   }
 }

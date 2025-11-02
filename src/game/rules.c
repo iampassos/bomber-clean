@@ -4,6 +4,7 @@
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "entities/explosion_tile.h"
+#include "entities/power_up.h"
 #include "game/game_manager.h"
 #include <stdlib.h>
 
@@ -28,10 +29,16 @@ bool rules_can_place_bomb(Player *player) {
 bool rules_can_kill_player(Player *player) {
   GridPosition pos = player_world_to_grid(player);
 
-  if (explosion_tile_at_grid(pos) != NULL)
+  if (explosion_tile_at_grid(pos) != NULL && !player->invencible)
     return true;
 
-  if (!player->invencible)
+  return false;
+}
+
+bool rules_can_kill_power_up(PowerUp *power_up) {
+  GridPosition pos = map_world_to_grid(power_up->entity.position);
+
+  if (explosion_tile_at_grid(pos) != NULL)
     return true;
 
   return false;

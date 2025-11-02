@@ -1,7 +1,9 @@
 #include "explosion_tile.h"
 #include "core/animation.h"
 #include "core/asset_manager.h"
+#include "entities/entity.h"
 #include "entities_manager.h"
+#include "game/game_manager.h"
 #include <stdlib.h>
 
 ExplosionTile *explosion_tile_create(Vector2 position,
@@ -40,8 +42,22 @@ void explosion_tile_update(Entity *self) {
   animation_update(&explosion_tile->explosion_animation);
 
   if (GetTime() - explosion_tile->spawn_time >= explosion_tile->lifetime) {
+    Vector2 pos = explosion_tile->entity.position;
     entities_manager_remove(self);
+
+    if (explosion_tile->tile_type == EXPLOSION_CENTER)
+      game_manager_on_explosion_end(pos);
+
     return;
+  }
+
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity->type == ENTITY_EXPLOSION_TILE)
+      continue;
+
+    game_manager_on_entity_exploded(entity);
   }
 }
 

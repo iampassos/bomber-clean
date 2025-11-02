@@ -39,6 +39,8 @@ void power_up_update(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;
 
   if (!power_up->active) {
+    // depois vai ter uma animacao para a morte
+    entities_manager_remove(self);
     return;
   }
 
