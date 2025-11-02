@@ -119,11 +119,10 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
   }
 
   if (rules_can_spawn_power_up()) {
-    srand(time(NULL));
     int spawn = rand() % 100 < POWER_UP_PROBABILITY;
 
     if (spawn) {
-      float probabilities[6] = {5, 25, 27.5f, 25, 2.5f, 15};
+      float probabilities[6] = {2.5f, 27.5f, 27.5f, 27.5f, 1.0f, 14};
       power_up_create(map_grid_to_world(center),
                       weighted_average(6, probabilities));
     }
@@ -153,6 +152,7 @@ void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
     break;
   case POWER_UP_INVENCIBLE:
     player->invencible = true;
+    player->invencibility_start = GetTime();
     break;
   }
 

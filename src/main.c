@@ -5,8 +5,34 @@
 #include "input/input_manager.h"
 #include "render/renderer.h"
 #include <raylib.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Aleatoriedade para windows ou mac/linux
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <process.h>
+#include <windows.h>
+#else
+#include <sys/time.h>
+#include <unistd.h>
+#endif
+
+void seed_rng() {
+#if defined(_WIN32) || defined(_WIN64)
+  LARGE_INTEGER li;
+  QueryPerformanceCounter(&li);
+  srand((unsigned int)(li.QuadPart ^ _getpid()));
+#else
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  srand(tv.tv_usec ^ tv.tv_sec ^ getpid());
+#endif
+}
 
 int main(void) {
+  seed_rng();
+
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bomber Clean");
 
   entities_manager_init();
