@@ -1,6 +1,8 @@
 #include "rules.h"
+#include "core/common.h"
 #include "core/map.h"
 #include "entities/entities_manager.h"
+#include "entities/entity.h"
 #include "entities/explosion_tile.h"
 #include "game/game_manager.h"
 #include <stdlib.h>
@@ -32,6 +34,14 @@ bool rules_can_kill_player(Player *player) {
   return false;
 }
 
+bool rules_can_spawn_power_up() {
+  if (entities_manager_get_all_from_type(
+          ENTITY_POWER_UP, NULL, POWER_UP_MAP_LIMIT) >= POWER_UP_MAP_LIMIT)
+    return false;
+
+  return true;
+}
+
 bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up) {
   switch (power_up->power_up_type) {
   case POWER_UP_LIFE:
@@ -39,12 +49,22 @@ bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up) {
       return false;
     break;
   case POWER_UP_SPEED:
-    if (player->speed + POWER_UP_SPEED_INCREASE > MAX_PLAYER_SPEED + POWER_UP_SPEED_INCREASE / 2.0f)
+    if (player->speed + POWER_UP_SPEED_INCREASE >
+        MAX_PLAYER_SPEED + POWER_UP_SPEED_INCREASE / 2.0f)
       return false;
     break;
   case POWER_UP_BOMB:
     if (player->bomb_capacity + 1 > MAX_PLAYER_BOMBS)
       return false;
+    break;
+  case POWER_UP_RADIUS:
+    if (player->bomb_radius + 1 > MAX_BOMB_RADIUS)
+      return false;
+    ;
+    break;
+  case POWER_UP_MAXIMUM_RADIUS:
+    break;
+  case POWER_UP_INVENCIBLE:
     break;
   }
 

@@ -42,6 +42,7 @@ Player *player_create(int id, Vector2 position) {
   entity.position = position;
   entity.width = TILE_SIZE - 10;
   entity.height = TILE_SIZE - 10;
+  entity.spawn_time = GetTime();
   entity.update = player_update;
   entity.draw = player_draw;
   entity.debug = player_debug;
@@ -50,14 +51,19 @@ Player *player_create(int id, Vector2 position) {
   player->entity = entity;
   player->id = id;
   player->alive = true;
-  player->lives = 3;
-  player->bomb_capacity = 3;
+  player->invencible = true;
+  player->invencibility_start = GetTime();
+  player->lives = PLAYER_DEFAULT_LIVES;
+  player->bomb_capacity = DEFAULT_BOMB_RADIUS;
+  player->bomb_radius = DEFAULT_BOMB_RADIUS;
   player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
 
   animation_init(&player->death_animation, 7, 0.3f, false, false);
   animation_init(&player->walk_animation, 3, 0.25f, true, false);
   animation_play(&player->walk_animation);
+  animation_init(&player->invencible_animation, 2, 0.1f, true, false);
+  animation_play(&player->invencible_animation);
 
   GridPosition pos = map_world_to_grid(position);
   pos.col = fmax(1, fmin(pos.col, GRID_WIDTH - 2));
@@ -112,9 +118,16 @@ void player_update(Entity *self) {
     return;
   }
 
+  if (GetTime() - player->invencibility_start >= PLAYER_INVENCIBILITY_TIME) {
+    animation_stop(&player->invencible_animation);
+    player->invencible = false;
+  } else {
+    animation_update(&player->invencible_animation);
+  }
+
   if (player->input.place_bomb && rules_can_place_bomb(player))
     bomb_create(player->id, map_grid_to_world(player_world_to_grid(player)),
-                DEFAULT_BOMB_RADIUS);
+                player->bomb_radius);
 
   Vector2 projected = player->entity.position;
 
@@ -174,7 +187,9 @@ void player_draw(Entity *self) {
         player->entity.direction, animation_get_frame(&player->walk_animation));
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
-                WHITE);
+                animation_get_frame(&player->invencible_animation) == 0
+                    ? WHITE
+                    : BLANK);
   }
 }
 
@@ -195,7 +210,9 @@ void player_debug(Entity *self) {
            "state: %s\n"
            "bomb-capacity: %d\n"
            "bombs: %d\n"
+           "bomb-radius: %d\n"
            "speed: %.2f\n"
+           "invencible: %s\n"
            "alive: %s\n"
            "lives: %d\n"
            "animation-step: %d\n"
@@ -210,8 +227,9 @@ void player_debug(Entity *self) {
            : player->state == STATE_RUNNING ? "RUNNING"
                                             : "DEAD",
            player->bomb_capacity, player_get_all_bombs(player, NULL),
-           player->speed, player->alive ? "yes" : "no", player->lives,
-           player->walk_animation.current_frame,
+           player->bomb_radius, player->speed,
+           player->invencible ? "yes" : "no", player->alive ? "yes" : "no",
+           player->lives, player->walk_animation.current_frame,
            tile == TILE_EMPTY   ? "EMPTY"
            : tile == TILE_WALL  ? "WALL"
            : tile == TILE_BRICK ? "BRICK"

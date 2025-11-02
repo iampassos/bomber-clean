@@ -16,6 +16,7 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   entity.position = position;
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
+  entity.spawn_time = GetTime();
   entity.update = bomb_update;
   entity.draw = bomb_draw;
   entity.debug = NULL;

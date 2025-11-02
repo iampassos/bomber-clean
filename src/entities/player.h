@@ -12,13 +12,17 @@ typedef struct {
   Entity entity;
   int id;
   bool alive;
+  bool invencible;
+  float invencibility_start;
   int lives;
   PlayerState state;
   int bomb_capacity;
+  int bomb_radius;
   float speed;
   PlayerInput input;
   Animation walk_animation;
   Animation death_animation;
+  Animation invencible_animation;
 } Player;
 
 Player *player_create(int id, Vector2 position);

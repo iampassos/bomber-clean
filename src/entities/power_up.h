@@ -1,19 +1,21 @@
 #ifndef POWER_UP_H
 #define POWER_UP_H
 
-#include "entity.h"
 #include "core/animation.h"
+#include "entity.h"
 
 typedef enum {
   POWER_UP_LIFE,
   POWER_UP_SPEED,
   POWER_UP_BOMB,
+  POWER_UP_RADIUS,
+  POWER_UP_MAXIMUM_RADIUS,
+  POWER_UP_INVENCIBLE,
 } PowerUpType;
 
 typedef struct {
   Entity entity;
   PowerUpType power_up_type;
-  float spawn_time;
   Animation tick_animation;
 } PowerUp;
 

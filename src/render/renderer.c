@@ -10,6 +10,7 @@ void renderer_draw_game() {
   map_renderer();
   renderer_hud();
 
+  entities_manager_draw_all_layer(LAYER_POWER_UPS);
   entities_manager_draw_all_layer(LAYER_BOMBS);
   entities_manager_draw_all_layer(LAYER_PLAYERS);
 

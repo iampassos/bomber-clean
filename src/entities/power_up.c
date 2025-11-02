@@ -1,5 +1,7 @@
 #include "power_up.h"
+#include "core/animation.h"
 #include "core/asset_manager.h"
+#include "core/common.h"
 #include "entities/entity.h"
 #include "entities_manager.h"
 #include "game/game_manager.h"
@@ -15,6 +17,7 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   entity.position = position;
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
+  entity.spawn_time = GetTime();
   entity.update = power_up_update;
   entity.draw = power_up_draw;
   entity.debug = power_up_debug;
@@ -22,9 +25,9 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   PowerUp *power_up = malloc(sizeof(PowerUp));
   power_up->entity = entity;
   power_up->power_up_type = type;
-  power_up->spawn_time = GetTime();
 
-  animation_init(&power_up->tick_animation, 10, 0.1f, 0, false);
+  animation_init(&power_up->tick_animation, 2, 0.05f, true, false);
+  animation_play(&power_up->tick_animation);
 
   entities_manager_add((Entity *)power_up);
 
@@ -41,38 +44,29 @@ void power_up_update(Entity *self) {
     return;
   }
 
-  if (GetTime() - power_up->spawn_time >= POWER_UP_MAX_TIME) {
+  if (GetTime() - power_up->entity.spawn_time >= POWER_UP_TIMEOUT) {
     entities_manager_remove(self);
     return;
   }
 
-  if (GetTime() - power_up->spawn_time >= POWER_UP_MAX_TIME - 1.0f &&
-      !animation_is_playing(&power_up->tick_animation))
-    animation_play(&power_up->tick_animation);
-
-  if (animation_is_playing(&power_up->tick_animation))
-    animation_update(&power_up->tick_animation);
+  animation_update(&power_up->tick_animation);
 }
 
 void power_up_draw(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;
 
-  Texture2D *texture =
-      asset_manager_get_power_up_texture(power_up->power_up_type);
+  Texture2D *texture = asset_manager_get_power_up_texture(
+      power_up->power_up_type, animation_get_frame(&power_up->tick_animation));
 
   DrawTexture(*texture, power_up->entity.position.x,
-              power_up->entity.position.y,
-              animation_is_playing(&power_up->tick_animation) &&
-                      power_up->tick_animation.current_frame % 2 == 0
-                  ? BLANK
-                  : WHITE);
+              power_up->entity.position.y, WHITE);
 }
 
 void power_up_debug(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;
 
   char buff[100];
-  snprintf(buff, sizeof(buff), "%.2f", GetTime() - power_up->spawn_time);
+  snprintf(buff, sizeof(buff), "%.2f", GetTime() - power_up->entity.spawn_time);
 
   Vector2 textSize = MeasureTextEx(GetFontDefault(), buff, 20, 1.0f);
   DrawTextEx(GetFontDefault(), buff,

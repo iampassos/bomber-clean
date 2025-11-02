@@ -2,7 +2,6 @@
 #include "core/animation.h"
 #include "core/asset_manager.h"
 #include "entities_manager.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 ExplosionTile *explosion_tile_create(Vector2 position,
@@ -15,6 +14,7 @@ ExplosionTile *explosion_tile_create(Vector2 position,
   entity.position = position;
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
+  entity.spawn_time = GetTime();
   entity.update = explosion_tile_update;
   entity.draw = explosion_tile_draw;
   entity.debug = NULL;
@@ -22,10 +22,11 @@ ExplosionTile *explosion_tile_create(Vector2 position,
   ExplosionTile *explosion_tile = malloc(sizeof(ExplosionTile));
   explosion_tile->entity = entity;
   explosion_tile->tile_type = tile_type;
-  explosion_tile->lifetime = 1.0f;
+  explosion_tile->lifetime = DEFAULT_EXPLOSION_LIFETIME;
   explosion_tile->spawn_time = GetTime();
 
-  animation_init(&explosion_tile->explosion_animation, 5, 0.1f, false, true);
+  animation_init(&explosion_tile->explosion_animation, 5,
+                 explosion_tile->lifetime / 9.0f, false, true);
   animation_play(&explosion_tile->explosion_animation);
 
   entities_manager_add((Entity *)explosion_tile);
@@ -51,16 +52,16 @@ void explosion_tile_draw(Entity *self) {
 
   if (explosion_tile->tile_type == EXPLOSION_CENTER) {
     texture = asset_manager_get_explosion_center_texture(
-        explosion_tile->explosion_animation.current_frame);
+        animation_get_frame(&explosion_tile->explosion_animation));
 
   } else if (explosion_tile->tile_type == EXPLOSION_MIDDLE) {
     texture = asset_manager_get_explosion_middle_texture(
         explosion_tile->entity.direction,
-        explosion_tile->explosion_animation.current_frame);
+        animation_get_frame(&explosion_tile->explosion_animation));
   } else {
     texture = asset_manager_get_explosion_final_texture(
         explosion_tile->entity.direction,
-        explosion_tile->explosion_animation.current_frame);
+        animation_get_frame(&explosion_tile->explosion_animation));
   }
 
   DrawTexture(*texture, explosion_tile->entity.position.x,

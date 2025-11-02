@@ -26,6 +26,7 @@ typedef struct Entity {
   Vector2 position;
   float width;
   float height;
+  float spawn_time;
 
   void (*update)(struct Entity *self);
   void (*draw)(struct Entity *self);

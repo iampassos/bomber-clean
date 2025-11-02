@@ -1,8 +1,10 @@
 #include "game_manager.h"
 #include "core/asset_manager.h"
+#include "core/common.h"
 #include "core/map.h"
 #include "entities/entities_manager.h"
 #include "entities/explosion_tile.h"
+#include "entities/power_up.h"
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
 #include "rules.h"
@@ -38,7 +40,7 @@ void game_manager_update(float dt) {
 }
 
 void game_manager_start_stage() {
-  map_init(&game_manager.map, MAP_STAGE_1);
+  map_init(&game_manager.map, MAP_BATTLE_STAGE_1);
   asset_manager_load_map_textures(game_manager.map.stage);
   game_manager.players[game_manager.player_count] =
       player_create(0, (Vector2){0, 0});
@@ -116,12 +118,15 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
     }
   }
 
-  srand(time(NULL));
-  int spawn = rand() % 100 < 100;
-
-  if (spawn) {
+  if (rules_can_spawn_power_up()) {
     srand(time(NULL));
-    power_up_create(map_grid_to_world(center), rand() % 3);
+    int spawn = rand() % 100 < POWER_UP_PROBABILITY;
+
+    if (spawn) {
+      float probabilities[6] = {5, 25, 27.5f, 25, 2.5f, 15};
+      power_up_create(map_grid_to_world(center),
+                      weighted_average(6, probabilities));
+    }
   }
 }
 
@@ -140,7 +145,33 @@ void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
   case POWER_UP_BOMB:
     player->bomb_capacity++;
     break;
+  case POWER_UP_RADIUS:
+    player->bomb_radius++;
+    break;
+  case POWER_UP_MAXIMUM_RADIUS:
+    player->bomb_radius = MAX_BOMB_RADIUS;
+    break;
+  case POWER_UP_INVENCIBLE:
+    player->invencible = true;
+    break;
   }
 
   entities_manager_remove((Entity *)power_up);
+}
+
+int weighted_average(int items, float *probabilities) {
+  float cumulative[items];
+  cumulative[0] = probabilities[0];
+  for (int i = 1; i < items; i++)
+    cumulative[i] = cumulative[i - 1] + probabilities[i];
+
+  float r = ((float)rand() / RAND_MAX) * cumulative[items - 1];
+
+  for (int i = 0; i < items; i++) {
+    if (r < cumulative[i]) {
+      return i;
+    }
+  }
+
+  return -1;
 }

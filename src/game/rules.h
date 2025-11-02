@@ -7,6 +7,7 @@
 
 bool rules_can_place_bomb(Player *player);
 bool rules_can_kill_player(Player *player);
-bool rules_player_can_consume_power_up(Player *player, PowerUp* power_up);
+bool rules_can_spawn_power_up();
+bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up);
 
 #endif
