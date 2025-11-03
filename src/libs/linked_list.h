@@ -13,7 +13,8 @@ typedef struct{
     Node *head;
 }LinkedList;
 
-LinkedList* list_creater();
-
+LinkedList* list_creater(); //criar uma lista
+void list_insert_end(LinkedList *list,void *data); //inserir um no no final
+int list_lenght(LinkedList *list);
 
 #endif
