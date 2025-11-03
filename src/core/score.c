@@ -35,7 +35,8 @@
 //     if(array !=NULL){
 //         for(int i=1;i<len;i++){
 //             int current=i;
-//             while(current!=0 && array[current].time < array[current-1].time ){
+//             while(current!=0 && array[current].time < array[current-1].time
+//             ){
 //                 swap_Score(&array[current],&array[current-1]);
 //                 current--;
 //             }
