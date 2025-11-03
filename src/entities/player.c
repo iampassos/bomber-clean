@@ -186,13 +186,17 @@ void player_draw(Entity *self) {
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
                 WHITE);
   } else {
-    Texture2D *texture = asset_manager_get_player_walk_texture(
-        player->entity.direction, animation_get_frame(&player->walk_animation));
+    int frame = animation_get_frame(&player->invencible_animation);
+
+    Texture2D *texture =
+        frame == 1 ? asset_manager_get_player_walk_white_texture(
+                         player->entity.direction, frame)
+                   : asset_manager_get_player_walk_texture(
+                         player->entity.direction,
+                         animation_get_frame(&player->walk_animation));
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
-                animation_get_frame(&player->invencible_animation) == 0
-                    ? WHITE
-                    : BLANK);
+                WHITE);
   }
 }
 

@@ -12,7 +12,6 @@
 #include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
-#include <time.h>
 
 GameManager game_manager = {0};
 

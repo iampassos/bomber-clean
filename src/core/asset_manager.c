@@ -68,7 +68,34 @@ Texture2D *asset_manager_get_power_up_texture(PowerUpType type, int frame) {
 
 void asset_manager_load_player_textures() {
   asset_manager_load_player_walk_textures();
+  asset_manager_load_player_walk_white_textures();
   asset_manager_load_player_death_textures();
+}
+
+void asset_manager_load_player_walk_white_textures() {
+  const char *paths[4][3] = {{"assets/sprites/player/UP1_WHITE.png",
+                              "assets/sprites/player/UP2_WHITE.png",
+                              "assets/sprites/player/UP3_WHITE.png"},
+                             {"assets/sprites/player/DOWN1_WHITE.png",
+                              "assets/sprites/player/DOWN2_WHITE.png",
+                              "assets/sprites/player/DOWN3_WHITE.png"},
+                             {"assets/sprites/player/LEFT1_WHITE.png",
+                              "assets/sprites/player/LEFT2_WHITE.png",
+                              "assets/sprites/player/LEFT3_WHITE.png"},
+                             {"assets/sprites/player/RIGHT1_WHITE.png",
+                              "assets/sprites/player/RIGHT2_WHITE.png",
+                              "assets/sprites/player/RIGHT3_WHITE.png"}};
+
+  for (int dir = 0; dir < 4; dir++) {
+    for (int frame = 0; frame < 3; frame++) {
+      Image img = LoadImage(paths[dir][frame]);
+      ImageResizeNN(&img, 64, 88);
+      asset_manager.player_walk_white[dir][frame] = LoadTextureFromImage(img);
+      SetTextureFilter(asset_manager.player_walk_white[dir][frame],
+                       TEXTURE_FILTER_POINT);
+      UnloadImage(img);
+    }
+  }
 }
 
 void asset_manager_load_player_walk_textures() {
@@ -117,6 +144,12 @@ void asset_manager_load_player_death_textures() {
 Texture2D *asset_manager_get_player_walk_texture(EntityDirection direction,
                                                  int frame) {
   return &asset_manager.player_walk[direction][frame];
+}
+
+Texture2D *
+asset_manager_get_player_walk_white_texture(EntityDirection direction,
+                                            int frame) {
+  return &asset_manager.player_walk_white[direction][frame];
 }
 
 Texture2D *asset_manager_get_player_death_texture(int frame) {
