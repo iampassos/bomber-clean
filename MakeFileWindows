@@ -32,4 +32,5 @@ clean:
 # Comando para rodar:
 # mingw32-make -f MakeFileWindows
 #comando power shell para make e run
-# mingw32-make -f MakeFileWindows; if ($?) { ./main.exe }
+# mingw32-make -f MakeFileWindows && main.exe && mingw32-make -f MakeFileWindows clean
+

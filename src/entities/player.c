@@ -109,6 +109,8 @@ void player_update(Entity *self) {
         entities_manager_remove(self);
       else {
         player->alive = true;
+        player->invencible = true;
+        player->invencibility_start = GetTime();
         animation_stop(&player->death_animation);
         player->entity.position =
             player_grid_to_world(player, (GridPosition){1, 1});
