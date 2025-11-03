@@ -81,3 +81,22 @@ void power_up_debug(Entity *self) {
                        power_up->entity.position.y - textSize.y},
              20, 1.0f, WHITE);
 }
+
+PowerUp *power_up_at_grid(GridPosition grid) {
+  for (int i = 0; i < MAX_ENTITIES; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity == NULL)
+      break;
+
+    PowerUp *power_up = (PowerUp *)entity;
+
+    if (entity->type == ENTITY_POWER_UP) {
+      GridPosition pos = map_world_to_grid(power_up->entity.position);
+      if (map_is_same_grid(pos, grid))
+        return power_up;
+    }
+  }
+
+  return NULL;
+}

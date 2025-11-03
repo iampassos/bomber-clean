@@ -2,6 +2,7 @@
 #define POWER_UP_H
 
 #include "core/animation.h"
+#include "core/map.h"
 #include "entity.h"
 
 typedef enum {
@@ -25,5 +26,7 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type);
 void power_up_update(Entity *self);
 void power_up_draw(Entity *self);
 void power_up_debug(Entity *self);
+
+PowerUp *power_up_at_grid(GridPosition grid);
 
 #endif

@@ -2,6 +2,7 @@
 #include "core/asset_manager.h"
 #include "core/common.h"
 #include "core/map.h"
+#include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "entities/explosion_tile.h"
@@ -87,7 +88,11 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
       TileType tile = map_get_tile(&game_manager.map, new_grid_position);
 
       if (tile == TILE_EMPTY) {
-        affected[affected_length++] = new_grid_position;
+        if (bomb_at_grid(new_grid_position) ||
+            explosion_tile_at_grid(new_grid_position))
+          destroyed[destroyed_length++] = new_grid_position;
+        else
+          affected[affected_length++] = new_grid_position;
       } else if (tile == TILE_BRICK) {
         destroyed[destroyed_length++] = new_grid_position;
         break;
@@ -120,7 +125,8 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
 
   for (int i = 0; i < destroyed_length; i++) {
     map_set_tile(&game_manager.map, destroyed[i], TILE_EMPTY);
-    map_renderer_animate_brick_destruction(destroyed[i]);
+    if (!bomb_at_grid(destroyed[i]) && !explosion_tile_at_grid(destroyed[i]))
+      map_renderer_animate_brick_destruction(destroyed[i]);
   }
 
   for (int i = 0; i < entities_manager.count; i++) {

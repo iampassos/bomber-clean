@@ -95,7 +95,7 @@ ExplosionTile *explosion_tile_at_grid(GridPosition grid) {
 
     if (entity->type == ENTITY_EXPLOSION_TILE) {
       GridPosition pos = map_world_to_grid(explosion_tile->entity.position);
-      if (pos.col == grid.col && pos.row == grid.row)
+      if (map_is_same_grid(pos, grid))
         return explosion_tile;
     }
   }

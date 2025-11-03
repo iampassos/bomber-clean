@@ -54,7 +54,7 @@ Player *player_create(int id, Vector2 position) {
   player->invencible = true;
   player->invencibility_start = GetTime();
   player->lives = PLAYER_DEFAULT_LIVES;
-  player->bomb_capacity = DEFAULT_BOMB_RADIUS;
+  player->bomb_capacity = DEFAULT_BOMBS;
   player->bomb_radius = DEFAULT_BOMB_RADIUS;
   player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
