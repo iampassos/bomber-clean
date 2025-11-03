@@ -84,11 +84,13 @@ bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up) {
 
 GridPosition rules_bomb_can_spawn(){
     srand(time(NULL));
-    while(1){
+    int cont =0;
+    while(cont<100){
       int cow = 1+ rand() % (GRID_HEIGHT - 2); // 1 a 11
       int row = 1+ rand() % (GRID_WIDTH - 2);  // 1 a 13
       GridPosition bomb_place ={cow,row};
       if(game_manager.map.grid[row][cow] == TILE_EMPTY) return bomb_place;
+      cont++;
     }
     
 }
