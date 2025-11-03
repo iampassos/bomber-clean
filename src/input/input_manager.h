@@ -8,6 +8,7 @@ typedef struct {
   Vector2 move;
   bool place_bomb;
   bool debug;
+  bool fullscreen;
 } PlayerInput;
 
 typedef enum { ORIGIN_KEYBOARD, ORIGIN_CONTROLLER } InputOrigin;
@@ -15,8 +16,7 @@ typedef enum { ORIGIN_KEYBOARD, ORIGIN_CONTROLLER } InputOrigin;
 typedef struct {
   PlayerInput player_inputs[MAX_PLAYERS];
   InputOrigin input_origins[MAX_PLAYERS];
-  float last_bomb_input[MAX_PLAYERS];
-  float last_view_input[MAX_PLAYERS];
+  float last_input[MAX_PLAYERS];
 } InputManager;
 
 extern InputManager input_manager;
