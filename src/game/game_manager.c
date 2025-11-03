@@ -187,7 +187,7 @@ void game_manager_random_interval() {
       game_manager.event_interval) {
     game_manager.last_event_interval = GetTime();
 
-    for (int i = 0; i < game_manager.bomb_quantity; i++) {
+    for (int i = 0, tries = 0; i < game_manager.bomb_quantity && tries < 10; i++) {
       int col = 1 + rand() % (GRID_HEIGHT - 2); // 1 a 11
       int row = 1 + rand() % (GRID_WIDTH - 2);  // 1 a 13
 
@@ -195,7 +195,9 @@ void game_manager_random_interval() {
 
       if (rules_can_spawn_bomb(grid)) {
         bomb_create(-1, map_grid_to_world(grid), game_manager.bomb_radius);
+        tries = 0;
       } else {
+        tries++;
         i--;
       }
     }
