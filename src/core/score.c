@@ -1,7 +1,19 @@
 #include "score.h"
+#include "player.h"
 
+void score_get_player(Player *p1,Player *p2,Player *p3,Player *p4){
+    if(p1!=NULL){
+        //insert_score(p1->id,p1->death_time);
+    }
+}
 
+void insert_score(int id,double time){
+    //inserie no txt
+}
 
+char *score_get(){
+    
+}
 
 void swap_Score(Score *a,Score *b){
     Score temp=*a;
