@@ -44,6 +44,14 @@ bool map_is_same_grid(GridPosition grid1, GridPosition grid2) {
   return grid1.col == grid2.col && grid1.row == grid2.row;
 }
 
+bool map_is_valid_grid(GridPosition grid) {
+  return grid.col >= 0 && grid.col < GRID_WIDTH && grid.row >= 0 && grid.row < GRID_HEIGHT;
+}
+
+bool map_is_valid_position(Vector2 position) {
+  return map_is_valid_grid(map_world_to_grid(position));
+}
+
 GridPosition map_world_to_grid(Vector2 position) {
   return (GridPosition){.col = (position.x - MAP_X_OFFSET) / TILE_SIZE,
                         .row = (position.y - MAP_Y_OFFSET) / TILE_SIZE};

@@ -16,7 +16,12 @@
 
 GameManager game_manager = {0};
 
-void game_manager_init() {}
+void game_manager_init() {
+  game_manager.last_event_interval = GetTime();
+  game_manager.bomb_radius = RANDOM_BOMB_INITIAL_RADIUS;
+  game_manager.bomb_quantity = RANDOM_BOMB_INITIAL_QUANTITY;
+  game_manager.event_interval = RANDOM_EVENT_INTERVAL;
+}
 
 void game_manager_update(float dt) {
   for (int i = 0; i < game_manager.player_count; i++) {
@@ -37,6 +42,7 @@ void game_manager_update(float dt) {
         input.debug ? GetTime() : input_manager.last_input[i];
   }
 
+  game_manager_random_interval();
   entities_manager_update_all();
 }
 
@@ -174,6 +180,26 @@ void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
   }
 
   entities_manager_remove((Entity *)power_up);
+}
+
+void game_manager_random_interval() {
+  if (GetTime() - game_manager.last_event_interval >=
+      game_manager.event_interval) {
+    game_manager.last_event_interval = GetTime();
+
+    for (int i = 0; i < game_manager.bomb_quantity; i++) {
+      int col = 1 + rand() % (GRID_HEIGHT - 2); // 1 a 11
+      int row = 1 + rand() % (GRID_WIDTH - 2);  // 1 a 13
+
+      GridPosition grid = {col, row};
+
+      if (rules_can_spawn_bomb(grid)) {
+        bomb_create(-1, map_grid_to_world(grid), game_manager.bomb_radius);
+      } else {
+        i--;
+      }
+    }
+  }
 }
 
 int weighted_average(int items, float *probabilities) {

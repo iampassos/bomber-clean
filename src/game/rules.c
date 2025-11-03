@@ -1,6 +1,7 @@
 #include "rules.h"
 #include "core/common.h"
 #include "core/map.h"
+#include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "entities/explosion_tile.h"
@@ -82,15 +83,17 @@ bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up) {
   return true;
 }
 
-GridPosition rules_bomb_can_spawn(){
-    srand(time(NULL));
-    int cont =0;
-    while(cont<100){
-      int cow = 1+ rand() % (GRID_HEIGHT - 2); // 1 a 11
-      int row = 1+ rand() % (GRID_WIDTH - 2);  // 1 a 13
-      GridPosition bomb_place ={cow,row};
-      if(game_manager.map.grid[row][cow] == TILE_EMPTY) return bomb_place;
-      cont++;
-    }
-    
+bool rules_can_spawn_bomb(GridPosition grid) {
+  TileType tile = map_get_tile(&game_manager.map, grid);
+
+  if (!map_is_valid_grid(grid))
+    return false;
+
+  if (tile != TILE_EMPTY)
+    return false;
+
+  if (bomb_at_grid(grid))
+    return false;
+
+  return true;
 }

@@ -13,6 +13,10 @@ typedef struct {
   Player *players[MAX_PLAYERS];
   int player_count;
   ViewMode view_mode;
+  float last_event_interval;
+  float event_interval;
+  int bomb_radius;
+  int bomb_quantity;
 } GameManager;
 
 extern GameManager game_manager;
@@ -21,6 +25,7 @@ void game_manager_init();
 void game_manager_update(float dt);
 
 void game_manager_start_stage();
+void game_manager_random_interval();
 
 void game_manager_on_entity_exploded(Entity *entity);
 void game_manager_on_bomb_exploded(GridPosition center, int radius);
@@ -28,5 +33,8 @@ void game_manager_on_explosion_end(Vector2 position);
 void game_manager_on_power_up_press(Player *player, PowerUp *power_up);
 
 int weighted_average(int items, float probabilities[]);
+
+
+
 
 #endif

@@ -28,6 +28,8 @@ TileType map_get_tile(Map *map, GridPosition position);
 void map_set_tile(Map *map, GridPosition position, TileType tile);
 bool map_is_walkable(Map *map, GridPosition position);
 bool map_is_same_grid(GridPosition grid1, GridPosition grid2);
+bool map_is_valid_grid(GridPosition grid);
+bool map_is_valid_position(Vector2 position);
 
 GridPosition map_world_to_grid(Vector2 position);
 Vector2 map_grid_to_world(GridPosition position);
