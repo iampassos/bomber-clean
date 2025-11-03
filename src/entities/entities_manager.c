@@ -1,6 +1,9 @@
 #include "entities_manager.h"
+#include "core/common.h"
 #include "core/map.h"
 #include "entities/entity.h"
+#include "entities/player.h"
+#include <raylib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -79,6 +82,24 @@ void entities_manager_clear() {
   memset(entities_manager.entries, 0, sizeof(entities_manager.entries));
 };
 
+float old_x_offset = 0;
+float old_y_offset = 0;
+
+void entities_manager_recalculate_positions() {
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    entity->position.x -= old_x_offset;
+    entity->position.y -= old_y_offset;
+
+    entity->position.x += MAP_X_OFFSET;
+    entity->position.y += MAP_Y_OFFSET;
+  }
+
+  old_x_offset = MAP_X_OFFSET;
+  old_y_offset = MAP_Y_OFFSET;
+}
+
 int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
                                      int max_out) {
   int count = 0;
@@ -129,7 +150,7 @@ void entities_manager_debug() {
   Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
 
   float x = 15;
-  float y = SCREEN_HEIGHT / 4.0f - textSize.y / 2.0f;
+  float y = (GAMEPLAY_HEIGHT + MAP_Y_OFFSET) / 4.0f - textSize.y / 2.0f;
 
   DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
                 (Color){196, 196, 196, 200});

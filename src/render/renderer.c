@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "core/asset_manager.h"
+#include "core/common.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "game/game_manager.h"
@@ -22,5 +23,6 @@ void renderer_draw_game() {
 }
 
 void renderer_hud() {
-  DrawTexture(*asset_manager_get_hud_texture(), 0, 0, WHITE);
+  DrawTexture(*asset_manager_get_hud_texture(), MAP_X_OFFSET - TILE_SIZE / 2.0f,
+              0, WHITE);
 }

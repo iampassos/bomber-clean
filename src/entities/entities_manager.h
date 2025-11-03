@@ -21,6 +21,7 @@ void entities_manager_draw_all();
 void entities_manager_draw_all_layer(EntityLayer layer);
 void entities_manager_debug_all();
 void entities_manager_clear();
+void entities_manager_recalculate_positions();
 
 int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
                                      int max_out);

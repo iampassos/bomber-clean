@@ -245,7 +245,7 @@ void player_debug(Entity *self) {
   Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
 
   float x = 15;
-  float y = SCREEN_HEIGHT / 2.0f - textSize.y / 2.0f;
+  float y = (GAMEPLAY_HEIGHT + MAP_Y_OFFSET) / 2.0f - textSize.y / 2.0f;
 
   DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
                 (Color){196, 196, 196, 200});

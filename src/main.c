@@ -11,7 +11,10 @@
 int main(void) {
   seed_rng();
 
-  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bomber Clean");
+  InitWindow(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT, "Bomber Clean");
+
+  common_update_offset();
+  entities_manager_recalculate_positions();
 
   entities_manager_init();
   input_manager_init();
@@ -26,6 +29,11 @@ int main(void) {
 
   while (!WindowShouldClose()) {
     float dt = GetFrameTime();
+
+    if (common_should_update_offset()) {
+      common_update_offset();
+      entities_manager_recalculate_positions();
+    }
 
     input_manager_update();
     game_manager_update(dt);
