@@ -30,7 +30,7 @@
 //     *a=*b;
 //     *b=temp;
 // }
-
+//
 // void bubble_sort_score_by_time(Score *array, int len){
 //     if(array !=NULL){
 //         for(int i=1;i<len;i++){
@@ -42,4 +42,5 @@
 //             }
 //         }
 //     }
+// }
 // }
