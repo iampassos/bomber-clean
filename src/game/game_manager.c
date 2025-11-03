@@ -89,9 +89,10 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
 
       if (tile == TILE_EMPTY) {
         if (bomb_at_grid(new_grid_position) ||
-            explosion_tile_at_grid(new_grid_position))
+            explosion_tile_at_grid(new_grid_position)) {
           destroyed[destroyed_length++] = new_grid_position;
-        else
+          break;
+        } else
           affected[affected_length++] = new_grid_position;
       } else if (tile == TILE_BRICK) {
         destroyed[destroyed_length++] = new_grid_position;
