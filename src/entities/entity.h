@@ -7,10 +7,16 @@ typedef enum {
   ENTITY_PLAYER,
   ENTITY_BOMB,
   ENTITY_EXPLOSION_TILE,
-  ENTITY_POWER_UP
+  ENTITY_POWER_UP,
+  ENTITY_ENEMY,
 } EntityType;
 
-typedef enum { LAYER_PLAYERS, LAYER_BOMBS, LAYER_POWER_UPS } EntityLayer;
+typedef enum {
+  LAYER_PLAYERS,
+  LAYER_ENEMIES,
+  LAYER_BOMBS,
+  LAYER_POWER_UPS
+} EntityLayer;
 
 typedef enum {
   DIR_UP,

@@ -13,6 +13,7 @@ void renderer_draw_game() {
 
   entities_manager_draw_all_layer(LAYER_POWER_UPS);
   entities_manager_draw_all_layer(LAYER_BOMBS);
+  entities_manager_draw_all_layer(LAYER_ENEMIES);
   entities_manager_draw_all_layer(LAYER_PLAYERS);
 
   if (game_manager.view_mode == VIEW_DEBUG) {

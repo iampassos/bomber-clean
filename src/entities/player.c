@@ -207,7 +207,7 @@ void player_draw(Entity *self) {
   Player *player = (Player *)self;
 
   if (animation_is_playing(&player->death_animation)) {
-    Texture2D *texture = assets_players_get_player_death_texture(
+    Texture2D *texture = assets_players_get_death_texture(
         animation_get_frame(&player->death_animation));
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
@@ -216,9 +216,9 @@ void player_draw(Entity *self) {
     int frame = animation_get_frame(&player->invencible_animation);
 
     Texture2D *texture =
-        frame == 1 ? assets_players_get_player_walk_white_texture(
+        frame == 1 ? assets_players_get_walk_white_texture(
                          player->entity.direction, frame)
-                   : assets_players_get_player_walk_texture(
+                   : assets_players_get_walk_texture(
                          player->entity.direction,
                          animation_get_frame(&player->walk_animation));
 

@@ -2,6 +2,7 @@
 #define ASSET_MANAGER_H
 
 #include "core/assets/assets_enemies.h"
+#include "core/assets/assets_explosion.h"
 #include "core/assets/assets_maps.h"
 #include "core/assets/assets_players.h"
 #include "entities/power_up.h"
@@ -15,6 +16,7 @@ typedef struct {
   AssetsMaps assets_maps;
   AssetsPlayers assets_players;
   AssetsEnemies assets_enemies;
+  AssetsExplosion assets_explosion;
 } AssetManager;
 
 extern AssetManager asset_manager;

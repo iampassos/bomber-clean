@@ -1,4 +1,5 @@
 #include "asset_manager.h"
+#include "core/assets/assets_explosion.h"
 #include "core/common.h"
 #include <raylib.h>
 #include <stdio.h>
@@ -8,7 +9,8 @@ AssetManager asset_manager = {0};
 void asset_manager_init() {}
 
 void asset_manager_load_all() {
-  assets_players_load_player_textures();
+  assets_players_load_textures();
+  assets_explosion_load_textures();
   asset_manager_load_hud_textures();
   asset_manager_load_power_ups_textures();
 }

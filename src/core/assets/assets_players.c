@@ -2,13 +2,13 @@
 #include "asset_manager.h"
 #include <stdio.h>
 
-void assets_players_load_player_textures() {
-  assets_players_load_player_walk_textures();
-  assets_players_load_player_walk_white_textures();
-  assets_players_load_player_death_textures();
+void assets_players_load_textures() {
+  assets_players_load_walk_textures();
+  assets_players_load_walk_white_textures();
+  assets_players_load_death_textures();
 }
 
-void assets_players_load_player_walk_white_textures() {
+void assets_players_load_walk_white_textures() {
   char *player_path = "assets/sprites/player/";
 
   const char *paths[4][3] = {
@@ -23,18 +23,19 @@ void assets_players_load_player_walk_white_textures() {
     for (int frame = 0; frame < 3; frame++) {
       sprintf(path, "%s%s", player_path, paths[dir][frame]);
       Image img = LoadImage(path);
+      ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
       ImageResizeNN(&img, 64, 88);
-      asset_manager.assets_players.player_walk_white[dir][frame] =
+      ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
+      asset_manager.assets_players.white[dir][frame] =
           LoadTextureFromImage(img);
-      SetTextureFilter(
-          asset_manager.assets_players.player_walk_white[dir][frame],
-          TEXTURE_FILTER_POINT);
+      SetTextureFilter(asset_manager.assets_players.white[dir][frame],
+                       TEXTURE_FILTER_POINT);
       UnloadImage(img);
     }
   }
 }
 
-void assets_players_load_player_walk_textures() {
+void assets_players_load_walk_textures() {
   char *player_path = "assets/sprites/player/";
 
   const char *paths[4][3] = {{"UP1.png", "UP2.png", "UP3.png"},
@@ -48,23 +49,23 @@ void assets_players_load_player_walk_textures() {
     for (int frame = 0; frame < 3; frame++) {
       sprintf(path, "%s%s", player_path, paths[dir][frame]);
       Image img = LoadImage(path);
+      ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
       ImageResizeNN(&img, 64, 88);
-      asset_manager.assets_players.player_walk[dir][frame] =
-          LoadTextureFromImage(img);
-      SetTextureFilter(asset_manager.assets_players.player_walk[dir][frame],
+      ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
+      asset_manager.assets_players.walk[dir][frame] = LoadTextureFromImage(img);
+      SetTextureFilter(asset_manager.assets_players.walk[dir][frame],
                        TEXTURE_FILTER_POINT);
       UnloadImage(img);
     }
   }
 }
 
-void assets_players_load_player_death_textures() {
+void assets_players_load_death_textures() {
   char *player_path = "assets/sprites/player/";
 
   const char *paths[7] = {
-      "PLAYER_DEATH_1.png", "PLAYER_DEATH_2.png", "PLAYER_DEATH_3.png",
-      "PLAYER_DEATH_4.png", "PLAYER_DEATH_5.png", "PLAYER_DEATH_6.png",
-      "PLAYER_DEATH_7.png",
+      "DEATH1.png", "DEATH2.png", "DEATH3.png", "DEATH4.png",
+      "DEATH5.png", "DEATH6.png", "DEATH7.png",
   };
 
   char path[100];
@@ -72,26 +73,26 @@ void assets_players_load_player_death_textures() {
   for (int frame = 0; frame < 7; frame++) {
     sprintf(path, "%s%s", player_path, paths[frame]);
     Image img = LoadImage(path);
+    ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
     ImageResizeNN(&img, 64, 88);
-    asset_manager.assets_players.player_death[frame] =
-        LoadTextureFromImage(img);
-    SetTextureFilter(asset_manager.assets_players.player_death[frame],
+    ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
+    asset_manager.assets_players.death[frame] = LoadTextureFromImage(img);
+    SetTextureFilter(asset_manager.assets_players.death[frame],
                      TEXTURE_FILTER_POINT);
     UnloadImage(img);
   }
 }
 
-Texture2D *assets_players_get_player_walk_texture(EntityDirection direction,
-                                                  int frame) {
-  return &asset_manager.assets_players.player_walk[direction][frame];
+Texture2D *assets_players_get_walk_texture(EntityDirection direction,
+                                           int frame) {
+  return &asset_manager.assets_players.walk[direction][frame];
 }
 
-Texture2D *
-assets_players_get_player_walk_white_texture(EntityDirection direction,
-                                             int frame) {
-  return &asset_manager.assets_players.player_walk_white[direction][frame];
+Texture2D *assets_players_get_walk_white_texture(EntityDirection direction,
+                                                 int frame) {
+  return &asset_manager.assets_players.white[direction][frame];
 }
 
-Texture2D *assets_players_get_player_death_texture(int frame) {
-  return &asset_manager.assets_players.player_death[frame];
+Texture2D *assets_players_get_death_texture(int frame) {
+  return &asset_manager.assets_players.death[frame];
 }

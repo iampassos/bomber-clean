@@ -32,8 +32,8 @@ void map_renderer() {
 }
 
 void map_renderer_background() {
-  DrawTexture(*assets_maps_get_map_background_texture(),
-              MAP_X_OFFSET - TILE_SIZE, MAP_Y_OFFSET, WHITE);
+  DrawTexture(*assets_maps_get_background_texture(), MAP_X_OFFSET - TILE_SIZE,
+              MAP_Y_OFFSET, WHITE);
 }
 
 void map_renderer_brick_animation() {
@@ -79,7 +79,7 @@ void map_renderer_animate_brick_destruction(GridPosition grid) {
 void map_renderer_battle_stage_one_tiles() {
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = assets_maps_get_map_tiles_textures();
+      Texture2D *textures = assets_maps_get_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
@@ -107,7 +107,7 @@ void map_renderer_battle_stage_one_tiles() {
 void map_renderer_peace_town_tiles() {
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = assets_maps_get_map_tiles_textures();
+      Texture2D *textures = assets_maps_get_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});

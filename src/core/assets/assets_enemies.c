@@ -1,5 +1,6 @@
 #include "assets_enemies.h"
 #include "asset_manager.h"
+#include <raylib.h>
 #include <stdio.h>
 
 void assets_enemies_load_ballom_textures() {
@@ -17,7 +18,9 @@ void assets_enemies_load_ballom_textures() {
     for (int frame = 0; frame < 4; frame++) {
       sprintf(path, "%s%s", ballom_path, paths[dir][frame]);
       Image img = LoadImage(path);
+      ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
       ImageResizeNN(&img, 64, 88);
+      ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
       asset_manager.assets_enemies.ballom[dir][frame] =
           LoadTextureFromImage(img);
       SetTextureFilter(asset_manager.assets_enemies.ballom[dir][frame],
