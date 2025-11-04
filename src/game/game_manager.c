@@ -19,6 +19,7 @@ GameManager game_manager = {0};
 
 void game_manager_init() {
   game_manager.player_count = 0;
+  game_manager.stage_start = 0;
   game_manager.last_event_interval = GetTime();
   game_manager.bomb_radius = RANDOM_BOMB_INITIAL_RADIUS;
   game_manager.bomb_quantity = RANDOM_BOMB_INITIAL_QUANTITY;
@@ -55,6 +56,9 @@ void game_manager_update(float dt) {
 
   game_manager_random_interval();
   entities_manager_update_all();
+
+  if (GetTime() - game_manager.stage_start >= MAP_CHANGE_INTERVAL)
+    game_manager_on_next_stage();
 }
 
 void game_manager_start_stage() {
@@ -64,6 +68,8 @@ void game_manager_start_stage() {
   }
 
   asset_manager_load_map_textures(game_manager.map->stage);
+
+  game_manager.stage_start = GetTime();
 }
 
 void game_manager_on_next_stage() {
@@ -225,8 +231,6 @@ void game_manager_random_interval() {
         i--;
       }
     }
-
-    game_manager_on_next_stage();
   }
 }
 

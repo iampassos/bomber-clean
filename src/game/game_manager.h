@@ -15,6 +15,7 @@ typedef struct {
   ViewMode view_mode;
   float last_event_interval;
   float event_interval;
+  float stage_start;
   int bomb_radius;
   int bomb_quantity;
 } GameManager;
