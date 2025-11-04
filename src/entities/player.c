@@ -24,8 +24,8 @@ Player *player_create(int id, GridPosition spawn_grid) {
   entity.layer = LAYER_PLAYERS;
   entity.direction = DIR_DOWN;
   entity.position = (Vector2){0, 0};
-  entity.width = TILE_SIZE - 10;
-  entity.height = TILE_SIZE - 10;
+  entity.width = TILE_SIZE - 4.5f;
+  entity.height = TILE_SIZE - 4.5f;
   entity.spawn_time = GetTime();
   entity.update = player_update;
   entity.draw = player_draw;

@@ -1,30 +1,15 @@
 #include "ballom.h"
 #include "core/animation.h"
 #include "core/assets/assets_enemies.h"
+#include "core/common.h"
 #include "core/map.h"
+#include "core/physics.h"
 #include "enemies/enemy.h"
 #include "entities/entities_manager.h"
+#include "entities/entity.h"
 #include <stdlib.h>
 
 #define HEIGHT_TOLERANCE 28.5f
-
-Vector2 ballom_grid_to_world(Ballom *ballom, GridPosition grid) {
-  Vector2 center = map_grid_to_world_center(grid);
-  return (Vector2){center.x - ballom->enemy.entity.width / 2.0f,
-                   center.y - ballom->enemy.entity.height / 2.0f -
-                       HEIGHT_TOLERANCE};
-}
-
-GridPosition ballom_world_to_grid(Ballom *ballom) {
-  Vector2 feet_position = (Vector2){
-      ballom->enemy.entity.position.x + ballom->enemy.entity.width / 2.0f,
-      ballom->enemy.entity.position.y +
-          (ballom->enemy.entity.direction == DIR_UP
-               ? ballom->enemy.entity.height * 1.1f
-               : ballom->enemy.entity.height * 0.60f + HEIGHT_TOLERANCE)};
-  GridPosition pos = map_world_to_grid(feet_position);
-  return pos;
-}
 
 Ballom *ballom_create(GridPosition spawn_grid) {
   Entity entity;
@@ -50,7 +35,8 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   Ballom *ballom = malloc(sizeof(Ballom));
   ballom->enemy = enemy;
 
-  ballom->enemy.entity.position = ballom_grid_to_world(ballom, spawn_grid);
+  ballom->enemy.entity.position = entity_grid_to_world(
+      &ballom->enemy.entity, spawn_grid, BALLOM_HEIGHT_TOLERANCE);
 
   entities_manager_add((Entity *)ballom);
 
@@ -59,6 +45,34 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 
 void ballom_update(Entity *self) {
   Ballom *ballom = (Ballom *)self;
+  Entity *entity = (Entity *)&ballom->enemy.entity;
+
+  GridPosition grid = entity_world_to_grid(entity, BALLOM_HEIGHT_TOLERANCE);
+
+  Vector2 dirs[] = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+
+  EntityDirection dir = entity->direction;
+
+  GridPosition next_grid = {grid.col + dirs[dir].x, grid.row + dirs[dir].y};
+
+  Vector2 position = entity->position;
+
+  Vector2 projected = position;
+
+  projected.x = position.x + (dir == DIR_LEFT    ? -ENEMY_DEFAULT_SPEED
+                              : dir == DIR_RIGHT ? ENEMY_DEFAULT_SPEED
+                                                 : 0);
+  projected.y = position.y + (dir == DIR_UP     ? -ENEMY_DEFAULT_SPEED
+                              : dir == DIR_DOWN ? ENEMY_DEFAULT_SPEED
+                                                : 0);
+
+  if (physics_can_move_to(
+          (Vector2){entity->position.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
+          entity->width, entity->height))
+    position = projected;
+  ;
+
+  entity->position = position;
 
   animation_update(&ballom->enemy.walk_animation);
 }

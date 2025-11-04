@@ -5,9 +5,9 @@
 
 bool physics_can_move_to(Vector2 projected, float width, float height) {
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
-  int right = (projected.x + width - MAP_X_OFFSET) / TILE_SIZE;
+  int right = (projected.x + width - 1 - MAP_X_OFFSET) / TILE_SIZE;
   int top = (projected.y - MAP_Y_OFFSET) / TILE_SIZE;
-  int bottom = (projected.y + height - MAP_Y_OFFSET) / TILE_SIZE;
+  int bottom = (projected.y + height - 1 - MAP_Y_OFFSET) / TILE_SIZE;
 
   left = fmax(0, fmin(left, GRID_WIDTH - 1));
   right = fmax(0, fmin(right, GRID_WIDTH - 1));
