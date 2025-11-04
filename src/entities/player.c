@@ -153,6 +153,29 @@ void player_update(Entity *self) {
   if (physics_can_move_to((Vector2){vertical.x, vertical.y + HEIGHT_TOLERANCE},
                           player->entity.width, player->entity.height))
     new_pos.y = vertical.y;
+  else if (player->input.move.x == 0) {
+    float offset_in_tile = fmod(
+        player->entity.position.x + player->entity.width / 2.0f, TILE_SIZE);
+
+    float dist_to_left = offset_in_tile;
+    float dist_to_right = TILE_SIZE - offset_in_tile;
+
+    if (dist_to_left < dist_to_right) {
+      float val = fmin(player->speed, dist_to_left);
+
+      if (physics_can_move_to(
+              (Vector2){new_pos.x - val, new_pos.y + HEIGHT_TOLERANCE},
+              player->entity.width, player->entity.height))
+        new_pos.x -= val;
+    } else if (dist_to_right < dist_to_left) {
+      float val = fmin(player->speed, dist_to_right);
+
+      if (physics_can_move_to(
+              (Vector2){new_pos.x + val, new_pos.y + HEIGHT_TOLERANCE},
+              player->entity.width, player->entity.height))
+        new_pos.x += val;
+    }
+  }
 
   float dx = new_pos.x - player->entity.position.x;
   float dy = new_pos.y - player->entity.position.y;

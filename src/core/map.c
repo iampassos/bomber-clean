@@ -1,6 +1,7 @@
 #include "map.h"
 #include "core/common.h"
 #include <raylib.h>
+#include <raymath.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -45,7 +46,8 @@ bool map_is_same_grid(GridPosition grid1, GridPosition grid2) {
 }
 
 bool map_is_valid_grid(GridPosition grid) {
-  return grid.col >= 0 && grid.col < GRID_WIDTH && grid.row >= 0 && grid.row < GRID_HEIGHT;
+  return grid.col >= 0 && grid.col < GRID_WIDTH && grid.row >= 0 &&
+         grid.row < GRID_HEIGHT;
 }
 
 bool map_is_valid_position(Vector2 position) {

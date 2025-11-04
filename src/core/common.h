@@ -31,7 +31,7 @@
 #define POWER_UP_MAP_LIMIT 6
 #define POWER_UP_TIMEOUT 60.0f
 
-#define RANDOM_EVENT_INTERVAL 5.0f //invervalo de spawn de bomba
+#define RANDOM_EVENT_INTERVAL 5.0f // invervalo de spawn de bomba
 #define RANDOM_BOMB_PROBABILITY 100.0f
 #define RANDOM_EVENT_INTERVAL_DECREASE 0.25f
 #define RANDOM_BOMB_INITIAL_RADIUS 1
