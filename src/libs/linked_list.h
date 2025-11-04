@@ -11,6 +11,7 @@ typedef struct Node {
 
 typedef struct {
   Node *head;
+  Node *tail;
 } LinkedList;
 
 LinkedList *list_create();                          // criar uma lista
@@ -21,5 +22,7 @@ int list_find_node_position(
     LinkedList *list, void *target); // achar a posicao de um data especifico
 void *list_get_data_position(LinkedList *list,
                              int posi); // retorna uma data por posicao
+
+void pop(LinkedList *list); //excluir o primeiro no
 
 #endif

@@ -5,6 +5,7 @@ LinkedList *list_create() {
   if (list == NULL)
     return NULL;
   list->head = NULL;
+  list->tail = NULL;
   return list;
 }
 
@@ -18,13 +19,13 @@ void list_insert_end(LinkedList *list, void *data) {
   new->data = data;
   new->next = NULL;
 
-  if (list->head == NULL)
+  if (list->head == NULL){
     list->head = new;
+    list->tail = new;
+  }
   else {
-    Node *aux = list->head;
-    while (aux->next != NULL)
-      aux = aux->next;
-    aux->next = new;
+    list->tail->next=new;
+    list->tail=new;
   }
 }
 
@@ -55,6 +56,20 @@ void list_free_all(LinkedList *list) {
   }
   free(list);
 }
+
+void pop(LinkedList *list){
+
+  if(list!=NULL && list->head!=NULL){
+    Node *delete=list->head;
+    list->head=list->head->next;
+    free(delete->data);
+    free(delete);
+    if(list->head==NULL){
+      list->tail=NULL;
+    }
+  }
+}
+
 
 int list_find_node_position(LinkedList *list, void *target) {
   if (list == NULL || target == NULL)
