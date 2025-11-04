@@ -18,7 +18,7 @@ int brick_destruction_length = 0;
 void map_renderer() {
   map_renderer_background();
 
-  switch (game_manager.map.stage) {
+  switch (game_manager.map->stage) {
   case MAP_BATTLE_STAGE_1:
     map_renderer_battle_stage_one_tiles();
     break;
@@ -82,9 +82,9 @@ void map_renderer_battle_stage_one_tiles() {
       Texture2D *textures = asset_manager_get_map_tiles_textures();
       Texture2D *text = NULL;
 
-      TileType tile = map_get_tile(&game_manager.map, (GridPosition){j, i});
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
       TileType upper_tile =
-          map_get_tile(&game_manager.map, (GridPosition){j, i - 1});
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
 
       switch (tile) {
       case TILE_EMPTY:
@@ -110,9 +110,9 @@ void map_renderer_peace_town_tiles() {
       Texture2D *textures = asset_manager_get_map_tiles_textures();
       Texture2D *text = NULL;
 
-      TileType tile = map_get_tile(&game_manager.map, (GridPosition){j, i});
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
       TileType upper_tile =
-          map_get_tile(&game_manager.map, (GridPosition){j, i - 1});
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
 
       switch (tile) {
       case TILE_EMPTY:
@@ -155,7 +155,7 @@ void map_renderer_debug() {
     for (int j = 0; j < GRID_WIDTH; j++) {
       Vector2 center = map_grid_to_world_center((GridPosition){j, i});
       char buff[3];
-      snprintf(buff, sizeof(buff), "%d", game_manager.map.grid[i][j]);
+      snprintf(buff, sizeof(buff), "%d", game_manager.map->grid[i][j]);
 
       Vector2 textSize = MeasureTextEx(GetFontDefault(), buff, 20, 1.0f);
       DrawTextEx(

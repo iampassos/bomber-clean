@@ -1,12 +1,18 @@
 #include "map.h"
 #include "core/common.h"
+#include "linked_list.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-void map_init(Map *map, MapType map_type) {
-  srand(time(NULL));
+LinkedList *linked_list_head = NULL;
+
+Map *map_create(MapType map_type) {
+  if (linked_list_head == NULL)
+    linked_list_head = list_create();
+
+  Map *map = malloc(sizeof(Map));
 
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
@@ -27,6 +33,16 @@ void map_init(Map *map, MapType map_type) {
   map->grid[2][1] = TILE_EMPTY;
 
   map->stage = map_type;
+
+  list_insert_end(linked_list_head, map);
+
+  return map;
+}
+
+Map *map_next(Map *map) {
+  int pos = list_find_node_position(linked_list_head, map);
+  Map *next = (Map *)list_get_data_position(linked_list_head, pos + 1);
+  return next != NULL ? next : NULL;
 }
 
 TileType map_get_tile(Map *map, GridPosition position) {

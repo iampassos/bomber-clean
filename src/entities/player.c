@@ -69,7 +69,7 @@ Player *player_create(int id, Vector2 position) {
   pos.col = fmax(1, fmin(pos.col, GRID_WIDTH - 2));
   pos.row = fmax(1, fmin(pos.row, GRID_HEIGHT - 2));
 
-  Map *map = &game_manager.map;
+  Map *map = game_manager.map;
 
   entities_manager_add((Entity *)player);
 
@@ -229,7 +229,7 @@ void player_debug(Entity *self) {
   Player *player = (Player *)self;
 
   GridPosition pos = player_world_to_grid(player);
-  TileType tile = map_get_tile(&game_manager.map, pos);
+  TileType tile = map_get_tile(game_manager.map, pos);
   char strBuffer[1000];
   snprintf(strBuffer, sizeof(strBuffer),
            "Player debug\n"

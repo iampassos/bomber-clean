@@ -22,7 +22,8 @@ typedef struct Map {
   MapType stage;
 } Map;
 
-void map_init(Map *map, MapType map_type);
+Map *map_create(MapType map_type);
+Map *map_next(Map *map);
 
 TileType map_get_tile(Map *map, GridPosition position);
 void map_set_tile(Map *map, GridPosition position, TileType tile);

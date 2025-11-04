@@ -4,20 +4,22 @@
 #include "core/map.h"
 #include <stdlib.h>
 
-typedef struct Node{
-    void *data;
-    struct Node *next;
-}Node;
+typedef struct Node {
+  void *data;
+  struct Node *next;
+} Node;
 
-typedef struct{
-    Node *head;
-}LinkedList;
+typedef struct {
+  Node *head;
+} LinkedList;
 
-LinkedList* list_creater(); //criar uma lista
-void list_insert_end(LinkedList *list,void *data); //inserir um no no final
-int list_lenght(LinkedList *list);
+LinkedList *list_create();                          // criar uma lista
+void list_insert_end(LinkedList *list, void *data); // inserir um no no final
+int list_length(LinkedList *list);
 void list_free_all(LinkedList *list);
-int list_find_node_position(LinkedList *list,void *target); //achar a posicao de um data especifico
-void *list_get_data_position(LinkedList *list, int posi); // retorna uma data por posicao
+int list_find_node_position(
+    LinkedList *list, void *target); // achar a posicao de um data especifico
+void *list_get_data_position(LinkedList *list,
+                             int posi); // retorna uma data por posicao
 
 #endif

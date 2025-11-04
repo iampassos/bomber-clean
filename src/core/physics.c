@@ -1,4 +1,5 @@
 #include "common.h"
+#include "core/map.h"
 #include "game/game_manager.h"
 #include <math.h>
 
@@ -15,7 +16,7 @@ bool physics_can_move_to(Vector2 projected, float width, float height) {
 
   for (int row = top; row <= bottom; row++)
     for (int col = left; col <= right; col++)
-      if (!map_is_walkable(&game_manager.map, (GridPosition){col, row}))
+      if (!map_is_walkable(game_manager.map, (GridPosition){col, row}))
         return false;
 
   return true;

@@ -23,8 +23,6 @@ int main(void) {
 
   asset_manager_load_all();
 
-  game_manager_start_stage();
-
   SetTargetFPS(60);
 
   while (!WindowShouldClose()) {

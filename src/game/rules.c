@@ -19,7 +19,7 @@ bool rules_can_place_bomb(Player *player) {
 
   GridPosition pos = player_world_to_grid(player);
 
-  if (!map_is_walkable(&game_manager.map, pos))
+  if (!map_is_walkable(game_manager.map, pos))
     return false;
 
   if (entities_manager_get_all_at_grid(pos, NULL, MAX_ENTITIES) > 0)
@@ -84,7 +84,7 @@ bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up) {
 }
 
 bool rules_can_spawn_bomb(GridPosition grid) {
-  TileType tile = map_get_tile(&game_manager.map, grid);
+  TileType tile = map_get_tile(game_manager.map, grid);
 
   if (!map_is_valid_grid(grid))
     return false;

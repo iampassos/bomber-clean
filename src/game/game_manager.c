@@ -17,10 +17,16 @@
 GameManager game_manager = {0};
 
 void game_manager_init() {
+  game_manager.player_count = 0;
   game_manager.last_event_interval = GetTime();
   game_manager.bomb_radius = RANDOM_BOMB_INITIAL_RADIUS;
   game_manager.bomb_quantity = RANDOM_BOMB_INITIAL_QUANTITY;
   game_manager.event_interval = RANDOM_EVENT_INTERVAL;
+
+  game_manager.map = map_create(MAP_BATTLE_STAGE_1);
+  map_create(MAP_PEACE_TOWN);
+
+  game_manager_start_stage();
 }
 
 void game_manager_update(float dt) {
@@ -47,11 +53,22 @@ void game_manager_update(float dt) {
 }
 
 void game_manager_start_stage() {
-  map_init(&game_manager.map, MAP_PEACE_TOWN);
-  asset_manager_load_map_textures(game_manager.map.stage);
   game_manager.players[game_manager.player_count] =
       player_create(0, (Vector2){0, 0});
   game_manager.player_count++;
+  asset_manager_load_map_textures(game_manager.map->stage);
+}
+
+void game_manager_on_next_stage() {
+  Map *next = map_next(game_manager.map);
+
+  if (next) {
+    entities_manager_clear();
+    game_manager.player_count = 0;
+
+    game_manager.map = next;
+    game_manager_start_stage();
+  }
 }
 
 void game_manager_on_entity_exploded(Entity *entity) {
@@ -91,7 +108,7 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
       int col = center.col + col_direction[i] * j;
 
       GridPosition new_grid_position = {col, row};
-      TileType tile = map_get_tile(&game_manager.map, new_grid_position);
+      TileType tile = map_get_tile(game_manager.map, new_grid_position);
 
       if (tile == TILE_EMPTY) {
         if (bomb_at_grid(new_grid_position) ||
@@ -131,7 +148,7 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius) {
   }
 
   for (int i = 0; i < destroyed_length; i++) {
-    map_set_tile(&game_manager.map, destroyed[i], TILE_EMPTY);
+    map_set_tile(game_manager.map, destroyed[i], TILE_EMPTY);
     if (!bomb_at_grid(destroyed[i]) && !explosion_tile_at_grid(destroyed[i]))
       map_renderer_animate_brick_destruction(destroyed[i]);
   }
@@ -187,7 +204,8 @@ void game_manager_random_interval() {
       game_manager.event_interval) {
     game_manager.last_event_interval = GetTime();
 
-    for (int i = 0, tries = 0; i < game_manager.bomb_quantity && tries < 10; i++) {
+    for (int i = 0, tries = 0; i < game_manager.bomb_quantity && tries < 10;
+         i++) {
       int col = 1 + rand() % (GRID_HEIGHT - 2); // 1 a 11
       int row = 1 + rand() % (GRID_WIDTH - 2);  // 1 a 13
 
@@ -201,6 +219,8 @@ void game_manager_random_interval() {
         i--;
       }
     }
+
+    game_manager_on_next_stage();
   }
 }
 

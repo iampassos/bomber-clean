@@ -2,7 +2,6 @@
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/entity.h"
-#include "entities/player.h"
 #include <raylib.h>
 #include <stdio.h>
 #include <string.h>
@@ -80,6 +79,7 @@ void entities_manager_debug_all() {
 
 void entities_manager_clear() {
   memset(entities_manager.entries, 0, sizeof(entities_manager.entries));
+  entities_manager.count = 0;
 };
 
 float old_x_offset = 0;
