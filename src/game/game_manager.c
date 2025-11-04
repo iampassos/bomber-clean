@@ -75,12 +75,19 @@ void game_manager_start_stage() {
 void game_manager_on_next_stage() {
   Map *next = map_next(game_manager.map);
 
-  if (next) {
-    entities_manager_clear_but_player();
+  if (!next)
+    return;
 
-    game_manager.map = next;
-    game_manager_start_stage();
-  }
+  entities_manager_clear_but_player();
+
+  game_manager.map = next;
+  game_manager_start_stage();
+
+  game_manager.bomb_radius += RANDOM_BOMB_RADIUS_INCREASE;
+  game_manager.bomb_quantity +=
+      game_manager.map->stage % RANDOM_BOMB_MAP_QUANTITY_INCREASE == 0
+          ? RANDOM_BOMB_QUANTITY_INCREASE
+          : 0;
 }
 
 void game_manager_on_entity_exploded(Entity *entity) {
