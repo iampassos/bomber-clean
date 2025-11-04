@@ -29,8 +29,26 @@ Map *map_create(MapType map_type) {
   }
 
   // garantir que tenha laterais empyt no spawn do bomber man
+  // PLAYER 1 (canto superior esquerdo)
+  map->grid[1][1] = TILE_EMPTY;
   map->grid[1][2] = TILE_EMPTY;
   map->grid[2][1] = TILE_EMPTY;
+
+  // PLAYER 2 (canto superior direito)
+  map->grid[1][12] = TILE_EMPTY;
+  map->grid[1][13] = TILE_EMPTY;
+  map->grid[2][13] = TILE_EMPTY;
+
+  // PLAYER 3 (canto inferior esquerdo)
+  map->grid[10][1] = TILE_EMPTY;
+  map->grid[11][1] = TILE_EMPTY;
+  map->grid[11][2] = TILE_EMPTY;
+
+  // PLAYER 4 (canto inferior direito)
+  map->grid[10][13] = TILE_EMPTY;
+  map->grid[11][12] = TILE_EMPTY;
+  map->grid[11][13] = TILE_EMPTY;
+
 
   map->stage = map_type;
 
