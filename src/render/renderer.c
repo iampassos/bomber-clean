@@ -1,5 +1,5 @@
 #include "renderer.h"
-#include "core/asset_manager.h"
+#include "core/assets/asset_manager.h"
 #include "core/common.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"

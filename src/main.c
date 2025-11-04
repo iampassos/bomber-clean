@@ -1,4 +1,4 @@
-#include "core/asset_manager.h"
+#include "core/assets/asset_manager.h"
 #include "core/common.h"
 #include "entities/entities_manager.h"
 #include "game/game_manager.h"

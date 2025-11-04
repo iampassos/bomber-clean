@@ -1,6 +1,6 @@
 #include "bomb.h"
 #include "core/animation.h"
-#include "core/asset_manager.h"
+#include "core/assets/assets_maps.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/entities_manager.h"
@@ -55,8 +55,8 @@ void bomb_update(Entity *self) {
 void bomb_draw(Entity *self) {
   Bomb *bomb = (Bomb *)self;
 
-  Texture2D *texture = asset_manager_get_bomb_texture(
-      animation_get_frame(&bomb->tick_animation));
+  Texture2D *texture =
+      assets_maps_get_bomb_texture(animation_get_frame(&bomb->tick_animation));
 
   DrawTexture(*texture, bomb->entity.position.x, bomb->entity.position.y,
               WHITE);

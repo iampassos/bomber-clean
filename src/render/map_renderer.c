@@ -1,6 +1,6 @@
 #include "map_renderer.h"
 #include "core/animation.h"
-#include "core/asset_manager.h"
+#include "core/assets/assets_maps.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/bomb.h"
@@ -32,7 +32,7 @@ void map_renderer() {
 }
 
 void map_renderer_background() {
-  DrawTexture(*asset_manager_get_map_background_texture(),
+  DrawTexture(*assets_maps_get_map_background_texture(),
               MAP_X_OFFSET - TILE_SIZE, MAP_Y_OFFSET, WHITE);
 }
 
@@ -53,7 +53,7 @@ void map_renderer_brick_destruction() {
       Vector2 pos = map_grid_to_world(brick_destruction_position[i]);
 
       DrawTexture(
-          *asset_manager_get_brick_destruction_texture(anim->current_frame),
+          *assets_maps_get_brick_destruction_texture(anim->current_frame),
           pos.x, pos.y, WHITE);
 
       animation_update(anim);
@@ -79,7 +79,7 @@ void map_renderer_animate_brick_destruction(GridPosition grid) {
 void map_renderer_battle_stage_one_tiles() {
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = asset_manager_get_map_tiles_textures();
+      Texture2D *textures = assets_maps_get_map_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
@@ -107,7 +107,7 @@ void map_renderer_battle_stage_one_tiles() {
 void map_renderer_peace_town_tiles() {
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = asset_manager_get_map_tiles_textures();
+      Texture2D *textures = assets_maps_get_map_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});

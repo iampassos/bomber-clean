@@ -1,6 +1,6 @@
 #include "power_up.h"
 #include "core/animation.h"
-#include "core/asset_manager.h"
+#include "core/assets/asset_manager.h"
 #include "core/common.h"
 #include "entities/entity.h"
 #include "entities_manager.h"

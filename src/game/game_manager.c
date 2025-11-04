@@ -1,5 +1,5 @@
 #include "game_manager.h"
-#include "core/asset_manager.h"
+#include "core/assets/assets_maps.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/bomb.h"
@@ -67,7 +67,7 @@ void game_manager_start_stage() {
     player->entity.position = player_grid_to_world(player, player->spawn_grid);
   }
 
-  asset_manager_load_map_textures(game_manager.map->stage);
+  assets_maps_load_map_textures(game_manager.map->stage);
 
   game_manager.stage_start = GetTime();
 }

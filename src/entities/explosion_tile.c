@@ -1,6 +1,6 @@
 #include "explosion_tile.h"
 #include "core/animation.h"
-#include "core/asset_manager.h"
+#include "core/assets/assets_maps.h"
 #include "entities/entity.h"
 #include "entities_manager.h"
 #include "game/game_manager.h"
@@ -67,15 +67,15 @@ void explosion_tile_draw(Entity *self) {
   Texture2D *texture;
 
   if (explosion_tile->tile_type == EXPLOSION_CENTER) {
-    texture = asset_manager_get_explosion_center_texture(
+    texture = assets_maps_get_explosion_center_texture(
         animation_get_frame(&explosion_tile->explosion_animation));
 
   } else if (explosion_tile->tile_type == EXPLOSION_MIDDLE) {
-    texture = asset_manager_get_explosion_middle_texture(
+    texture = assets_maps_get_explosion_middle_texture(
         explosion_tile->entity.direction,
         animation_get_frame(&explosion_tile->explosion_animation));
   } else {
-    texture = asset_manager_get_explosion_final_texture(
+    texture = assets_maps_get_explosion_final_texture(
         explosion_tile->entity.direction,
         animation_get_frame(&explosion_tile->explosion_animation));
   }
