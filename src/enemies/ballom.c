@@ -6,6 +6,26 @@
 #include "entities/entities_manager.h"
 #include <stdlib.h>
 
+#define HEIGHT_TOLERANCE 28.5f
+
+Vector2 ballom_grid_to_world(Ballom *ballom, GridPosition grid) {
+  Vector2 center = map_grid_to_world_center(grid);
+  return (Vector2){center.x - ballom->enemy.entity.width / 2.0f,
+                   center.y - ballom->enemy.entity.height / 2.0f -
+                       HEIGHT_TOLERANCE};
+}
+
+GridPosition ballom_world_to_grid(Ballom *ballom) {
+  Vector2 feet_position = (Vector2){
+      ballom->enemy.entity.position.x + ballom->enemy.entity.width / 2.0f,
+      ballom->enemy.entity.position.y +
+          (ballom->enemy.entity.direction == DIR_UP
+               ? ballom->enemy.entity.height * 1.1f
+               : ballom->enemy.entity.height * 0.60f + HEIGHT_TOLERANCE)};
+  GridPosition pos = map_world_to_grid(feet_position);
+  return pos;
+}
+
 Ballom *ballom_create(GridPosition spawn_grid) {
   Entity entity;
   entity.type = ENTITY_ENEMY;
@@ -19,8 +39,6 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   entity.draw = ballom_draw;
   entity.debug = NULL;
 
-  entity.position = map_grid_to_world(spawn_grid);
-
   Enemy enemy;
   enemy.entity = entity;
   enemy.type = ENEMY_BALLOM;
@@ -31,6 +49,8 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 
   Ballom *ballom = malloc(sizeof(Ballom));
   ballom->enemy = enemy;
+
+  ballom->enemy.entity.position = ballom_grid_to_world(ballom, spawn_grid);
 
   entities_manager_add((Entity *)ballom);
 

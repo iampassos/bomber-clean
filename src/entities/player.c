@@ -15,25 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define HEIGHT_TOLERANCE 28.5f
-
-Vector2 player_grid_to_world(Player *player, GridPosition grid) {
-  Vector2 center = map_grid_to_world_center(grid);
-  return (Vector2){center.x - player->entity.width / 2,
-                   center.y - player->entity.height / 2 - HEIGHT_TOLERANCE};
-}
-
-GridPosition player_world_to_grid(Player *player) {
-  Vector2 feet_position =
-      (Vector2){player->entity.position.x + player->entity.width / 2.0f,
-                player->entity.position.y +
-                    (player->entity.direction == DIR_UP
-                         ? player->entity.height * 1.1f
-                         : player->entity.height * 0.60f + HEIGHT_TOLERANCE)};
-  GridPosition pos = map_world_to_grid(feet_position);
-  return pos;
-}
-
 Player *player_create(int id, GridPosition spawn_grid) {
   spawn_grid.col = fmax(1, fmin(spawn_grid.col, GRID_WIDTH - 2));
   spawn_grid.row = fmax(1, fmin(spawn_grid.row, GRID_HEIGHT - 2));
@@ -63,7 +44,8 @@ Player *player_create(int id, GridPosition spawn_grid) {
   player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
 
-  player->entity.position = player_grid_to_world(player, spawn_grid);
+  player->entity.position = entity_grid_to_world(&player->entity, spawn_grid,
+                                                 PLAYER_HEIGHT_TOLERANCE);
 
   animation_init(&player->death_animation, 7, 0.3f, false, false);
   animation_init(&player->walk_animation, 3, 0.25f, true, false);
@@ -76,21 +58,23 @@ Player *player_create(int id, GridPosition spawn_grid) {
   entities_manager_add((Entity *)player);
 
   if (map_is_walkable(map, spawn_grid)) {
-    player->entity.position = player_grid_to_world(player, spawn_grid);
+    player->entity.position = entity_grid_to_world(&player->entity, spawn_grid,
+                                                   PLAYER_HEIGHT_TOLERANCE);
     return player;
   }
 
   for (int r = spawn_grid.col; r < GRID_HEIGHT - 1; r++) {
     for (int c = spawn_grid.row; c < GRID_WIDTH - 1; c++) {
       if (map_is_walkable(map, (GridPosition){r, c})) {
-        player->entity.position =
-            player_grid_to_world(player, (GridPosition){c, r});
+        player->entity.position = entity_grid_to_world(
+            &player->entity, (GridPosition){c, r}, PLAYER_HEIGHT_TOLERANCE);
         return player;
       }
     }
   }
 
-  player->entity.position = player_grid_to_world(player, (GridPosition){1, 1});
+  player->entity.position = entity_grid_to_world(
+      &player->entity, (GridPosition){1, 1}, PLAYER_HEIGHT_TOLERANCE);
 
   return player;
 }
@@ -114,8 +98,8 @@ void player_update(Entity *self) {
         player->invencible = true;
         player->invencibility_start = GetTime();
         animation_stop(&player->death_animation);
-        player->entity.position =
-            player_grid_to_world(player, (GridPosition){1, 1});
+        player->entity.position = entity_grid_to_world(
+            &player->entity, (GridPosition){1, 1}, PLAYER_HEIGHT_TOLERANCE);
       }
     }
 
@@ -133,7 +117,9 @@ void player_update(Entity *self) {
   }
 
   if (player->input.place_bomb && rules_can_place_bomb(player))
-    bomb_create(player->id, map_grid_to_world(player_world_to_grid(player)),
+    bomb_create(player->id,
+                map_grid_to_world(entity_world_to_grid(
+                    &player->entity, PLAYER_HEIGHT_TOLERANCE)),
                 player->bomb_radius);
 
   Vector2 projected = player->entity.position;
@@ -146,14 +132,15 @@ void player_update(Entity *self) {
   Vector2 new_pos = player->entity.position;
 
   Vector2 horizontal = {projected.x,
-                        player->entity.position.y + HEIGHT_TOLERANCE};
+                        player->entity.position.y + PLAYER_HEIGHT_TOLERANCE};
   if (physics_can_move_to(horizontal, player->entity.width,
                           player->entity.height))
     new_pos.x = horizontal.x;
 
   Vector2 vertical = {player->entity.position.x, projected.y};
-  if (physics_can_move_to((Vector2){vertical.x, vertical.y + HEIGHT_TOLERANCE},
-                          player->entity.width, player->entity.height))
+  if (physics_can_move_to(
+          (Vector2){vertical.x, vertical.y + PLAYER_HEIGHT_TOLERANCE},
+          player->entity.width, player->entity.height))
     new_pos.y = vertical.y;
   else if (player->input.move.x == 0) {
     float offset_in_tile = fmod(
@@ -166,14 +153,14 @@ void player_update(Entity *self) {
       float val = fmin(player->speed, dist_to_left);
 
       if (physics_can_move_to(
-              (Vector2){new_pos.x - val, new_pos.y + HEIGHT_TOLERANCE},
+              (Vector2){new_pos.x - val, new_pos.y + PLAYER_HEIGHT_TOLERANCE},
               player->entity.width, player->entity.height))
         new_pos.x -= val;
     } else if (dist_to_right < dist_to_left) {
       float val = fmin(player->speed, dist_to_right);
 
       if (physics_can_move_to(
-              (Vector2){new_pos.x + val, new_pos.y + HEIGHT_TOLERANCE},
+              (Vector2){new_pos.x + val, new_pos.y + PLAYER_HEIGHT_TOLERANCE},
               player->entity.width, player->entity.height))
         new_pos.x += val;
     }
@@ -230,7 +217,8 @@ void player_draw(Entity *self) {
 void player_debug(Entity *self) {
   Player *player = (Player *)self;
 
-  GridPosition pos = player_world_to_grid(player);
+  GridPosition pos =
+      entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
   TileType tile = map_get_tile(game_manager.map, pos);
   char strBuffer[1000];
   snprintf(strBuffer, sizeof(strBuffer),
@@ -309,7 +297,8 @@ Player *player_on_grid(GridPosition grid) {
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = (Player *)game_manager.players[i];
 
-    GridPosition grid2 = player_world_to_grid(player);
+    GridPosition grid2 =
+        entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
 
     if (map_is_same_grid(grid, grid2))
       return player;

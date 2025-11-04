@@ -65,7 +65,8 @@ void game_manager_update(float dt) {
 void game_manager_start_stage() {
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = game_manager.players[i];
-    player->entity.position = player_grid_to_world(player, player->spawn_grid);
+    player->entity.position = entity_grid_to_world(
+        &player->entity, player->spawn_grid, PLAYER_HEIGHT_TOLERANCE);
   }
 
   assets_maps_load_textures(game_manager.map->stage);

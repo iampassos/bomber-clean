@@ -5,9 +5,9 @@
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "entities/explosion_tile.h"
+#include "entities/player.h"
 #include "entities/power_up.h"
 #include "game/game_manager.h"
-#include <stdlib.h>
 #include <time.h>
 
 bool rules_can_place_bomb(Player *player) {
@@ -17,7 +17,8 @@ bool rules_can_place_bomb(Player *player) {
   if (player_get_all_bombs(player, NULL) >= player->bomb_capacity)
     return false;
 
-  GridPosition pos = player_world_to_grid(player);
+  GridPosition pos =
+      entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
 
   if (!map_is_walkable(game_manager.map, pos))
     return false;
@@ -29,7 +30,8 @@ bool rules_can_place_bomb(Player *player) {
 }
 
 bool rules_can_kill_player(Player *player) {
-  GridPosition pos = player_world_to_grid(player);
+  GridPosition pos =
+      entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
 
   if (explosion_tile_at_grid(pos) != NULL && !player->invencible)
     return true;

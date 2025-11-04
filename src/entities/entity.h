@@ -1,6 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "core/map.h"
 #include <raylib.h>
 
 typedef enum {
@@ -38,5 +39,9 @@ typedef struct Entity {
   void (*draw)(struct Entity *self);
   void (*debug)(struct Entity *self);
 } Entity;
+
+Vector2 entity_grid_to_world(Entity *entity, GridPosition grid,
+                             float height_tolerance);
+GridPosition entity_world_to_grid(Entity *entity, float height_tolerance);
 
 #endif
