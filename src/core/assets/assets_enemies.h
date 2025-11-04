@@ -8,6 +8,8 @@ typedef struct {
   Texture2D ballom[4][4];
 } AssetsEnemies;
 
-void assets_enemies_load_enemy_textures();
+void assets_enemies_load_ballom_textures();
+Texture2D *assets_enemies_get_ballom_texture(EntityDirection direction,
+                                             int frame);
 
 #endif

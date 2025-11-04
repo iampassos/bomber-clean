@@ -1,5 +1,6 @@
 #include "assets_players.h"
 #include "asset_manager.h"
+#include <stdio.h>
 
 void assets_players_load_player_textures() {
   assets_players_load_player_walk_textures();
@@ -8,22 +9,20 @@ void assets_players_load_player_textures() {
 }
 
 void assets_players_load_player_walk_white_textures() {
-  const char *paths[4][3] = {{"assets/sprites/player/UP1_WHITE.png",
-                              "assets/sprites/player/UP2_WHITE.png",
-                              "assets/sprites/player/UP3_WHITE.png"},
-                             {"assets/sprites/player/DOWN1_WHITE.png",
-                              "assets/sprites/player/DOWN2_WHITE.png",
-                              "assets/sprites/player/DOWN3_WHITE.png"},
-                             {"assets/sprites/player/LEFT1_WHITE.png",
-                              "assets/sprites/player/LEFT2_WHITE.png",
-                              "assets/sprites/player/LEFT3_WHITE.png"},
-                             {"assets/sprites/player/RIGHT1_WHITE.png",
-                              "assets/sprites/player/RIGHT2_WHITE.png",
-                              "assets/sprites/player/RIGHT3_WHITE.png"}};
+  char *player_path = "assets/sprites/player/";
+
+  const char *paths[4][3] = {
+      {"UP1_WHITE.png", "UP2_WHITE.png", "UP3_WHITE.png"},
+      {"DOWN1_WHITE.png", "DOWN2_WHITE.png", "DOWN3_WHITE.png"},
+      {"LEFT1_WHITE.png", "LEFT2_WHITE.png", "LEFT3_WHITE.png"},
+      {"RIGHT1_WHITE.png", "RIGHT2_WHITE.png", "RIGHT3_WHITE.png"}};
+
+  char path[100];
 
   for (int dir = 0; dir < 4; dir++) {
     for (int frame = 0; frame < 3; frame++) {
-      Image img = LoadImage(paths[dir][frame]);
+      sprintf(path, "%s%s", player_path, paths[dir][frame]);
+      Image img = LoadImage(path);
       ImageResizeNN(&img, 64, 88);
       asset_manager.assets_players.player_walk_white[dir][frame] =
           LoadTextureFromImage(img);
@@ -36,19 +35,19 @@ void assets_players_load_player_walk_white_textures() {
 }
 
 void assets_players_load_player_walk_textures() {
-  const char *paths[4][3] = {
-      {"assets/sprites/player/UP1.png", "assets/sprites/player/UP2.png",
-       "assets/sprites/player/UP3.png"},
-      {"assets/sprites/player/DOWN1.png", "assets/sprites/player/DOWN2.png",
-       "assets/sprites/player/DOWN3.png"},
-      {"assets/sprites/player/LEFT1.png", "assets/sprites/player/LEFT2.png",
-       "assets/sprites/player/LEFT3.png"},
-      {"assets/sprites/player/RIGHT1.png", "assets/sprites/player/RIGHT2.png",
-       "assets/sprites/player/RIGHT3.png"}};
+  char *player_path = "assets/sprites/player/";
+
+  const char *paths[4][3] = {{"UP1.png", "UP2.png", "UP3.png"},
+                             {"DOWN1.png", "DOWN2.png", "DOWN3.png"},
+                             {"LEFT1.png", "LEFT2.png", "LEFT3.png"},
+                             {"RIGHT1.png", "RIGHT2.png", "RIGHT3.png"}};
+
+  char path[100];
 
   for (int dir = 0; dir < 4; dir++) {
     for (int frame = 0; frame < 3; frame++) {
-      Image img = LoadImage(paths[dir][frame]);
+      sprintf(path, "%s%s", player_path, paths[dir][frame]);
+      Image img = LoadImage(path);
       ImageResizeNN(&img, 64, 88);
       asset_manager.assets_players.player_walk[dir][frame] =
           LoadTextureFromImage(img);
@@ -60,18 +59,19 @@ void assets_players_load_player_walk_textures() {
 }
 
 void assets_players_load_player_death_textures() {
+  char *player_path = "assets/sprites/player/";
+
   const char *paths[7] = {
-      "assets/sprites/player/PLAYER_DEATH_1.png",
-      "assets/sprites/player/PLAYER_DEATH_2.png",
-      "assets/sprites/player/PLAYER_DEATH_3.png",
-      "assets/sprites/player/PLAYER_DEATH_4.png",
-      "assets/sprites/player/PLAYER_DEATH_5.png",
-      "assets/sprites/player/PLAYER_DEATH_6.png",
-      "assets/sprites/player/PLAYER_DEATH_7.png",
+      "PLAYER_DEATH_1.png", "PLAYER_DEATH_2.png", "PLAYER_DEATH_3.png",
+      "PLAYER_DEATH_4.png", "PLAYER_DEATH_5.png", "PLAYER_DEATH_6.png",
+      "PLAYER_DEATH_7.png",
   };
 
+  char path[100];
+
   for (int frame = 0; frame < 7; frame++) {
-    Image img = LoadImage(paths[frame]);
+    sprintf(path, "%s%s", player_path, paths[frame]);
+    Image img = LoadImage(path);
     ImageResizeNN(&img, 64, 88);
     asset_manager.assets_players.player_death[frame] =
         LoadTextureFromImage(img);
