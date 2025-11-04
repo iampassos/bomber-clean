@@ -1,14 +1,19 @@
-// #ifndef SCORE_H
-// #define SCORE_H
+#ifndef SCORE_H
+#define SCORE_H
 
-// #include <stdlib.h>
-// #include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "entities/player.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-// typedef struct Score{
-//     int id;
-//     double time;
-// }Score;
+typedef struct Score {
+  int id;
+  double time;
+} Score;
 
-// void score_get_player(Player *p1,Player *p2,Player *p3,Player *p4);
 
-// #endif
+void score_get_player(Player *p1);
+
+#endif 
