@@ -6,6 +6,7 @@
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "entities/explosion_tile.h"
+#include "entities/player.h"
 #include "entities/power_up.h"
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
@@ -25,6 +26,10 @@ void game_manager_init() {
 
   game_manager.map = map_create(MAP_BATTLE_STAGE_1);
   map_create(MAP_PEACE_TOWN);
+
+  game_manager.players[game_manager.player_count] =
+      player_create(0, (GridPosition){1, 1});
+  game_manager.player_count++;
 
   game_manager_start_stage();
 }
@@ -53,9 +58,11 @@ void game_manager_update(float dt) {
 }
 
 void game_manager_start_stage() {
-  game_manager.players[game_manager.player_count] =
-      player_create(0, (Vector2){0, 0});
-  game_manager.player_count++;
+  for (int i = 0; i < game_manager.player_count; i++) {
+    Player *player = game_manager.players[i];
+    player->entity.position = player_grid_to_world(player, player->spawn_grid);
+  }
+
   asset_manager_load_map_textures(game_manager.map->stage);
 }
 
@@ -63,8 +70,7 @@ void game_manager_on_next_stage() {
   Map *next = map_next(game_manager.map);
 
   if (next) {
-    entities_manager_clear();
-    game_manager.player_count = 0;
+    entities_manager_clear_but_player();
 
     game_manager.map = next;
     game_manager_start_stage();

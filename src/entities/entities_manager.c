@@ -4,6 +4,7 @@
 #include "entities/entity.h"
 #include <raylib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 EntitiesManager entities_manager = {0};
@@ -78,9 +79,19 @@ void entities_manager_debug_all() {
 }
 
 void entities_manager_clear() {
-  memset(entities_manager.entries, 0, sizeof(entities_manager.entries));
+  for (int i = 0; i < entities_manager.count; i++)
+    free(entities_manager.entries[i]);
+
   entities_manager.count = 0;
 };
+
+void entities_manager_clear_but_player() {
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+    if (entity->type != ENTITY_PLAYER)
+      entities_manager_remove(entity);
+  }
+}
 
 float old_x_offset = 0;
 float old_y_offset = 0;

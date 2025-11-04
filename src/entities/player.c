@@ -34,12 +34,15 @@ GridPosition player_world_to_grid(Player *player) {
   return pos;
 }
 
-Player *player_create(int id, Vector2 position) {
+Player *player_create(int id, GridPosition spawn_grid) {
+  spawn_grid.col = fmax(1, fmin(spawn_grid.col, GRID_WIDTH - 2));
+  spawn_grid.row = fmax(1, fmin(spawn_grid.row, GRID_HEIGHT - 2));
+
   Entity entity;
   entity.type = ENTITY_PLAYER;
   entity.layer = LAYER_PLAYERS;
   entity.direction = DIR_DOWN;
-  entity.position = position;
+  entity.position = (Vector2){0, 0};
   entity.width = TILE_SIZE - 10;
   entity.height = TILE_SIZE - 10;
   entity.spawn_time = GetTime();
@@ -50,6 +53,7 @@ Player *player_create(int id, Vector2 position) {
   Player *player = malloc(sizeof(Player));
   player->entity = entity;
   player->id = id;
+  player->spawn_grid = spawn_grid;
   player->alive = true;
   player->invencible = true;
   player->invencibility_start = GetTime();
@@ -59,27 +63,25 @@ Player *player_create(int id, Vector2 position) {
   player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
 
+  player->entity.position = player_grid_to_world(player, spawn_grid);
+
   animation_init(&player->death_animation, 7, 0.3f, false, false);
   animation_init(&player->walk_animation, 3, 0.25f, true, false);
   animation_play(&player->walk_animation);
   animation_init(&player->invencible_animation, 2, 0.1f, true, false);
   animation_play(&player->invencible_animation);
 
-  GridPosition pos = map_world_to_grid(position);
-  pos.col = fmax(1, fmin(pos.col, GRID_WIDTH - 2));
-  pos.row = fmax(1, fmin(pos.row, GRID_HEIGHT - 2));
-
   Map *map = game_manager.map;
 
   entities_manager_add((Entity *)player);
 
-  if (map_is_walkable(map, pos)) {
-    player->entity.position = player_grid_to_world(player, pos);
+  if (map_is_walkable(map, spawn_grid)) {
+    player->entity.position = player_grid_to_world(player, spawn_grid);
     return player;
   }
 
-  for (int r = pos.col; r < GRID_HEIGHT - 1; r++) {
-    for (int c = pos.row; c < GRID_WIDTH - 1; c++) {
+  for (int r = spawn_grid.col; r < GRID_HEIGHT - 1; r++) {
+    for (int c = spawn_grid.row; c < GRID_WIDTH - 1; c++) {
       if (map_is_walkable(map, (GridPosition){r, c})) {
         player->entity.position =
             player_grid_to_world(player, (GridPosition){c, r});
