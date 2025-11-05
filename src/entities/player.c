@@ -99,7 +99,7 @@ void player_update(Entity *self) {
         player->invencibility_start = GetTime();
         animation_stop(&player->death_animation);
         player->entity.position = entity_grid_to_world(
-            &player->entity, (GridPosition){1, 1}, PLAYER_HEIGHT_TOLERANCE);
+            &player->entity, player->spawn_grid, PLAYER_HEIGHT_TOLERANCE);
       }
     }
 

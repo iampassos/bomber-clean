@@ -46,6 +46,7 @@ void game_manager_update(float dt) {
 
     input.place_bomb =
         input.place_bomb && GetTime() - input_manager.last_input[i] >= 0.25f;
+
     input_manager.last_input[i] =
         input.place_bomb ? GetTime() : input_manager.last_input[i];
 
@@ -55,6 +56,7 @@ void game_manager_update(float dt) {
         input.debug && GetTime() - input_manager.last_input[i] >= 0.25f
             ? game_manager.view_mode == VIEW_NORMAL ? VIEW_DEBUG : VIEW_NORMAL
             : game_manager.view_mode;
+
     input_manager.last_input[i] =
         input.debug ? GetTime() : input_manager.last_input[i];
   }
