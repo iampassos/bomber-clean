@@ -51,7 +51,9 @@ void list_free_all(LinkedList *list) {
   while (aux != NULL) {
     Node *delete = aux;
     aux = aux->next;
-    free(aux->data); // libera o ponteiro data
+    if(delete->data){
+      free(delete->data); // libera o ponteiro data
+    }
     free(delete);    // libera o nó em si
   }
   free(list);
