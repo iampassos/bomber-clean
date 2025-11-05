@@ -22,8 +22,10 @@ void renderer_draw_game() {
   }
   if (game_manager.hitboxes)
     entities_manager_hitboxes();
-  if (game_manager.grid)
+  if (game_manager.grid) {
     map_renderer_debug();
+    entities_manager_grid();
+  }
 }
 
 void renderer_hud() {

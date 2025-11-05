@@ -298,11 +298,6 @@ void player_debug(Entity *self) {
                 (Color){196, 196, 196, 200});
 
   DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
-
-  Vector2 grid = map_grid_to_world(pos);
-
-  DrawRectangle(grid.x, grid.y, TILE_SIZE, TILE_SIZE,
-                (Color){128, 128, 128, 128});
 }
 
 int player_get_all_bombs(Player *player, Entity **out) {

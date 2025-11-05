@@ -31,5 +31,6 @@ int entities_manager_get_all_from_type(EntityType type, Entity **out,
 
 void entities_manager_debug();
 void entities_manager_hitboxes();
+void entities_manager_grid();
 
 #endif

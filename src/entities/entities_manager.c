@@ -175,3 +175,18 @@ void entities_manager_hitboxes() {
                        entity->width, entity->height, YELLOW);
   }
 }
+
+void entities_manager_grid() {
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    if (entity->type == ENTITY_ENEMY || entity->type == ENTITY_PLAYER) {
+      GridPosition grid =
+          entity_world_to_grid(entity, entity->height_tolerance);
+      Vector2 pos = map_grid_to_world(grid);
+
+      DrawRectangle(pos.x, pos.y, TILE_SIZE, TILE_SIZE,
+                    (Color){128, 128, 128, 128});
+    }
+  }
+}
