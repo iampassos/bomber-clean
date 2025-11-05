@@ -31,7 +31,8 @@ void game_manager_random_interval();
 void game_manager_on_next_stage();
 void game_manager_on_enemy_touch(Player *player);
 void game_manager_on_entity_exploded(Entity *entity);
-void game_manager_on_bomb_exploded(GridPosition center, int radius);
+void game_manager_on_bomb_exploded(GridPosition center, int radius,
+                                   int player_id);
 void game_manager_on_explosion_end(Vector2 position);
 void game_manager_on_power_up_press(Player *player, PowerUp *power_up);
 

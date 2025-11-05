@@ -14,13 +14,14 @@ typedef enum {
 
 typedef struct {
   Entity entity;
+  int player_id;
   ExplosionTileType tile_type;
   float lifetime;
   float spawn_time;
   Animation explosion_animation;
 } ExplosionTile;
 
-ExplosionTile *explosion_tile_create(Vector2 position,
+ExplosionTile *explosion_tile_create(int player_id, Vector2 position,
                                      EntityDirection direction,
                                      ExplosionTileType tile_type);
 

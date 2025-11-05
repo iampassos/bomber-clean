@@ -6,7 +6,7 @@
 #include "game/game_manager.h"
 #include <stdlib.h>
 
-ExplosionTile *explosion_tile_create(Vector2 position,
+ExplosionTile *explosion_tile_create(int player_id, Vector2 position,
                                      EntityDirection direction,
                                      ExplosionTileType tile_type) {
   Entity entity;
@@ -23,6 +23,7 @@ ExplosionTile *explosion_tile_create(Vector2 position,
   entity.debug = NULL;
 
   ExplosionTile *explosion_tile = malloc(sizeof(ExplosionTile));
+  explosion_tile->player_id = player_id;
   explosion_tile->entity = entity;
   explosion_tile->tile_type = tile_type;
   explosion_tile->lifetime = DEFAULT_EXPLOSION_LIFETIME;
@@ -46,7 +47,8 @@ void explosion_tile_update(Entity *self) {
     Vector2 pos = explosion_tile->entity.position;
     entities_manager_remove(self);
 
-    if (explosion_tile->tile_type == EXPLOSION_CENTER)
+    if (explosion_tile->player_id == -1 &&
+        explosion_tile->tile_type == EXPLOSION_CENTER)
       game_manager_on_explosion_end(pos);
 
     return;

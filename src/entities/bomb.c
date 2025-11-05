@@ -45,7 +45,7 @@ void bomb_update(Entity *self) {
     bomb->exploded = true;
 
     game_manager_on_bomb_exploded(map_world_to_grid(bomb->entity.position),
-                                  bomb->radius);
+                                  bomb->radius, bomb->player_id);
 
     entities_manager_remove(self);
   }
