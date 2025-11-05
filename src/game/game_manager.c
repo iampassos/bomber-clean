@@ -29,9 +29,13 @@ void game_manager_init() {
   game_manager.map = map_create(MAP_BATTLE_STAGE_1);
   map_create(MAP_PEACE_TOWN);
 
-  game_manager.players[game_manager.player_count] =
-      player_create(0, (GridPosition){1, 1});
-  game_manager.player_count++;
+  GridPosition spawn_pos[4] = {{1, 1}, {13, 11}, {13, 1}, {1, 11}};
+
+  do {
+    game_manager.players[game_manager.player_count] =
+        player_create(0, spawn_pos[game_manager.player_count]);
+    game_manager.player_count++;
+  } while (game_manager.player_count < input_manager.controllers_n);
 
   game_manager_start_stage();
 }

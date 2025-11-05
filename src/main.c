@@ -1,9 +1,11 @@
+#include "controller.h"
 #include "core/assets/asset_manager.h"
 #include "core/common.h"
 #include "entities/entities_manager.h"
 #include "game/game_manager.h"
 #include "input/input_manager.h"
 #include "render/renderer.h"
+#include <SDL2/SDL_gamecontroller.h>
 #include <raylib.h>
 
 #include "rng.h"

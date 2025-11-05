@@ -1,28 +1,28 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <SDL2/SDL_gamecontroller.h>
+#include <SDL2/SDL_joystick.h>
 #include <raylib.h>
 
 typedef struct ControllerInput {
-  Vector2 rightAxis;
-  Vector2 leftAxis;
-  float rt;
-  float lt;
-  bool up;
-  bool down;
-  bool left;
-  bool right;
   bool a;
   bool b;
-  bool x;
   bool y;
-  bool menu;
+  bool x;
+  bool select;
+  bool start;
+  bool up;
+  bool down;
+  bool right;
+  bool left;
+  bool lt;
+  bool rt;
 } ControllerInput;
 
-void controllers_init(SDL_GameController *controllers[], int *controllers_n);
-ControllerInput controller_input(SDL_GameController *controller);
-ControllerInput controllers_all_inputs(SDL_GameController *controllers[],
+void controllers_init(SDL_Joystick *controllers[], int *controllers_n);
+
+ControllerInput controller_input(SDL_Joystick *joy);
+ControllerInput controllers_all_inputs(SDL_Joystick *controllers[],
                                        int controller_n);
 
 #endif

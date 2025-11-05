@@ -49,7 +49,6 @@ Map *map_create(MapType map_type) {
   map->grid[11][12] = TILE_EMPTY;
   map->grid[11][13] = TILE_EMPTY;
 
-
   map->stage = map_type;
 
   list_insert_end(linked_list_head, map);

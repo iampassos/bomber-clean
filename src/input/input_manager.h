@@ -2,21 +2,25 @@
 #define INPUT_MANAGER_H
 
 #include "core/common.h"
+#include <SDL2/SDL_joystick.h>
 #include <raylib.h>
 
 typedef struct {
   Vector2 move;
   bool place_bomb;
   bool debug;
-  bool fullscreen;
 } PlayerInput;
 
 typedef enum { ORIGIN_KEYBOARD, ORIGIN_CONTROLLER } InputOrigin;
 
 typedef struct {
   PlayerInput player_inputs[MAX_PLAYERS];
+
   InputOrigin input_origins[MAX_PLAYERS];
   float last_input[MAX_PLAYERS];
+
+  SDL_Joystick *controllers[4];
+  int controllers_n;
 } InputManager;
 
 extern InputManager input_manager;
