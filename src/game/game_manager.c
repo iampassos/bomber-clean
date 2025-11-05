@@ -26,6 +26,8 @@ void game_manager_init() {
   game_manager.bomb_radius = RANDOM_BOMB_INITIAL_RADIUS;
   game_manager.bomb_quantity = RANDOM_BOMB_INITIAL_QUANTITY;
   game_manager.event_interval = RANDOM_EVENT_INTERVAL;
+  game_manager.enemy_quantity = RANDOM_ENEMY_INITIAL_QUANTITY;
+  game_manager.enemies_available_n = 0;
 
   game_manager.map = map_create(MAP_BATTLE_STAGE_1);
   map_create(MAP_PEACE_TOWN);
@@ -80,7 +82,12 @@ void game_manager_start_stage() {
 
   game_manager.stage_start = GetTime();
 
-  ballom_create((GridPosition){1, 1});
+  for (int i = 0; i < game_manager.map->enemies_n; i++) {
+    game_manager.enemies_available[game_manager.enemies_available_n++] =
+        game_manager.map->enemies[i];
+  }
+
+  // ballom_create((GridPosition){1, 1});
 }
 
 void game_manager_on_next_stage() {
@@ -98,6 +105,10 @@ void game_manager_on_next_stage() {
   game_manager.bomb_quantity +=
       game_manager.map->stage % RANDOM_BOMB_MAP_QUANTITY_INCREASE == 0
           ? RANDOM_BOMB_QUANTITY_INCREASE
+          : 0;
+  game_manager.enemy_quantity +=
+      game_manager.map->stage % RANDOM_ENEMY_MAP_QUANTITY_INCREASE == 0
+          ? RANDOM_ENEMY_QUANTITY_INCREASE
           : 0;
 }
 
@@ -205,13 +216,14 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius,
   }
 }
 
-void game_manager_on_explosion_end(Vector2 position) {
-  if (rules_can_spawn_power_up()) {
+void game_manager_on_explosion_end(GridPosition grid) {
+  if (rules_can_spawn_power_up(grid)) {
     int spawn = rand() % 100 < POWER_UP_PROBABILITY;
 
     if (spawn) {
       float probabilities[6] = {2.5f, 27.5f, 27.5f, 27.5f, 1.0f, 14};
-      power_up_create(position, weighted_average(6, probabilities));
+      power_up_create(map_grid_to_world(grid),
+                      weighted_average(6, probabilities));
     }
   }
 }
@@ -250,19 +262,42 @@ void game_manager_random_interval() {
       game_manager.event_interval) {
     game_manager.last_event_interval = GetTime();
 
-    for (int i = 0, tries = 0; i < game_manager.bomb_quantity && tries < 10;
-         i++) {
-      int col = 1 + rand() % (GRID_HEIGHT - 2); // 1 a 11
-      int row = 1 + rand() % (GRID_WIDTH - 2);  // 1 a 13
+    float probabilities[] = {ENEMY_PROBABILITY, BOMB_PROBABILITY};
+    int ev = weighted_average(2, probabilities);
 
-      GridPosition grid = {col, row};
+    if (ev == 0) {
+      for (int i = 0, tries = 0; i < game_manager.enemy_quantity && tries < 10;
+           i++) {
+        int col = 1 + rand() % (GRID_HEIGHT - 2); // 1 a 11
+        int row = 1 + rand() % (GRID_WIDTH - 2);  // 1 a 13
+        GridPosition grid = {col, row};
 
-      if (rules_can_spawn_bomb(grid)) {
-        bomb_create(-1, map_grid_to_world(grid), game_manager.bomb_radius);
-        tries = 0;
-      } else {
-        tries++;
-        i--;
+        if (rules_can_spawn_enemy(grid)) {
+          switch (rand() % game_manager.enemies_available_n) {
+          case ENEMY_BALLOM:
+            ballom_create(grid);
+            break;
+          }
+          tries = 0;
+        } else {
+          tries++;
+          i--;
+        }
+      }
+    } else {
+      for (int i = 0, tries = 0; i < game_manager.bomb_quantity && tries < 10;
+           i++) {
+        int col = 1 + rand() % (GRID_HEIGHT - 2); // 1 a 11
+        int row = 1 + rand() % (GRID_WIDTH - 2);  // 1 a 13
+        GridPosition grid = {col, row};
+
+        if (rules_can_spawn_bomb(grid)) {
+          bomb_create(-1, map_grid_to_world(grid), game_manager.bomb_radius);
+          tries = 0;
+        } else {
+          tries++;
+          i--;
+        }
       }
     }
   }

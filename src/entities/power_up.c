@@ -45,7 +45,7 @@ void power_up_update(Entity *self) {
     return;
   }
 
-  Player *player = player_on_grid(map_world_to_grid(power_up->entity.position));
+  Player *player = player_at_grid(map_world_to_grid(power_up->entity.position));
 
   if (player) {
     game_manager_on_power_up_press(player, power_up);

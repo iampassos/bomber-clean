@@ -20,6 +20,8 @@ typedef struct GridPosition {
 typedef struct Map {
   TileType grid[GRID_HEIGHT][GRID_WIDTH];
   MapType stage;
+  int enemies[3];
+  int enemies_n;
 } Map;
 
 Map *map_create(MapType map_type);

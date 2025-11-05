@@ -3,6 +3,7 @@
 
 #include "core/common.h"
 #include "core/map.h"
+#include "enemies/enemy.h"
 #include "entities/player.h"
 #include "entities/power_up.h"
 
@@ -18,6 +19,9 @@ typedef struct {
   float stage_start;
   int bomb_radius;
   int bomb_quantity;
+  int enemy_quantity;
+  EnemyType enemies_available[1];
+  int enemies_available_n;
 } GameManager;
 
 extern GameManager game_manager;
@@ -33,7 +37,7 @@ void game_manager_on_enemy_touch(Player *player);
 void game_manager_on_entity_exploded(Entity *entity);
 void game_manager_on_bomb_exploded(GridPosition center, int radius,
                                    int player_id);
-void game_manager_on_explosion_end(Vector2 position);
+void game_manager_on_explosion_end(GridPosition grid);
 void game_manager_on_power_up_press(Player *player, PowerUp *power_up);
 
 int weighted_average(int items, float probabilities[]);

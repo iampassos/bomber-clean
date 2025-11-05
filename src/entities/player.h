@@ -35,6 +35,6 @@ void player_draw(Entity *self);
 void player_debug(Entity *self);
 
 int player_get_all_bombs(Player *player, Entity **out);
-Player *player_on_grid(GridPosition grid);
+Player *player_at_grid(GridPosition grid);
 
 #endif

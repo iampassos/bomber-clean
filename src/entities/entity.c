@@ -1,5 +1,4 @@
 #include "entity.h"
-#include "core/map.h"
 
 Vector2 entity_grid_to_world(Entity *entity, GridPosition grid,
                              float height_tolerance) {

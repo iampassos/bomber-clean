@@ -1,10 +1,11 @@
 #include "map.h"
 #include "core/common.h"
+#include "enemies/enemy.h"
 #include "linked_list.h"
 #include <raylib.h>
 #include <raymath.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 LinkedList *linked_list_head = NULL;
 
@@ -50,6 +51,15 @@ Map *map_create(MapType map_type) {
   map->grid[11][13] = TILE_EMPTY;
 
   map->stage = map_type;
+
+  map->enemies_n = 0;
+  switch (map_type) {
+  case MAP_BATTLE_STAGE_1:
+    map->enemies[map->enemies_n++] = ENEMY_BALLOM;
+    break;
+  default:
+    break;
+  }
 
   list_insert_end(linked_list_head, map);
 

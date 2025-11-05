@@ -1,6 +1,5 @@
 #include "rules.h"
 #include "core/common.h"
-#include "core/map.h"
 #include "enemies/enemy.h"
 #include "entities/bomb.h"
 #include "entities/entities_manager.h"
@@ -40,18 +39,48 @@ bool rules_can_kill_power_up(PowerUp *power_up) { return true; }
 
 bool rules_can_kill_enemy(Enemy *enemy) { return true; }
 
-bool rules_can_spawn_enemy() {
+bool rules_can_spawn_enemy(GridPosition grid) {
   if (entities_manager_get_all_from_type(ENTITY_ENEMY, NULL, ENEMY_MAP_LIMIT) >=
       ENEMY_MAP_LIMIT)
     return false;
 
+  TileType tile = map_get_tile(game_manager.map, grid);
+
+  if (!map_is_valid_grid(grid))
+    return false;
+
+  if (tile != TILE_EMPTY)
+    return false;
+
+  for (int i = grid.col - 1; i <= grid.col + 1; i++) {
+    for (int j = grid.row - 1; j <= grid.row + 1; j++) {
+      if (enemy_at_grid((GridPosition){i, j}))
+        return false;
+    }
+  }
+
   return true;
 }
 
-bool rules_can_spawn_power_up() {
+bool rules_can_spawn_power_up(GridPosition grid) {
   if (entities_manager_get_all_from_type(
           ENTITY_POWER_UP, NULL, POWER_UP_MAP_LIMIT) >= POWER_UP_MAP_LIMIT)
     return false;
+
+  TileType tile = map_get_tile(game_manager.map, grid);
+
+  if (!map_is_valid_grid(grid))
+    return false;
+
+  if (tile != TILE_EMPTY)
+    return false;
+
+  for (int i = grid.col - 1; i <= grid.col + 1; i++) {
+    for (int j = grid.row - 1; j <= grid.row + 1; j++) {
+      if (power_up_at_grid((GridPosition){i, j}))
+        return false;
+    }
+  }
 
   return true;
 }

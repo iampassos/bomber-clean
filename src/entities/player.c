@@ -300,7 +300,7 @@ int player_get_all_bombs(Player *player, Entity **out) {
   return count;
 }
 
-Player *player_on_grid(GridPosition grid) {
+Player *player_at_grid(GridPosition grid) {
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = (Player *)game_manager.players[i];
 

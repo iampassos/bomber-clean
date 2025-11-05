@@ -1,6 +1,7 @@
 #include "explosion_tile.h"
 #include "core/animation.h"
 #include "core/assets/assets_explosion.h"
+#include "core/map.h"
 #include "entities/entity.h"
 #include "entities_manager.h"
 #include "game/game_manager.h"
@@ -49,7 +50,7 @@ void explosion_tile_update(Entity *self) {
 
     if (explosion_tile->player_id == -1 &&
         explosion_tile->tile_type == EXPLOSION_CENTER)
-      game_manager_on_explosion_end(pos);
+      game_manager_on_explosion_end(map_world_to_grid(pos));
 
     return;
   }
