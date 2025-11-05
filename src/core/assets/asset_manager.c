@@ -20,28 +20,28 @@ void asset_manager_load_power_ups_textures() {
 
   const char *paths[6][2] = {
       {
-          "LIFE_1.png",
-          "LIFE_2.png",
+          "LIFE_1",
+          "LIFE_2",
       },
       {
-          "SPEED_UP_1.png",
-          "SPEED_UP_2.png",
+          "SPEED_UP_1",
+          "SPEED_UP_2",
       },
       {
-          "BOMB_1.png",
-          "BOMB_2.png",
+          "BOMB_1",
+          "BOMB_2",
       },
       {
-          "RADIUS_1.png",
-          "RADIUS_2.png",
+          "RADIUS_1",
+          "RADIUS_2",
       },
       {
-          "MAXIMUM_RADIUS_1.png",
-          "MAXIMUM_RADIUS_2.png",
+          "MAXIMUM_RADIUS_1",
+          "MAXIMUM_RADIUS_2",
       },
       {
-          "INVENCIBLE_1.png",
-          "INVENCIBLE_2.png",
+          "INVENCIBLE_1",
+          "INVENCIBLE_2",
       },
   };
 
@@ -49,7 +49,7 @@ void asset_manager_load_power_ups_textures() {
 
   for (int power_up = 0; power_up < 6; power_up++) {
     for (int frame = 0; frame < 2; frame++) {
-      sprintf(path, "%s%s", power_up_path, paths[power_up][frame]);
+      sprintf(path, "%s%s.png", power_up_path, paths[power_up][frame]);
       Image img = LoadImage(path);
       ImageResizeNN(&img, TILE_SIZE, TILE_SIZE);
       asset_manager.power_ups[power_up][frame] = LoadTextureFromImage(img);

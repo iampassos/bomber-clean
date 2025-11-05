@@ -1,6 +1,5 @@
 #include "animation.h"
 #include <raylib.h>
-#include <stdio.h>
 
 void animation_init(Animation *animation, int total_frames,
                     float frame_duration, bool loop, bool end_and_reverse) {
@@ -69,6 +68,7 @@ void animation_reverse(Animation *animation) {
 }
 
 void animation_play(Animation *animation) {
+  animation->started_at = GetTime();
   animation->playing = true;
   animation->ended = false;
 }
@@ -81,9 +81,14 @@ void animation_stop(Animation *animation) {
 }
 
 void animation_restart(Animation *animation) {
-  animation_play(animation);
+  animation->playing = true;
+  animation->ended = false;
   animation->current_frame = 0;
   animation->last_frame = GetTime();
+}
+
+float animation_started_at(Animation *animation) {
+  return animation->started_at;
 }
 
 void animation_pause(Animation *animation) { animation->playing = false; }

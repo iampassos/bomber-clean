@@ -111,7 +111,7 @@ void player_update(Entity *self) {
     Entity *entity2 = entities_manager.entries[i];
     if (entity2->type == ENTITY_ENEMY &&
         physics_entity_collision(&player->entity, entity2)) {
-      game_manager_on_enemy_touch(player);
+      game_manager_on_enemy_touch(player, (Enemy *)entity2);
     }
   }
 

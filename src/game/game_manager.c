@@ -112,8 +112,8 @@ void game_manager_on_next_stage() {
           : 0;
 }
 
-void game_manager_on_enemy_touch(Player *player) {
-  if (rules_can_kill_player(player))
+void game_manager_on_enemy_touch(Player *player, Enemy *enemy) {
+  if (enemy->alive && rules_can_kill_player(player))
     player->alive = false;
 }
 

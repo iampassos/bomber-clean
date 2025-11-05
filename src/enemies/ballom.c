@@ -7,6 +7,7 @@
 #include "enemies/enemy.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
+#include <raylib.h>
 #include <stdlib.h>
 
 Ballom *ballom_create(GridPosition spawn_grid) {
@@ -25,10 +26,11 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 
   Enemy enemy;
   enemy.entity = entity;
+  enemy.speed = 2.0f;
   enemy.alive = true;
   enemy.type = ENEMY_BALLOM;
 
-  animation_init(&enemy.death_animation, 2, 0.05, true, false);
+  animation_init(&enemy.death_animation, 2, 0.01, true, false);
   animation_init(&enemy.walk_animation, 4, 0.01f, true, false);
   animation_play(&enemy.walk_animation);
 
@@ -48,27 +50,27 @@ void ballom_update(Entity *self) {
   Entity *entity = (Entity *)&ballom->enemy.entity;
 
   if (!ballom->enemy.alive) {
-    entities_manager_remove(self);
+    if (!animation_is_playing(&ballom->enemy.death_animation))
+      animation_play(&ballom->enemy.death_animation);
+    else {
+      if (GetTime() - animation_started_at(&ballom->enemy.death_animation) >=
+          1.0f)
+        entities_manager_remove(self);
+      else
+        animation_update(&ballom->enemy.death_animation);
+    }
     return;
   }
 
-  GridPosition grid = entity_world_to_grid(entity, BALLOM_HEIGHT_TOLERANCE);
-
-  Vector2 dirs[] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-
   EntityDirection dir = entity->direction;
-
-  GridPosition next_grid = {grid.col + dirs[dir].x, grid.row + dirs[dir].y};
-
   Vector2 position = entity->position;
-
   Vector2 projected = position;
 
-  projected.x = position.x + (dir == DIR_LEFT    ? -ENEMY_DEFAULT_SPEED
-                              : dir == DIR_RIGHT ? ENEMY_DEFAULT_SPEED
+  projected.x = position.x + (dir == DIR_LEFT    ? -ballom->enemy.speed
+                              : dir == DIR_RIGHT ? ballom->enemy.speed
                                                  : 0);
-  projected.y = position.y + (dir == DIR_UP     ? -ENEMY_DEFAULT_SPEED
-                              : dir == DIR_DOWN ? ENEMY_DEFAULT_SPEED
+  projected.y = position.y + (dir == DIR_UP     ? -ballom->enemy.speed
+                              : dir == DIR_DOWN ? ballom->enemy.speed
                                                 : 0);
 
   if (physics_can_move_to(
@@ -78,11 +80,11 @@ void ballom_update(Entity *self) {
   else {
     EntityDirection new_dir = rand() % 4;
 
-    projected.x = position.x + (new_dir == DIR_LEFT    ? -ENEMY_DEFAULT_SPEED
-                                : new_dir == DIR_RIGHT ? ENEMY_DEFAULT_SPEED
+    projected.x = position.x + (new_dir == DIR_LEFT    ? -ballom->enemy.speed
+                                : new_dir == DIR_RIGHT ? ballom->enemy.speed
                                                        : 0);
-    projected.y = position.y + (new_dir == DIR_UP     ? -ENEMY_DEFAULT_SPEED
-                                : new_dir == DIR_DOWN ? ENEMY_DEFAULT_SPEED
+    projected.y = position.y + (new_dir == DIR_UP     ? -ballom->enemy.speed
+                                : new_dir == DIR_DOWN ? ballom->enemy.speed
                                                       : 0);
 
     if (physics_can_move_to(
@@ -101,8 +103,11 @@ void ballom_draw(Entity *self) {
 
   int frame = animation_get_frame(&ballom->enemy.walk_animation);
 
-  Texture2D *texture =
-      assets_enemies_get_ballom_texture(ballom->enemy.entity.direction, frame);
+  Texture2D *texture = animation_get_frame(&ballom->enemy.death_animation) == 0
+                           ? assets_enemies_get_normal_ballom_texture(
+                                 ballom->enemy.entity.direction, frame)
+                           : assets_enemies_get_white_ballom_texture(
+                                 ballom->enemy.entity.direction, frame);
 
   DrawTexture(*texture, ballom->enemy.entity.position.x,
               ballom->enemy.entity.position.y, WHITE);

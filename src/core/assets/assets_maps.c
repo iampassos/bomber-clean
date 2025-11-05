@@ -14,20 +14,20 @@ void assets_maps_load_textures(MapType map_type) {
   case MAP_BATTLE_STAGE_1: {
     strcpy(map_path, "assets/sprites/maps/battle_stage_one/");
     static const char *paths[] = {
-        "MAP.png",
-        "BOMB1.png",
-        "BOMB2.png",
-        "BOMB3.png",
-        "BRICK_DESTRUCTION_1.png",
-        "BRICK_DESTRUCTION_2.png",
-        "BRICK_DESTRUCTION_3.png",
-        "BRICK_DESTRUCTION_4.png",
-        "BRICK_DESTRUCTION_5.png",
-        "BRICK_DESTRUCTION_6.png",
-        "GRASS_SHADOW.png",
-        "GRASS.png",
-        "BRICK.png",
-        "WALL.png",
+        "MAP",
+        "BOMB1",
+        "BOMB2",
+        "BOMB3",
+        "BRICK_DESTRUCTION_1",
+        "BRICK_DESTRUCTION_2",
+        "BRICK_DESTRUCTION_3",
+        "BRICK_DESTRUCTION_4",
+        "BRICK_DESTRUCTION_5",
+        "BRICK_DESTRUCTION_6",
+        "GRASS_SHADOW",
+        "GRASS",
+        "BRICK",
+        "WALL",
     };
     image_path = paths;
     size = sizeof(paths) / sizeof(paths[0]);
@@ -38,28 +38,28 @@ void assets_maps_load_textures(MapType map_type) {
   case MAP_PEACE_TOWN: {
     strcpy(map_path, "assets/sprites/maps/peace_town/");
     static const char *paths[] = {
-        "MAP.png",
-        "BOMB1.png",
-        "BOMB2.png",
-        "BOMB3.png",
-        "BRICK_DESTRUCTION_1.png",
-        "BRICK_DESTRUCTION_2.png",
-        "BRICK_DESTRUCTION_3.png",
-        "BRICK_DESTRUCTION_4.png",
-        "BRICK_DESTRUCTION_5.png",
-        "BRICK_DESTRUCTION_6.png",
-        "GRASS.png",
-        "GRASS_SHADOW.png",
-        "GRASS_SHADOW_BOMB.png",
-        "BRICK.png",
-        "BRICK_SHADOW1.png",
-        "BRICK_SHADOW2.png",
-        "BRICK_SHADOW3.png",
-        "BRICK_SHADOW4.png",
-        "BRICK1.png",
-        "BRICK2.png",
-        "BRICK3.png",
-        "BRICK4.png",
+        "MAP",
+        "BOMB1",
+        "BOMB2",
+        "BOMB3",
+        "BRICK_DESTRUCTION_1",
+        "BRICK_DESTRUCTION_2",
+        "BRICK_DESTRUCTION_3",
+        "BRICK_DESTRUCTION_4",
+        "BRICK_DESTRUCTION_5",
+        "BRICK_DESTRUCTION_6",
+        "GRASS",
+        "GRASS_SHADOW",
+        "GRASS_SHADOW_BOMB",
+        "BRICK",
+        "BRICK_SHADOW1",
+        "BRICK_SHADOW2",
+        "BRICK_SHADOW3",
+        "BRICK_SHADOW4",
+        "BRICK1",
+        "BRICK2",
+        "BRICK3",
+        "BRICK4",
     };
     image_path = paths;
     size = sizeof(paths) / sizeof(paths[0]);
@@ -72,20 +72,20 @@ void assets_maps_load_textures(MapType map_type) {
 
   char path[150];
 
-  sprintf(path, "%s%s", map_path, image_path[0]);
+  sprintf(path, "%s%s.png", map_path, image_path[0]);
   images[0] = LoadImage(path);
   ImageResizeNN(&images[0], 272 * 4, 208 * 4);
   asset_manager.assets_maps.background = LoadTextureFromImage(images[0]);
 
   for (int i = 1; i <= 3; i++) {
-    sprintf(path, "%s%s", map_path, image_path[i]);
+    sprintf(path, "%s%s.png", map_path, image_path[i]);
     images[i] = LoadImage(path);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.assets_maps.bomb[i - 1] = LoadTextureFromImage(images[i]);
   }
 
   for (int i = 4; i <= 9; i++) {
-    sprintf(path, "%s%s", map_path, image_path[i]);
+    sprintf(path, "%s%s.png", map_path, image_path[i]);
     images[i] = LoadImage(path);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.assets_maps.brick_destruction[i - 4] =
@@ -93,7 +93,7 @@ void assets_maps_load_textures(MapType map_type) {
   }
 
   for (int i = 10; i < size; i++) {
-    sprintf(path, "%s%s", map_path, image_path[i]);
+    sprintf(path, "%s%s.png", map_path, image_path[i]);
     images[i] = LoadImage(path);
     ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
     asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);

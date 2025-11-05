@@ -10,6 +10,7 @@ typedef enum { ENEMY_BALLOM } EnemyType;
 typedef struct {
   Entity entity;
   EnemyType type;
+  float speed;
   bool alive;
   Animation walk_animation;
   Animation death_animation;

@@ -4,24 +4,22 @@
 
 void assets_players_load_textures() {
   assets_players_load_walk_textures();
-  assets_players_load_walk_white_textures();
   assets_players_load_death_textures();
 }
 
-void assets_players_load_walk_white_textures() {
+void assets_players_load_walk_textures() {
   char *player_path = "assets/sprites/players/player1/";
 
-  const char *paths[4][3] = {
-      {"UP1_WHITE.png", "UP2_WHITE.png", "UP3_WHITE.png"},
-      {"DOWN1_WHITE.png", "DOWN2_WHITE.png", "DOWN3_WHITE.png"},
-      {"LEFT1_WHITE.png", "LEFT2_WHITE.png", "LEFT3_WHITE.png"},
-      {"RIGHT1_WHITE.png", "RIGHT2_WHITE.png", "RIGHT3_WHITE.png"}};
+  const char *paths[4][3] = {{"UP1", "UP2", "UP3"},
+                             {"DOWN1", "DOWN2", "DOWN3"},
+                             {"LEFT1", "LEFT2", "LEFT3"},
+                             {"RIGHT1", "RIGHT2", "RIGHT3"}};
 
   char path[100];
 
   for (int dir = 0; dir < 4; dir++) {
     for (int frame = 0; frame < 3; frame++) {
-      sprintf(path, "%s%s", player_path, paths[dir][frame]);
+      sprintf(path, "%s%s_WHITE.png", player_path, paths[dir][frame]);
       Image img = LoadImage(path);
       ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
       ImageResizeNN(&img, 64, 88);
@@ -33,21 +31,10 @@ void assets_players_load_walk_white_textures() {
       UnloadImage(img);
     }
   }
-}
-
-void assets_players_load_walk_textures() {
-  char *player_path = "assets/sprites/players/player1/";
-
-  const char *paths[4][3] = {{"UP1.png", "UP2.png", "UP3.png"},
-                             {"DOWN1.png", "DOWN2.png", "DOWN3.png"},
-                             {"LEFT1.png", "LEFT2.png", "LEFT3.png"},
-                             {"RIGHT1.png", "RIGHT2.png", "RIGHT3.png"}};
-
-  char path[100];
 
   for (int dir = 0; dir < 4; dir++) {
     for (int frame = 0; frame < 3; frame++) {
-      sprintf(path, "%s%s", player_path, paths[dir][frame]);
+      sprintf(path, "%s%s.png", player_path, paths[dir][frame]);
       Image img = LoadImage(path);
       ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
       ImageResizeNN(&img, 64, 88);
@@ -64,14 +51,13 @@ void assets_players_load_death_textures() {
   char *player_path = "assets/sprites/players/player1/";
 
   const char *paths[7] = {
-      "DEATH1.png", "DEATH2.png", "DEATH3.png", "DEATH4.png",
-      "DEATH5.png", "DEATH6.png", "DEATH7.png",
+      "DEATH1", "DEATH2", "DEATH3", "DEATH4", "DEATH5", "DEATH6", "DEATH7",
   };
 
   char path[100];
 
   for (int frame = 0; frame < 7; frame++) {
-    sprintf(path, "%s%s", player_path, paths[frame]);
+    sprintf(path, "%s%s.png", player_path, paths[frame]);
     Image img = LoadImage(path);
     ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
     ImageResizeNN(&img, 64, 88);

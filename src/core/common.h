@@ -34,7 +34,6 @@
 #define POWER_UP_MAP_LIMIT 6
 #define POWER_UP_TIMEOUT 60.0f
 
-#define ENEMY_DEFAULT_SPEED 3.0f
 #define ENEMY_MAP_LIMIT 6
 
 #define RANDOM_EVENT_INTERVAL 5.0f // invervalo de spawn de bomba

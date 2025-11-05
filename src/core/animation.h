@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 typedef struct {
+  float started_at;
   int total_frames;
   int current_frame;
   float frame_duration;
@@ -27,6 +28,7 @@ void animation_stop(Animation *animation);
 void animation_restart(Animation *animation);
 void animation_pause(Animation *animation);
 
+float animation_started_at(Animation *animation);
 int animation_get_frame(Animation *animation);
 bool animation_is_playing(Animation *animation);
 bool animation_ended(Animation *animation);
