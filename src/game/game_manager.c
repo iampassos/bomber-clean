@@ -33,7 +33,7 @@ void game_manager_init() {
 
   do {
     game_manager.players[game_manager.player_count] =
-        player_create(0, spawn_pos[game_manager.player_count]);
+        player_create(game_manager.player_count, spawn_pos[game_manager.player_count]);
     game_manager.player_count++;
   } while (game_manager.player_count < input_manager.controllers_n);
 
