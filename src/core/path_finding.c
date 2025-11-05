@@ -122,7 +122,7 @@ GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition s
             
             if(grid[new_row][new_col] != TILE_EMPTY) continue;
 
-            GridPosition new_grid_posi = {new_row,new_col};
+            GridPosition new_grid_posi = {new_col,new_row};
             if(is_in_list(open,new_grid_posi)) continue;
             if(is_in_list(closed,new_grid_posi)) continue;
 
@@ -135,9 +135,11 @@ GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition s
     }
 
     nextMove = get_first_move(goalNode, star);
-
-    list_free_all(open);
-    list_free_all(closed);
+    //problema de segment fault arrumar 
+    //******************************************************************** */
+    //list_free_all(open);
+    //list_free_all(closed);
+      //******************************************************************** */
 
     return nextMove;
 }
