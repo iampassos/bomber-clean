@@ -25,4 +25,6 @@ void *list_get_data_position(LinkedList *list,
 
 void pop(LinkedList *list); //excluir o primeiro no
 
+void list_remove_node(LinkedList *list, void *target); //remover no especifico
+
 #endif

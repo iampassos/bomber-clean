@@ -102,3 +102,33 @@ void *list_get_data_position(LinkedList *list, int posi) {
   }
   return NULL;
 }
+
+
+void list_remove_node(LinkedList *list, void *target) {
+    if (!list || !list->head) return;
+    
+    //removendo o primeiro no
+    if(list->head->data==target){
+      Node *delete=list->head;
+      list->head=list->head->next;
+
+      if(list->head==NULL) list->tail=NULL;
+      free(delete->data);
+      free(delete);
+    }
+    else{
+      Node *aux=list->head;
+      
+      while(aux->next !=NULL){
+        if(aux->next->data==target){ //para um antes
+          Node *delete=aux->next;
+          aux->next=aux->next->next;
+          if(delete == list->tail) list->tail = aux; //atualiza a tail
+          free(delete->data);
+          free(delete);
+          return;
+        }
+        aux=aux->next;
+      }
+    }
+}
