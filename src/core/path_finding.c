@@ -89,8 +89,9 @@ GridPosition get_first_move(NodeA *goalNode, GridPosition star){
 
 
 //Funcao A_Star
+//char visual[GRID_HEIGHT][GRID_WIDTH]
 
-GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition star, GridPosition goal,char visual[GRID_HEIGHT][GRID_WIDTH]){
+GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition star, GridPosition goal){
     LinkedList *open=list_create();
     LinkedList *closed=list_create();
 
