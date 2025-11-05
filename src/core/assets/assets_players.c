@@ -9,7 +9,7 @@ void assets_players_load_textures() {
 }
 
 void assets_players_load_walk_white_textures() {
-  char *player_path = "assets/sprites/player/";
+  char *player_path = "assets/sprites/players/player1/";
 
   const char *paths[4][3] = {
       {"UP1_WHITE.png", "UP2_WHITE.png", "UP3_WHITE.png"},
@@ -36,7 +36,7 @@ void assets_players_load_walk_white_textures() {
 }
 
 void assets_players_load_walk_textures() {
-  char *player_path = "assets/sprites/player/";
+  char *player_path = "assets/sprites/players/player1/";
 
   const char *paths[4][3] = {{"UP1.png", "UP2.png", "UP3.png"},
                              {"DOWN1.png", "DOWN2.png", "DOWN3.png"},
@@ -61,7 +61,7 @@ void assets_players_load_walk_textures() {
 }
 
 void assets_players_load_death_textures() {
-  char *player_path = "assets/sprites/player/";
+  char *player_path = "assets/sprites/players/player1/";
 
   const char *paths[7] = {
       "DEATH1.png", "DEATH2.png", "DEATH3.png", "DEATH4.png",
