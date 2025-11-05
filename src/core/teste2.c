@@ -195,27 +195,18 @@
 // }
 
 // GridPos get_first_move(NodeA *goalNode, GridPos start) {
-//     GridPos nextMove = start; // padrão — não move caso não haja caminho
-
-//     if (goalNode == NULL)
-//         return nextMove;
+//     if (!goalNode) return start; // não há caminho
 
 //     NodeA *cur = goalNode;
-//     NodeA *prev = NULL;
-
-//     // Caminha de trás pra frente até achar o nó cujo pai é o start
-//     while (cur->parent != NULL) {
-//         prev = cur;
-//         cur = cur->parent;
-//         if (pos_equal(cur->pos, start)) {
-//             nextMove = prev->pos;
-//             break;
+//     while (cur->parent) {
+//         if (pos_equal(cur->parent->pos, start)) {
+//             return cur->pos; // próximo passo
 //         }
+//         cur = cur->parent;
 //     }
 
-//     return nextMove;
+//     return start; // fallback: não há caminho válido
 // }
-
 // // ------------------- A* -------------------
 // GridPos a_star(CellType grid[GRID_HEIGHT][GRID_WIDTH], GridPos start, GridPos goal, char visual[GRID_HEIGHT][GRID_WIDTH]) {
 //     LinkedList *open = list_create();
@@ -225,7 +216,8 @@
 //     NodeA *startNode = createNode(start, 0, manhattan(start, goal), NULL);
 //     list_insert_end(open, startNode);
 
-//     int dirs[4][2] = {{-1,0},{1,0},{0,-1},{0,1}}; // cima, baixo, esquerda, direita
+//     int d_row[4] = {-1, 1, 0, 0};
+//     int d_col[4] = {0, 0, -1, 1};
 //     NodeA *goalNode = NULL;
 
 //     while (open->head) {
@@ -239,10 +231,12 @@
 //         }
 
 //         for (int i = 0; i < 4; i++) {
-//             int nr = current->pos.row + dirs[i][0];
-//             int nc = current->pos.col + dirs[i][1];
 
-//             if (nr < 0 || nr >= GRID_HEIGHT || nc < 0 || nc >= GRID_WIDTH) continue;
+//             int nr = current->pos.row + d_row[i];
+//             int nc = current->pos.col + d_col[i];
+
+
+//             //if (nr < 0 || nr >= GRID_HEIGHT || nc < 0 || nc >= GRID_WIDTH) continue;
 //             if (grid[nr][nc] != EMPTY) continue;
 
 //             GridPos newPos = {nr, nc};
@@ -254,7 +248,7 @@
 //         }
 //     }
 
-//     // 🔹 Aqui chama a função que calcula o primeiro movimento:
+//     //🔹 Aqui chama a função que calcula o primeiro movimento:
 //     nextMove = get_first_move(goalNode, start);
 
 //     list_free_all(open);
@@ -310,7 +304,7 @@
 //     grid[9][8] = BRICK_UNDERBREAK; visual[9][8] = '#';
 //     grid[10][8] = BRICK_UNDERBREAK; visual[10][8] = '#';
 
-//     GridPos start = {1,1};
+//     GridPos start = {2,2};
 //     GridPos goal = {10,13};
 //     visual[start.row][start.col] = 'S';
 //     visual[goal.row][goal.col] = 'G';
