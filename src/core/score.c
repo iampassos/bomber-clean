@@ -6,7 +6,7 @@
   *b = temp;
 }
 
-void bubble_sort_score_by_time(Score *array, int len) {
+void insertion_sort_score_by_time(Score *array, int len) {
   if (array != NULL) {
     for (int i = 1; i < len; i++) {
       int current = i;
@@ -52,7 +52,7 @@ char *score_get() {
       break;
   }
   fclose(file);
-  bubble_sort_score_by_time(array, cont);
+  insertion_sort_score_by_time(array, cont);
   char *tabela = malloc(10000);
   tabela[0] = '\0';
   for (int i = 0; i < cont; i++) {
