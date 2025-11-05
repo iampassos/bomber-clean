@@ -4,7 +4,7 @@
 #include "core/map.h"
 #include "enemies/enemy.h"
 
-#define BALLOM_HEIGHT_TOLERANCE 28.5f
+#define BALLOM_HEIGHT_TOLERANCE 24.0f
 
 typedef struct {
   Enemy enemy;

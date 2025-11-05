@@ -9,13 +9,11 @@
 #include "entities/entity.h"
 #include <stdlib.h>
 
-#define HEIGHT_TOLERANCE 28.5f
-
 Ballom *ballom_create(GridPosition spawn_grid) {
   Entity entity;
   entity.type = ENTITY_ENEMY;
   entity.layer = LAYER_PLAYERS;
-  entity.direction = DIR_DOWN;
+  entity.direction = DIR_UP;
   entity.position = (Vector2){0, 0};
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
@@ -67,10 +65,24 @@ void ballom_update(Entity *self) {
                                                 : 0);
 
   if (physics_can_move_to(
-          (Vector2){entity->position.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
+          (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
           entity->width, entity->height))
     position = projected;
-  ;
+  else {
+    EntityDirection new_dir = rand() % 4;
+
+    projected.x = position.x + (new_dir == DIR_LEFT    ? -ENEMY_DEFAULT_SPEED
+                                : new_dir == DIR_RIGHT ? ENEMY_DEFAULT_SPEED
+                                                       : 0);
+    projected.y = position.y + (new_dir == DIR_UP     ? -ENEMY_DEFAULT_SPEED
+                                : new_dir == DIR_DOWN ? ENEMY_DEFAULT_SPEED
+                                                      : 0);
+
+    if (physics_can_move_to(
+            (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
+            entity->width, entity->height))
+      entity->direction = new_dir;
+  }
 
   entity->position = position;
 

@@ -73,7 +73,7 @@ void game_manager_start_stage() {
 
   game_manager.stage_start = GetTime();
 
-  ballom_create((GridPosition){1, 1});
+  ballom_create((GridPosition){1, 11});
 }
 
 void game_manager_on_next_stage() {
