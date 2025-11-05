@@ -8,7 +8,6 @@
 typedef struct {
   Vector2 move;
   bool place_bomb;
-  bool debug;
 } PlayerInput;
 
 typedef enum { ORIGIN_KEYBOARD, ORIGIN_CONTROLLER } InputOrigin;
@@ -21,6 +20,11 @@ typedef struct {
 
   SDL_Joystick *controllers[4];
   int controllers_n;
+
+  float last_dev_input;
+  bool debug;
+  bool hitboxes;
+  bool grid;
 } InputManager;
 
 extern InputManager input_manager;

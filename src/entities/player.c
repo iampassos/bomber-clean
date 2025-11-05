@@ -135,8 +135,6 @@ void player_update(Entity *self) {
 
   projected.x = fmax(MAP_X_OFFSET, player->entity.position.x +
                                        player->speed * player->input.move.x);
-  projected.y = fmax(MAP_Y_OFFSET, player->entity.position.y +
-                                       player->speed * player->input.move.y);
 
   Vector2 new_pos = player->entity.position;
 
@@ -145,6 +143,31 @@ void player_update(Entity *self) {
   if (physics_can_move_to(horizontal, player->entity.width,
                           player->entity.height))
     new_pos.x = horizontal.x;
+  else if (player->input.move.y == 0) {
+    float offset_in_tile = fmod(
+        player->entity.position.y + player->entity.height / 2.0f, TILE_SIZE);
+
+    float dist_to_up = offset_in_tile;
+    float dist_to_down = TILE_SIZE - offset_in_tile;
+
+    if (dist_to_up < dist_to_down) {
+      float val = fmin(player->speed, dist_to_up);
+
+      if (physics_can_move_to((Vector2){new_pos.x, new_pos.y - val},
+                              player->entity.width, player->entity.height))
+        new_pos.y -= val;
+
+    } else if (dist_to_down < dist_to_up) {
+      float val = fmin(player->speed, dist_to_down);
+
+      if (physics_can_move_to((Vector2){new_pos.x, new_pos.y + val},
+                              player->entity.width, player->entity.height))
+        new_pos.y += val;
+    }
+  }
+
+  projected.y =
+      fmax(MAP_Y_OFFSET, new_pos.y + player->speed * player->input.move.y);
 
   Vector2 vertical = {player->entity.position.x, projected.y};
   if (physics_can_move_to(

@@ -114,11 +114,8 @@ void entities_manager_recalculate_positions() {
 int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
                                      int max_out) {
   int count = 0;
-  for (int i = 0; i < MAX_ENTITIES && count < max_out; i++) {
+  for (int i = 0; i < entities_manager.count && count < max_out; i++) {
     Entity *entity = entities_manager.entries[i];
-
-    if (entity == NULL)
-      break;
 
     GridPosition pos = map_world_to_grid(entity->position);
 
@@ -135,11 +132,8 @@ int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
 int entities_manager_get_all_from_type(EntityType type, Entity **out,
                                        int max_out) {
   int count = 0;
-  for (int i = 0; i < MAX_ENTITIES && count < max_out; i++) {
+  for (int i = 0; i < entities_manager.count && count < max_out; i++) {
     Entity *entity = entities_manager.entries[i];
-
-    if (entity == NULL)
-      break;
 
     if (entity->type == type) {
       if (out != NULL)
@@ -167,4 +161,17 @@ void entities_manager_debug() {
                 (Color){196, 196, 196, 200});
 
   DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
+}
+
+void entities_manager_hitboxes() {
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity = entities_manager.entries[i];
+
+    DrawRectangleLines(entity->position.x, entity->position.y, entity->width,
+                       entity->height, RED);
+
+    DrawRectangleLines(entity->position.x,
+                       entity->position.y + entity->height_tolerance,
+                       entity->width, entity->height, YELLOW);
+  }
 }

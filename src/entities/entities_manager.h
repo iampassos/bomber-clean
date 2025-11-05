@@ -30,5 +30,6 @@ int entities_manager_get_all_from_type(EntityType type, Entity **out,
                                        int max_out);
 
 void entities_manager_debug();
+void entities_manager_hitboxes();
 
 #endif

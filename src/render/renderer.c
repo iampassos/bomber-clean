@@ -16,11 +16,14 @@ void renderer_draw_game() {
   entities_manager_draw_all_layer(LAYER_ENEMIES);
   entities_manager_draw_all_layer(LAYER_PLAYERS);
 
-  if (game_manager.view_mode == VIEW_DEBUG) {
-    map_renderer_debug();
+  if (game_manager.debug) {
     entities_manager_debug_all();
     entities_manager_debug();
   }
+  if (game_manager.hitboxes)
+    entities_manager_hitboxes();
+  if (game_manager.grid)
+    map_renderer_debug();
 }
 
 void renderer_hud() {

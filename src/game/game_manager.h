@@ -7,13 +7,10 @@
 #include "entities/player.h"
 #include "entities/power_up.h"
 
-typedef enum { VIEW_NORMAL, VIEW_DEBUG } ViewMode;
-
 typedef struct {
   Map *map;
   Player *players[MAX_PLAYERS];
   int player_count;
-  ViewMode view_mode;
   float last_event_interval;
   float event_interval;
   float stage_start;
@@ -22,6 +19,9 @@ typedef struct {
   int enemy_quantity;
   EnemyType enemies_available[1];
   int enemies_available_n;
+  bool debug;
+  bool hitboxes;
+  bool grid;
 } GameManager;
 
 extern GameManager game_manager;

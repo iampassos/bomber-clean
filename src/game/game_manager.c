@@ -54,14 +54,23 @@ void game_manager_update(float dt) {
         input.place_bomb ? GetTime() : input_manager.last_input[i];
 
     game_manager.players[i]->input = input;
+  }
 
-    game_manager.view_mode =
-        input.debug && GetTime() - input_manager.last_input[i] >= 0.25f
-            ? game_manager.view_mode == VIEW_NORMAL ? VIEW_DEBUG : VIEW_NORMAL
-            : game_manager.view_mode;
+  if (input_manager.debug &&
+      GetTime() - input_manager.last_dev_input >= 0.25f) {
+    game_manager.debug = !game_manager.debug;
+    input_manager.last_dev_input = GetTime();
+  }
 
-    input_manager.last_input[i] =
-        input.debug ? GetTime() : input_manager.last_input[i];
+  if (input_manager.grid && GetTime() - input_manager.last_dev_input >= 0.25f) {
+    game_manager.grid = !game_manager.grid;
+    input_manager.last_dev_input = GetTime();
+  }
+
+  if (input_manager.hitboxes &&
+      GetTime() - input_manager.last_dev_input >= 0.25f) {
+    game_manager.hitboxes = !game_manager.hitboxes;
+    input_manager.last_dev_input = GetTime();
   }
 
   game_manager_random_interval();
@@ -87,7 +96,7 @@ void game_manager_start_stage() {
         game_manager.map->enemies[i];
   }
 
-  // ballom_create((GridPosition){1, 1});
+  ballom_create((GridPosition){1, 11});
 }
 
 void game_manager_on_next_stage() {

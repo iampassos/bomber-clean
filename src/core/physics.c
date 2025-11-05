@@ -26,7 +26,7 @@ bool physics_can_move_to(Vector2 projected, float width, float height) {
 bool physics_entity_collision(Entity *entity1, Entity *entity2) {
   return CheckCollisionRecs(
       (Rectangle){entity1->position.x, entity1->position.y, entity1->width,
-                  entity1->height},
+                  entity1->height + entity1->height_tolerance},
       (Rectangle){entity2->position.x, entity2->position.y, entity2->width,
-                  entity2->height});
+                  entity2->height + entity2->height_tolerance});
 }
