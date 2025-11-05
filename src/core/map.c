@@ -23,7 +23,8 @@ Map *map_create(MapType map_type) {
       } else
         map->grid[i][j] =
             (i != 1 || j != 1) &&
-                    rand() % 100 < PROBABILITY_SPAWN_TILE_BRICK_ON_MAP
+                    rand() % 100 <
+                        (CLEAN_MODE ? 0 : PROBABILITY_SPAWN_TILE_BRICK_ON_MAP)
                 ? TILE_BRICK
                 : TILE_EMPTY;
     }

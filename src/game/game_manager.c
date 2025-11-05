@@ -73,7 +73,9 @@ void game_manager_update(float dt) {
     input_manager.last_dev_input = GetTime();
   }
 
-  game_manager_random_interval();
+  if (!CLEAN_MODE)
+    game_manager_random_interval();
+
   entities_manager_update_all();
 
   if (GetTime() - game_manager.stage_start >= MAP_CHANGE_INTERVAL)
@@ -95,8 +97,6 @@ void game_manager_start_stage() {
     game_manager.enemies_available[game_manager.enemies_available_n++] =
         game_manager.map->enemies[i];
   }
-
-  ballom_create((GridPosition){1, 11});
 }
 
 void game_manager_on_next_stage() {

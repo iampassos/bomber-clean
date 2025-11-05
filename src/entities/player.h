@@ -6,7 +6,7 @@
 #include "entity.h"
 #include "input/input_manager.h"
 
-#define PLAYER_HEIGHT_TOLERANCE 29.75f
+#define PLAYER_HEIGHT_TOLERANCE 28.5f
 
 typedef enum { STATE_IDLE, STATE_RUNNING, STATE_DEAD } PlayerState;
 

@@ -144,25 +144,34 @@ void player_update(Entity *self) {
                           player->entity.height))
     new_pos.x = horizontal.x;
   else if (player->input.move.y == 0) {
-    float offset_in_tile = fmod(
-        player->entity.position.y + player->entity.height / 2.0f, TILE_SIZE);
+    float offset_in_tile =
+        player->entity.direction != DIR_UP
+            ? fmod(player->entity.position.y + PLAYER_HEIGHT_TOLERANCE,
+                   TILE_SIZE)
+            : fmod(player->entity.position.y - PLAYER_HEIGHT_TOLERANCE,
+                   TILE_SIZE);
 
     float dist_to_up = offset_in_tile;
     float dist_to_down = TILE_SIZE - offset_in_tile;
+    float dist_from_center = fabs(offset_in_tile - TILE_SIZE / 2.0f);
 
-    if (dist_to_up < dist_to_down) {
-      float val = fmin(player->speed, dist_to_up);
+    if (dist_from_center > 0.5f) {
+      if (dist_to_up < dist_to_down) {
+        float val = fmin(player->speed, dist_to_up);
 
-      if (physics_can_move_to((Vector2){new_pos.x, new_pos.y - val},
-                              player->entity.width, player->entity.height))
-        new_pos.y -= val;
+        if (physics_can_move_to(
+                (Vector2){new_pos.x, new_pos.y + val + PLAYER_HEIGHT_TOLERANCE},
+                player->entity.width, player->entity.height))
+          new_pos.y += val;
 
-    } else if (dist_to_down < dist_to_up) {
-      float val = fmin(player->speed, dist_to_down);
+      } else if (dist_to_down < dist_to_up) {
+        float val = fmin(player->speed, dist_to_down);
 
-      if (physics_can_move_to((Vector2){new_pos.x, new_pos.y + val},
-                              player->entity.width, player->entity.height))
-        new_pos.y += val;
+        if (physics_can_move_to(
+                (Vector2){new_pos.x, new_pos.y - val + PLAYER_HEIGHT_TOLERANCE},
+                player->entity.width, player->entity.height))
+          new_pos.y -= val;
+      }
     }
   }
 
@@ -298,6 +307,11 @@ void player_debug(Entity *self) {
                 (Color){196, 196, 196, 200});
 
   DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
+
+  Vector2 grid = map_grid_to_world(pos);
+
+  DrawRectangle(grid.x, grid.y, TILE_SIZE, TILE_SIZE,
+                (Color){128, 128, 128, 128});
 }
 
 int player_get_all_bombs(Player *player, Entity **out) {
