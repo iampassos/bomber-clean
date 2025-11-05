@@ -3,6 +3,7 @@
 #include "core/common.h"
 #include "core/map.h"
 #include "enemies/ballom.h"
+#include "enemies/enemy.h"
 #include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
@@ -32,8 +33,8 @@ void game_manager_init() {
   GridPosition spawn_pos[4] = {{1, 1}, {13, 11}, {13, 1}, {1, 11}};
 
   do {
-    game_manager.players[game_manager.player_count] =
-        player_create(game_manager.player_count, spawn_pos[game_manager.player_count]);
+    game_manager.players[game_manager.player_count] = player_create(
+        game_manager.player_count, spawn_pos[game_manager.player_count]);
     game_manager.player_count++;
   } while (game_manager.player_count < input_manager.controllers_n);
 
@@ -79,7 +80,7 @@ void game_manager_start_stage() {
 
   game_manager.stage_start = GetTime();
 
-  ballom_create((GridPosition){1, 11});
+  ballom_create((GridPosition){1, 1});
 }
 
 void game_manager_on_next_stage() {
@@ -100,7 +101,17 @@ void game_manager_on_next_stage() {
           : 0;
 }
 
+void game_manager_on_enemy_touch(Player *player) {
+  if (rules_can_kill_player(player))
+    player->alive = false;
+}
+
 void game_manager_on_entity_exploded(Entity *entity) {
+  GridPosition pos = entity_world_to_grid(entity, entity->height_tolerance);
+
+  if (explosion_tile_at_grid(pos) == NULL)
+    return;
+
   switch (entity->type) {
   case ENTITY_PLAYER:
     Player *player = (Player *)entity;
@@ -111,6 +122,11 @@ void game_manager_on_entity_exploded(Entity *entity) {
     PowerUp *power_up = (PowerUp *)entity;
     if (rules_can_kill_power_up(power_up))
       power_up->active = false;
+    break;
+  case ENTITY_ENEMY:
+    Enemy *enemy = (Enemy *)entity;
+    if (rules_can_kill_enemy(enemy))
+      enemy->alive = false;
     break;
   default:
     break;

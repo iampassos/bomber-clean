@@ -17,6 +17,7 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
   entity.spawn_time = GetTime();
+  entity.height_tolerance = 0;
   entity.update = bomb_update;
   entity.draw = bomb_draw;
   entity.debug = NULL;
@@ -63,18 +64,13 @@ void bomb_draw(Entity *self) {
 }
 
 Bomb *bomb_at_grid(GridPosition grid) {
-  for (int i = 0; i < MAX_ENTITIES; i++) {
+  for (int i = 0; i < entities_manager.count; i++) {
     Entity *entity = entities_manager.entries[i];
 
-    if (entity == NULL)
-      break;
-
-    Bomb *bomb = (Bomb *)entity;
-
     if (entity->type == ENTITY_BOMB) {
-      GridPosition pos = map_world_to_grid(bomb->entity.position);
+      GridPosition pos = map_world_to_grid(entity->position);
       if (map_is_same_grid(pos, grid))
-        return bomb;
+        return (Bomb *)entity;
     }
   }
 

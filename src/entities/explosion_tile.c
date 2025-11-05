@@ -17,6 +17,7 @@ ExplosionTile *explosion_tile_create(Vector2 position,
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
   entity.spawn_time = GetTime();
+  entity.height_tolerance = 0;
   entity.update = explosion_tile_update;
   entity.draw = explosion_tile_draw;
   entity.debug = NULL;
@@ -85,18 +86,13 @@ void explosion_tile_draw(Entity *self) {
 }
 
 ExplosionTile *explosion_tile_at_grid(GridPosition grid) {
-  for (int i = 0; i < MAX_ENTITIES; i++) {
+  for (int i = 0; i < entities_manager.count; i++) {
     Entity *entity = entities_manager.entries[i];
 
-    if (entity == NULL)
-      break;
-
-    ExplosionTile *explosion_tile = (ExplosionTile *)entity;
-
     if (entity->type == ENTITY_EXPLOSION_TILE) {
-      GridPosition pos = map_world_to_grid(explosion_tile->entity.position);
+      GridPosition pos = map_world_to_grid(entity->position);
       if (map_is_same_grid(pos, grid))
-        return explosion_tile;
+        return (ExplosionTile *)entity;
     }
   }
 

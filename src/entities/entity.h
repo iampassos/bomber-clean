@@ -34,6 +34,7 @@ typedef struct Entity {
   float width;
   float height;
   float spawn_time;
+  float height_tolerance;
 
   void (*update)(struct Entity *self);
   void (*draw)(struct Entity *self);

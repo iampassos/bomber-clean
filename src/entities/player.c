@@ -27,6 +27,7 @@ Player *player_create(int id, GridPosition spawn_grid) {
   entity.width = TILE_SIZE - 4.5f;
   entity.height = TILE_SIZE - 4.5f;
   entity.spawn_time = GetTime();
+  entity.height_tolerance = PLAYER_HEIGHT_TOLERANCE;
   entity.update = player_update;
   entity.draw = player_draw;
   entity.debug = player_debug;
@@ -104,6 +105,14 @@ void player_update(Entity *self) {
     }
 
     return;
+  }
+
+  for (int i = 0; i < entities_manager.count; i++) {
+    Entity *entity2 = entities_manager.entries[i];
+    if (entity2->type == ENTITY_ENEMY &&
+        physics_entity_collision(&player->entity, entity2)) {
+      game_manager_on_enemy_touch(player);
+    }
   }
 
   if (GetTime() - player->invencibility_start >= PLAYER_INVENCIBILITY_TIME) {
@@ -275,11 +284,9 @@ void player_debug(Entity *self) {
 
 int player_get_all_bombs(Player *player, Entity **out) {
   int count = 0;
-  for (int i = 0; i < MAX_ENTITIES && count <= player->bomb_capacity; i++) {
+  for (int i = 0; i < entities_manager.count && count <= player->bomb_capacity;
+       i++) {
     Entity *entity = entities_manager.entries[i];
-
-    if (entity == NULL)
-      break;
 
     Bomb *bomb = (Bomb *)entity;
 

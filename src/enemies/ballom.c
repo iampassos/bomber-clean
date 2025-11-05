@@ -18,12 +18,14 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
   entity.spawn_time = GetTime();
+  entity.height_tolerance = BALLOM_HEIGHT_TOLERANCE;
   entity.update = ballom_update;
   entity.draw = ballom_draw;
   entity.debug = NULL;
 
   Enemy enemy;
   enemy.entity = entity;
+  enemy.alive = true;
   enemy.type = ENEMY_BALLOM;
 
   animation_init(&enemy.death_animation, 2, 0.05, true, false);
@@ -45,9 +47,14 @@ void ballom_update(Entity *self) {
   Ballom *ballom = (Ballom *)self;
   Entity *entity = (Entity *)&ballom->enemy.entity;
 
+  if (!ballom->enemy.alive) {
+    entities_manager_remove(self);
+    return;
+  }
+
   GridPosition grid = entity_world_to_grid(entity, BALLOM_HEIGHT_TOLERANCE);
 
-  Vector2 dirs[] = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+  Vector2 dirs[] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
   EntityDirection dir = entity->direction;
 

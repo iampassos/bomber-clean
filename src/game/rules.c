@@ -1,10 +1,10 @@
 #include "rules.h"
 #include "core/common.h"
 #include "core/map.h"
+#include "enemies/enemy.h"
 #include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
-#include "entities/explosion_tile.h"
 #include "entities/player.h"
 #include "entities/power_up.h"
 #include "game/game_manager.h"
@@ -30,22 +30,22 @@ bool rules_can_place_bomb(Player *player) {
 }
 
 bool rules_can_kill_player(Player *player) {
-  GridPosition pos =
-      entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
-
-  if (explosion_tile_at_grid(pos) != NULL && !player->invencible)
+  if (!player->invencible)
     return true;
 
   return false;
 }
 
-bool rules_can_kill_power_up(PowerUp *power_up) {
-  GridPosition pos = map_world_to_grid(power_up->entity.position);
+bool rules_can_kill_power_up(PowerUp *power_up) { return true; }
 
-  if (explosion_tile_at_grid(pos) != NULL)
-    return true;
+bool rules_can_kill_enemy(Enemy *enemy) { return true; }
 
-  return false;
+bool rules_can_spawn_enemy() {
+  if (entities_manager_get_all_from_type(ENTITY_ENEMY, NULL, ENEMY_MAP_LIMIT) >=
+      ENEMY_MAP_LIMIT)
+    return false;
+
+  return true;
 }
 
 bool rules_can_spawn_power_up() {

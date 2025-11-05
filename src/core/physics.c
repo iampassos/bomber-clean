@@ -2,6 +2,7 @@
 #include "core/map.h"
 #include "game/game_manager.h"
 #include <math.h>
+#include <raylib.h>
 
 bool physics_can_move_to(Vector2 projected, float width, float height) {
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
@@ -20,4 +21,12 @@ bool physics_can_move_to(Vector2 projected, float width, float height) {
         return false;
 
   return true;
+}
+
+bool physics_entity_collision(Entity *entity1, Entity *entity2) {
+  return CheckCollisionRecs(
+      (Rectangle){entity1->position.x, entity1->position.y, entity1->width,
+                  entity1->height},
+      (Rectangle){entity2->position.x, entity2->position.y, entity2->width,
+                  entity2->height});
 }

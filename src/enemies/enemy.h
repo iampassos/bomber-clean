@@ -9,8 +9,11 @@ typedef enum { ENEMY_BALLOM } EnemyType;
 typedef struct {
   Entity entity;
   EnemyType type;
+  bool alive;
   Animation walk_animation;
   Animation death_animation;
 } Enemy;
+
+Enemy *enemy_on_grid(GridPosition grid);
 
 #endif

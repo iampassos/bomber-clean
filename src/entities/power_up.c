@@ -18,6 +18,7 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   entity.width = TILE_SIZE;
   entity.height = TILE_SIZE;
   entity.spawn_time = GetTime();
+  entity.height_tolerance = 0;
   entity.update = power_up_update;
   entity.draw = power_up_draw;
   entity.debug = power_up_debug;
