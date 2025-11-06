@@ -30,8 +30,12 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   bomb->spawn_time = GetTime();
   bomb->explosion_time = 2.0f;
 
-  animation_init(&bomb->tick_animation, 3, 0.2f, 1, false);
+  animation_init(&bomb->tick_animation, 3, 0.2f, true, false);
   animation_play(&bomb->tick_animation);
+
+  animation_init(&bomb->spawn_animation, MACHINE_SPAWN_ANIMATION_TICKS,
+                 MACHINE_SPAWN_ANIMATION_FRAME_TIME, false, false);
+  animation_play(&bomb->spawn_animation);
 
   entities_manager_add((Entity *)bomb);
 
@@ -40,6 +44,11 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
 
 void bomb_update(Entity *self) {
   Bomb *bomb = (Bomb *)self;
+
+  if (bomb->player_id == -1 && animation_is_playing(&bomb->spawn_animation)) {
+    animation_update(&bomb->spawn_animation);
+    return;
+  }
 
   if (GetTime() - bomb->spawn_time >= bomb->explosion_time) {
     bomb->exploded = true;
@@ -59,7 +68,13 @@ void bomb_draw(Entity *self) {
   Texture2D *texture =
       assets_maps_get_bomb_texture(animation_get_frame(&bomb->tick_animation));
 
-  DrawTexture(*texture, bomb->entity.position.x, bomb->entity.position.y,
+  int frame = animation_get_frame(&bomb->spawn_animation);
+
+  DrawTexture(*texture, bomb->entity.position.x,
+              (animation_is_playing(&bomb->spawn_animation)
+                   ? (MACHINE_SPAWN_ANIMATION_TICKS - frame) * -5.0f
+                   : 0) +
+                  bomb->entity.position.y,
               WHITE);
 }
 

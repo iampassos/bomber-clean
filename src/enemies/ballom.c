@@ -32,7 +32,8 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 
   animation_init(&enemy.death_animation, 2, 0.01, true, false);
 
-  animation_init(&enemy.spawn_animation, 25, 0.01, false, false);
+  animation_init(&enemy.spawn_animation, MACHINE_SPAWN_ANIMATION_TICKS,
+                 MACHINE_SPAWN_ANIMATION_FRAME_TIME, false, false);
   animation_play(&enemy.spawn_animation);
 
   animation_init(&enemy.walk_animation, 4, 0.01f, true, false);
@@ -128,7 +129,7 @@ void ballom_draw(Entity *self) {
 
   DrawTexture(*texture, ballom->enemy.entity.position.x,
               (animation_is_playing(&ballom->enemy.spawn_animation)
-                   ? (25 - frame) * -5.0f
+                   ? (MACHINE_SPAWN_ANIMATION_TICKS - frame) * -5.0f
                    : 0) +
                   ballom->enemy.entity.position.y,
               WHITE);
