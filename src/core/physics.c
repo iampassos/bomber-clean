@@ -30,5 +30,5 @@ bool physics_entity_collision(Entity *entity1, Entity *entity2) {
                   entity1->width, entity1->height},
       (Rectangle){entity2->position.x,
                   entity2->position.y + entity2->height_tolerance,
-                  entity2->width, entity2->height});
+                  entity2->width - 8.0f, entity2->height - 8.0f});
 }
