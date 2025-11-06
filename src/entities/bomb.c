@@ -65,15 +65,19 @@ void bomb_update(Entity *self) {
 void bomb_draw(Entity *self) {
   Bomb *bomb = (Bomb *)self;
 
-  Texture2D *texture =
-      assets_maps_get_bomb_texture(animation_get_frame(&bomb->tick_animation));
+  int frame = animation_get_frame(&bomb->tick_animation);
 
-  int frame = animation_get_frame(&bomb->spawn_animation);
+  Texture2D *texture = bomb->player_id == -1
+                           ? assets_maps_get_bomb_machine_texture(frame)
+                           : assets_maps_get_bomb_texture(frame);
+
+  frame = animation_get_frame(&bomb->spawn_animation);
 
   DrawTexture(*texture, bomb->entity.position.x,
-              (animation_is_playing(&bomb->spawn_animation)
-                   ? (MACHINE_SPAWN_ANIMATION_TICKS - frame) * -5.0f
-                   : 0) +
+              (bomb->player_id == -1 &&
+               (animation_is_playing(&bomb->spawn_animation)
+                    ? (MACHINE_SPAWN_ANIMATION_TICKS - frame) * -5.0f
+                    : 0)) +
                   bomb->entity.position.y,
               WHITE);
 }

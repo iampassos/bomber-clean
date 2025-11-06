@@ -5,18 +5,26 @@
 #include <raylib.h>
 
 typedef struct {
-  Texture2D background;
   Texture2D *tiles;
-
+  Texture2D background;
   Texture2D brick_destruction[6];
   Texture2D bomb[3];
+  Texture2D bomb_machine[3];
+  Texture2D power_up_explosion[7];
 } AssetsMaps;
 
 void assets_maps_load_textures(MapType map_type);
+
+void assets_maps_load_jump_zone();
+void assets_maps_load_battle_stage_one();
+void assets_maps_load_peace_town();
+
 Texture2D *assets_maps_get_background_texture();
 Texture2D *assets_maps_get_tiles_textures();
 
 Texture2D *assets_maps_get_bomb_texture(int frame);
+Texture2D *assets_maps_get_bomb_machine_texture(int frame);
 Texture2D *assets_maps_get_brick_destruction_texture(int frame);
+Texture2D *assets_maps_get_power_up_explosion_texture(int frame);
 
 #endif

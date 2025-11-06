@@ -32,8 +32,7 @@ void game_manager_init() {
   game_manager.enemy_quantity = RANDOM_ENEMY_INITIAL_QUANTITY;
   game_manager.enemies_available_n = 0;
 
-  game_manager.map = map_create(MAP_BATTLE_STAGE_1);
-  map_create(MAP_PEACE_TOWN);
+  game_manager.map = map_create(MAP_JUMP_ZONE);
 
   GridPosition spawn_pos[4] = {{1, 1}, {13, 11}, {13, 1}, {1, 11}};
 

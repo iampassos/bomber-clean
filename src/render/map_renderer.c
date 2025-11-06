@@ -9,8 +9,6 @@
 #include <raylib.h>
 #include <stdio.h>
 
-Animation brick_animation;
-
 GridPosition brick_destruction_position[113] = {0};
 Animation brick_destruction_animation[113] = {0};
 int brick_destruction_length = 0;
@@ -25,24 +23,17 @@ void map_renderer() {
   case MAP_PEACE_TOWN:
     map_renderer_peace_town_tiles();
     break;
+  case MAP_JUMP_ZONE:
+    map_renderer_jump_zone_tiles();
+    break;
   }
 
   map_renderer_brick_destruction();
-  map_renderer_brick_animation();
 }
 
 void map_renderer_background() {
   DrawTexture(*assets_maps_get_background_texture(), MAP_X_OFFSET - TILE_SIZE,
               MAP_Y_OFFSET, WHITE);
-}
-
-void map_renderer_brick_animation() {
-  if (!animation_is_playing(&brick_animation)) {
-    animation_init(&brick_animation, 4, 0.1f, true, false);
-    animation_play(&brick_animation);
-  } else {
-    animation_update(&brick_animation);
-  }
 }
 
 void map_renderer_brick_destruction() {
@@ -88,10 +79,63 @@ void map_renderer_battle_stage_one_tiles() {
 
       switch (tile) {
       case TILE_EMPTY:
-        text = upper_tile != TILE_EMPTY ? &textures[10] : NULL;
+        text = upper_tile != TILE_EMPTY ? &textures[0] : NULL;
         break;
       case TILE_BRICK:
-        text = &textures[12];
+        text = &textures[1];
+        break;
+      case TILE_WALL:
+        break;
+      }
+
+      if (text != NULL)
+        DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
+                    MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
+    }
+  }
+}
+
+void map_renderer_jump_zone_tiles() {
+  static int turn = -1;
+  static float last = 0;
+  static Animation upward = {0};
+  static Animation downward = {0};
+
+  animation_init(&downward, 3, 0.1f, false, false);
+  animation_init(&upward, 3, 0.1f, false, false);
+
+  if (animation_is_playing(&upward)) {
+    animation_update(&upward);
+  } else if (animation_is_playing(&downward)) {
+    animation_update(&downward);
+  } else {
+    if (GetTime() - last > 0.5f) {
+      last = GetTime();
+      turn = -turn;
+    }
+
+    if (turn == 1) {
+      animation_play(&downward);
+    } else {
+      animation_play(&upward);
+    }
+  }
+
+  for (int i = 0; i < GRID_HEIGHT; i++) {
+    for (int j = 0; j < GRID_WIDTH; j++) {
+      Texture2D *textures = assets_maps_get_tiles_textures();
+      Texture2D *text = NULL;
+
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
+      TileType upper_tile =
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
+
+      switch (tile) {
+      case TILE_EMPTY:
+        break;
+      case TILE_BRICK:
+        int frame = animation_get_frame(turn == 1 ? &downward : &upward);
+        text = turn == 1 ? &textures[1 + frame] : &textures[4 + frame];
         break;
       case TILE_WALL:
         break;
@@ -105,6 +149,8 @@ void map_renderer_battle_stage_one_tiles() {
 }
 
 void map_renderer_peace_town_tiles() {
+  static Animation brick_animation = {0};
+
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
       Texture2D *textures = assets_maps_get_tiles_textures();
@@ -120,14 +166,14 @@ void map_renderer_peace_town_tiles() {
 
         if (!bomb)
           text = upper_tile != TILE_EMPTY
-                     ? upper_tile == TILE_BRICK ? &textures[12] : &textures[11]
+                     ? upper_tile == TILE_BRICK ? &textures[1] : &textures[0]
                      : NULL;
 
         break;
       case TILE_BRICK:
         text = upper_tile != TILE_EMPTY
-                   ? &textures[14 + brick_animation.current_frame]
-                   : &textures[18 + brick_animation.current_frame];
+                   ? &textures[3 + brick_animation.current_frame]
+                   : &textures[7 + brick_animation.current_frame];
         break;
       case TILE_WALL:
         break;
@@ -137,6 +183,13 @@ void map_renderer_peace_town_tiles() {
         DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
                     MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
     }
+  }
+
+  if (!animation_is_playing(&brick_animation)) {
+    animation_init(&brick_animation, 4, 0.1f, true, false);
+    animation_play(&brick_animation);
+  } else {
+    animation_update(&brick_animation);
   }
 }
 
