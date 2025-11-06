@@ -94,7 +94,7 @@ void player_update(Entity *self) {
       player->lives--;
 
       if (player->lives <= 0){
-        player->death_life_time= abs(player->entity.spawn_time-GetTime());
+        player->death_life_time=GetTime()- game_manager.stage_start;
         score_set_player(player);
         entities_manager_remove(self);
       }
