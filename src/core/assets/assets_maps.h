@@ -16,8 +16,13 @@ typedef struct {
 void assets_maps_load_textures(MapType map_type);
 
 void assets_maps_load_jump_zone();
-void assets_maps_load_battle_stage_one();
-void assets_maps_load_peace_town();
+void assets_maps_load_duel_zone();
+void assets_maps_load_light_zone();
+void assets_maps_load_speed_zone();
+void assets_maps_load_western_zone();
+void assets_maps_load_belt_zone();
+void assets_maps_load_normal_zone();
+void assets_maps_load_bomb_zone();
 
 Texture2D *assets_maps_get_background_texture();
 Texture2D *assets_maps_get_tiles_textures();

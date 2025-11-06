@@ -7,17 +7,33 @@
 #include <string.h>
 
 void assets_maps_load_textures(MapType map_type) {
+  assets_enemies_load_ballom_textures();
+
   switch (map_type) {
-  case MAP_BATTLE_STAGE_1:
-    assets_maps_load_battle_stage_one();
-    assets_enemies_load_ballom_textures();
+  case MAP_NORMAL_ZONE:
+    assets_maps_load_normal_zone();
     break;
-  case MAP_PEACE_TOWN:
-    assets_maps_load_peace_town();
+  case MAP_BOMB_ZONE:
+    assets_maps_load_bomb_zone();
     break;
   case MAP_JUMP_ZONE:
     assets_maps_load_jump_zone();
-    return;
+    break;
+  case MAP_DUEL_ZONE:
+    assets_maps_load_duel_zone();
+    break;
+  case MAP_LIGHT_ZONE:
+    assets_maps_load_light_zone();
+    break;
+  case MAP_SPEED_ZONE:
+    assets_maps_load_speed_zone();
+    break;
+  case MAP_BELT_ZONE:
+    assets_maps_load_belt_zone();
+    break;
+  case MAP_WESTERN_ZONE:
+    assets_maps_load_western_zone();
+    break;
   }
 }
 
@@ -64,8 +80,8 @@ void assets_maps_load_core(char *map_path) {
     UnloadImage(images[i]);
 }
 
-void assets_maps_load_battle_stage_one() {
-  char *map_path = "assets/sprites/maps/battle_stage_one/";
+void assets_maps_load_normal_zone() {
+  char *map_path = "assets/sprites/maps/normal_zone/";
 
   static const char *paths[] = {
       "GRASS_SHADOW",
@@ -93,8 +109,8 @@ void assets_maps_load_battle_stage_one() {
   }
 }
 
-void assets_maps_load_peace_town() {
-  char *map_path = "assets/sprites/maps/peace_town/";
+void assets_maps_load_bomb_zone() {
+  char *map_path = "assets/sprites/maps/bomb_zone/";
 
   static const char *paths[] = {
       "GRASS_SHADOW",  "GRASS_SHADOW_BOMB",
@@ -104,6 +120,156 @@ void assets_maps_load_peace_town() {
       "BRICK2",        "BRICK3",
       "BRICK4",
   };
+  int size = sizeof(paths) / sizeof(paths[0]);
+
+  Image images[size];
+  asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
+
+  assets_maps_load_core(map_path);
+
+  char path[150];
+
+  for (int i = 0; i < size; i++) {
+    sprintf(path, "%s%s.png", map_path, paths[i]);
+    images[i] = LoadImage(path);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 0; i < size; i++) {
+    SetTextureFilter(asset_manager.assets_maps.tiles[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
+  }
+}
+
+void assets_maps_load_light_zone() {
+  char *map_path = "assets/sprites/maps/light_zone/";
+
+  static const char *paths[] = {
+      "BRICK1",        "BRICK2",        "BRICK3",        "BRICK4",
+      "BRICK5",        "BRICK_SHADOW1", "BRICK_SHADOW2", "BRICK_SHADOW3",
+      "BRICK_SHADOW4", "BRICK_SHADOW5",
+  };
+  int size = sizeof(paths) / sizeof(paths[0]);
+
+  Image images[size];
+  asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
+
+  assets_maps_load_core(map_path);
+
+  char path[150];
+
+  for (int i = 0; i < size; i++) {
+    sprintf(path, "%s%s.png", map_path, paths[i]);
+    images[i] = LoadImage(path);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 0; i < size; i++) {
+    SetTextureFilter(asset_manager.assets_maps.tiles[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
+  }
+}
+
+void assets_maps_load_speed_zone() {
+  char *map_path = "assets/sprites/maps/speed_zone/";
+
+  static const char *paths[] = {"BRICK1", "BRICK2", "BRICK3", "GRASS_SHADOW"};
+
+  int size = sizeof(paths) / sizeof(paths[0]);
+
+  Image images[size];
+  asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
+
+  assets_maps_load_core(map_path);
+
+  char path[150];
+
+  for (int i = 0; i < size; i++) {
+    sprintf(path, "%s%s.png", map_path, paths[i]);
+    images[i] = LoadImage(path);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 0; i < size; i++) {
+    SetTextureFilter(asset_manager.assets_maps.tiles[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
+  }
+}
+
+void assets_maps_load_belt_zone() {
+  char *map_path = "assets/sprites/maps/belt_zone/";
+
+  static const char *paths[] = {
+      "GRASS_SHADOW", "BRICK1",  "BRICK2",  "BRICK3",   "BRICK4",
+      "BRICK5",       "BRICK6",  "BRICK7",  "BRICK8",   "BRICK9",
+      "BRICK10",      "BRICK11", "BRICK12", "CAR_LEFT", "CAR_RIGHT"};
+
+  int size = sizeof(paths) / sizeof(paths[0]);
+
+  Image images[size];
+  asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
+
+  assets_maps_load_core(map_path);
+
+  char path[150];
+
+  for (int i = 0; i < size - 1; i++) {
+    sprintf(path, "%s%s.png", map_path, paths[i]);
+    images[i] = LoadImage(path);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 13; i < size; i++) {
+    sprintf(path, "%s%s.png", map_path, paths[i]);
+    images[i] = LoadImage(path);
+    ImageFormat(&images[i], PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+    ImageResizeNN(&images[i], 64, 128);
+    ImageColorReplace(&images[i], (Color){104, 112, 80, 255}, BLANK);
+    asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 0; i < size; i++) {
+    SetTextureFilter(asset_manager.assets_maps.tiles[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
+  }
+}
+
+void assets_maps_load_western_zone() {
+  char *map_path = "assets/sprites/maps/western_zone/";
+
+  static const char *paths[] = {"BRICK", "BRICK_SHADOW", "GRASS_SHADOW",
+                                "GRASS_SHADOW1"};
+
+  int size = sizeof(paths) / sizeof(paths[0]);
+
+  Image images[size];
+  asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
+
+  assets_maps_load_core(map_path);
+
+  char path[150];
+
+  for (int i = 0; i < size; i++) {
+    sprintf(path, "%s%s.png", map_path, paths[i]);
+    images[i] = LoadImage(path);
+    ImageResizeNN(&images[i], TILE_SIZE, TILE_SIZE);
+    asset_manager.assets_maps.tiles[i] = LoadTextureFromImage(images[i]);
+  }
+
+  for (int i = 0; i < size; i++) {
+    SetTextureFilter(asset_manager.assets_maps.tiles[i], TEXTURE_FILTER_POINT);
+    UnloadImage(images[i]);
+  }
+}
+
+void assets_maps_load_duel_zone() {
+  char *map_path = "assets/sprites/maps/duel_zone/";
+
+  static const char *paths[] = {"GRASS_SHADOW", "BRICK"};
   int size = sizeof(paths) / sizeof(paths[0]);
 
   Image images[size];

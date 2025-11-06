@@ -6,6 +6,7 @@
 #include "entities/bomb.h"
 #include "game/game_manager.h"
 #include "map_renderer.h"
+#include <math.h>
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -18,14 +19,29 @@ void map_renderer() {
   map_renderer_background();
 
   switch (game_manager.map->stage) {
-  case MAP_BATTLE_STAGE_1:
-    map_renderer_battle_stage_one_tiles();
+  case MAP_NORMAL_ZONE:
+    map_renderer_normal_zone_tiles();
     break;
-  case MAP_PEACE_TOWN:
-    map_renderer_peace_town_tiles();
+  case MAP_BOMB_ZONE:
+    map_renderer_bomb_zone_tiles();
     break;
   case MAP_JUMP_ZONE:
     map_renderer_jump_zone_tiles();
+    break;
+  case MAP_DUEL_ZONE:
+    map_renderer_duel_zone_tiles();
+    break;
+  case MAP_LIGHT_ZONE:
+    map_renderer_light_zone_tiles();
+    break;
+  case MAP_BELT_ZONE:
+    map_renderer_belt_zone_tiles();
+    break;
+  case MAP_WESTERN_ZONE:
+    map_renderer_western_zone_tiles();
+    break;
+  case MAP_SPEED_ZONE:
+    map_renderer_speed_zone_tiles();
     break;
   }
 
@@ -66,7 +82,36 @@ void map_renderer_animate_brick_destruction(GridPosition grid) {
   brick_destruction_position[brick_destruction_length++] = grid;
 }
 
-void map_renderer_battle_stage_one_tiles() {
+void map_renderer_normal_zone_tiles() {
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
+  for (int i = 0; i < GRID_HEIGHT; i++) {
+    for (int j = 0; j < GRID_WIDTH; j++) {
+      Texture2D *text = NULL;
+
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
+      TileType upper_tile =
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
+
+      switch (tile) {
+      case TILE_EMPTY:
+        text = upper_tile != TILE_EMPTY ? &textures[0] : NULL;
+        break;
+      case TILE_BRICK:
+        text = &textures[1];
+        break;
+      case TILE_WALL:
+        break;
+      }
+
+      if (text != NULL)
+        DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
+                    MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
+    }
+  }
+}
+
+void map_renderer_duel_zone_tiles() {
   Texture2D *textures = assets_maps_get_tiles_textures();
 
   for (int i = 0; i < GRID_HEIGHT; i++) {
@@ -149,7 +194,162 @@ void map_renderer_jump_zone_tiles() {
   }
 }
 
-void map_renderer_peace_town_tiles() {
+void map_renderer_light_zone_tiles() {
+  static Animation brick_animation = {0};
+
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
+  for (int i = 0; i < GRID_HEIGHT; i++) {
+    for (int j = 0; j < GRID_WIDTH; j++) {
+      Texture2D *text = NULL;
+
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
+      TileType upper_tile =
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
+
+      switch (tile) {
+      case TILE_EMPTY:
+        break;
+      case TILE_BRICK:
+        int frame = animation_get_frame(&brick_animation);
+        text =
+            upper_tile == TILE_EMPTY ? &textures[frame] : &textures[5 + frame];
+        break;
+      case TILE_WALL:
+        break;
+      }
+
+      if (text != NULL)
+        DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
+                    MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
+    }
+  }
+
+  if (!brick_animation.playing) {
+    animation_init(&brick_animation, (int[]){4, 3, 2, 1, 0}, 5, 0.175f, true,
+                   true);
+  } else {
+    animation_update(&brick_animation);
+  }
+}
+
+void map_renderer_speed_zone_tiles() {
+  static Animation brick_animation = {0};
+
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
+  for (int i = 0; i < GRID_HEIGHT; i++) {
+    for (int j = 0; j < GRID_WIDTH; j++) {
+      Texture2D *text = NULL;
+
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
+      TileType upper_tile =
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
+
+      switch (tile) {
+      case TILE_EMPTY:
+        text = upper_tile != TILE_EMPTY && i > 1 ? &textures[3] : NULL;
+        break;
+      case TILE_BRICK:
+        text = &textures[brick_animation.frame_index];
+        break;
+      case TILE_WALL:
+        break;
+      }
+
+      if (text != NULL)
+        DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
+                    MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
+    }
+  }
+
+  if (!brick_animation.playing) {
+    animation_init(&brick_animation, (int[]){0, 1, 2}, 3, 0.5f, true, true);
+  } else {
+    animation_update(&brick_animation);
+  }
+}
+
+void map_renderer_belt_zone_tiles() {
+  static Animation brick_animation = {0};
+  static Animation car_animation = {0};
+
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
+  for (int i = 0; i < GRID_HEIGHT; i++) {
+    for (int j = 0; j < GRID_WIDTH; j++) {
+      Texture2D *text = NULL;
+
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
+      TileType upper_tile =
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
+
+      switch (tile) {
+      case TILE_EMPTY:
+        text = upper_tile == TILE_WALL && i > 1 ? &textures[0] : NULL;
+        break;
+      case TILE_BRICK:
+        text = &textures[1 + brick_animation.frame_index];
+        break;
+      case TILE_WALL:
+        break;
+      }
+
+      if (text != NULL)
+        DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
+                    MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
+    }
+  }
+
+  float y = fmod(animation_total_ticks(&car_animation) * 0.5f, GAMEPLAY_WIDTH);
+
+  DrawTexture(textures[13], 0, y, WHITE);
+
+  DrawTexture(textures[14], GAMEPLAY_WIDTH - 64, GAMEPLAY_HEIGHT - y, WHITE);
+
+  if (!brick_animation.playing) {
+    animation_init(&brick_animation,
+                   (int[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, 12, 0.075f,
+                   true, true);
+    animation_init(&car_animation, (int[]){0, 1}, 2, 0.01f, true, true);
+  } else {
+    animation_update(&brick_animation);
+    animation_update(&car_animation);
+  }
+}
+
+void map_renderer_western_zone_tiles() {
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
+  for (int i = 0; i < GRID_HEIGHT; i++) {
+    for (int j = 0; j < GRID_WIDTH; j++) {
+      Texture2D *text = NULL;
+
+      TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
+      TileType upper_tile =
+          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
+
+      switch (tile) {
+      case TILE_EMPTY:
+        text = upper_tile == TILE_WALL && i > 1 ? &textures[2]
+               : upper_tile == TILE_BRICK       ? &textures[3]
+                                                : NULL;
+        break;
+      case TILE_BRICK:
+        text = upper_tile != TILE_EMPTY ? &textures[1] : &textures[0];
+        break;
+      case TILE_WALL:
+        break;
+      }
+
+      if (text != NULL)
+        DrawTexture(*text, MAP_X_OFFSET + j * TILE_SIZE,
+                    MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
+    }
+  }
+}
+
+void map_renderer_bomb_zone_tiles() {
   static Animation brick_animation = {0};
 
   Texture2D *textures = assets_maps_get_tiles_textures();

@@ -55,10 +55,10 @@ Map *map_create(MapType map_type) {
 
   map->enemies_n = 0;
   switch (map_type) {
-  case MAP_BATTLE_STAGE_1:
-    map->enemies[map->enemies_n++] = ENEMY_BALLOM;
+  case MAP_NORMAL_ZONE:
     break;
   default:
+    map->enemies[map->enemies_n++] = ENEMY_BALLOM;
     break;
   }
 

@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-#define GAMEPLAY_WIDTH 256 * 4
-#define GAMEPLAY_HEIGHT 224 * 4
+#define GAMEPLAY_WIDTH 1024
+#define GAMEPLAY_HEIGHT 896
 
 #define MAP_X_OFFSET (GAMEPLAY_WIDTH / 2.0f - TILE_SIZE * GRID_WIDTH / 2.0f)
 #define MAP_Y_OFFSET                                                           \

@@ -4,7 +4,16 @@
 #include "common.h"
 #include <raylib.h>
 
-typedef enum { MAP_BATTLE_STAGE_1, MAP_PEACE_TOWN, MAP_JUMP_ZONE } MapType;
+typedef enum {
+  MAP_NORMAL_ZONE,
+  MAP_BOMB_ZONE,
+  MAP_JUMP_ZONE,
+  MAP_DUEL_ZONE,
+  MAP_LIGHT_ZONE,
+  MAP_SPEED_ZONE,
+  MAP_BELT_ZONE,
+  MAP_WESTERN_ZONE
+} MapType;
 
 typedef enum {
   TILE_EMPTY,
