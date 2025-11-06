@@ -4,8 +4,10 @@
 #include "core/common.h"
 #include "core/map.h"
 #include "core/physics.h"
+#include "core/score.h"
 #include "entities/bomb.h"
 #include "entities/entities_manager.h"
+#include "entities/power_up.h"
 #include "entity.h"
 #include "game/game_manager.h"
 #include "game/rules.h"
@@ -14,7 +16,6 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "core/score.h"
 
 Player *player_create(int id, GridPosition spawn_grid) {
   spawn_grid.col = fmax(1, fmin(spawn_grid.col, GRID_WIDTH - 2));
@@ -49,11 +50,12 @@ Player *player_create(int id, GridPosition spawn_grid) {
   player->entity.position = entity_grid_to_world(&player->entity, spawn_grid,
                                                  PLAYER_HEIGHT_TOLERANCE);
 
-  animation_init(&player->death_animation, 7, 0.3f, false, false);
-  animation_init(&player->walk_animation, 3, 0.25f, true, false);
-  animation_play(&player->walk_animation);
-  animation_init(&player->invencible_animation, 2, 0.1f, true, false);
-  animation_play(&player->invencible_animation);
+  animation_init(&player->death_animation, (int[]){0, 1, 2, 3, 4, 5, 6}, 7,
+                 0.3f, false, false);
+  animation_init(&player->walk_animation, (int[]){0, 1, 2}, 3, 0.25f, true,
+                 true);
+  animation_init(&player->invencible_animation, (int[]){0, 1}, 2, 0.1f, true,
+                 true);
 
   Map *map = game_manager.map;
 
@@ -85,27 +87,27 @@ void player_update(Entity *self) {
   Player *player = (Player *)self;
 
   if (!player->alive) {
-    if (!animation_is_playing(&player->death_animation) &&
-        !animation_ended(&player->death_animation)) {
+    if (!player->death_animation.playing &&
+        !animation_is_finished(&player->death_animation)) {
       animation_play(&player->death_animation);
-    } else if (!animation_ended(&player->death_animation)) {
+      return;
+    } else if (!animation_is_finished(&player->death_animation)) {
       animation_update(&player->death_animation);
-    } else {
-      player->lives--;
+      return;
+    }
 
-      if (player->lives <= 0){
-        player->death_life_time=GetTime()- game_manager.stage_start;
-        score_set_player(player);
-        entities_manager_remove(self);
-      }
-      else {
-        player->alive = true;
-        player->invencible = true;
-        player->invencibility_start = GetTime();
-        animation_stop(&player->death_animation);
-        player->entity.position = entity_grid_to_world(
-            &player->entity, player->spawn_grid, PLAYER_HEIGHT_TOLERANCE);
-      }
+    player->lives--;
+
+    if (player->lives <= 0) {
+      player->death_life_time = GetTime() - game_manager.stage_start;
+      score_set_player(player);
+      entities_manager_remove(self);
+    } else {
+      player->alive = true;
+      player->invencible = true;
+      animation_reset(&player->death_animation);
+      player->entity.position = entity_grid_to_world(
+          &player->entity, player->spawn_grid, PLAYER_HEIGHT_TOLERANCE);
     }
 
     return;
@@ -119,14 +121,15 @@ void player_update(Entity *self) {
     }
   }
 
-  if (GetTime() - player->invencibility_start >= PLAYER_INVENCIBILITY_TIME) {
-    animation_stop(&player->invencible_animation);
-    player->invencible = false;
-  } else {
-    if (animation_is_playing(&player->invencible_animation))
-      animation_update(&player->invencible_animation);
-    else
+  if (player->invencible) {
+    if (!player->invencible_animation.playing) {
       animation_play(&player->invencible_animation);
+      player->invencibility_start = GetTime();
+    } else if (GetTime() - player->invencibility_start >=
+               PLAYER_INVENCIBILITY_TIME) {
+      player->invencible = false;
+      animation_reset(&player->invencible_animation);
+    }
   }
 
   if (player->input.place_bomb && rules_can_place_bomb(player))
@@ -226,33 +229,34 @@ void player_update(Entity *self) {
 
   if (player->state == STATE_RUNNING) {
     animation_update(&player->walk_animation);
-    animation_play(&player->walk_animation);
+    animation_resume(&player->walk_animation);
   } else {
-    player->walk_animation.current_frame = 1;
+    player->walk_animation.frame_index = 1;
     animation_pause(&player->walk_animation);
   }
 
   player->entity.position = new_pos;
+
+  animation_update(&player->invencible_animation);
 }
 
 void player_draw(Entity *self) {
   Player *player = (Player *)self;
 
-  if (animation_is_playing(&player->death_animation)) {
+  if (player->death_animation.playing) {
     Texture2D *texture = assets_players_get_death_texture(
-        player->id, animation_get_frame(&player->death_animation));
+        player->id, player->death_animation.frame_index);
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
                 WHITE);
   } else {
-    int frame = animation_get_frame(&player->invencible_animation);
+    int frame = player->invencible_animation.frame_index;
 
-    Texture2D *texture =
-        frame == 1 ? assets_players_get_walk_white_texture(
-                         player->entity.direction, frame)
-                   : assets_players_get_walk_texture(
-                         player->id, player->entity.direction,
-                         animation_get_frame(&player->walk_animation));
+    Texture2D *texture = frame == 1 ? assets_players_get_walk_white_texture(
+                                          player->entity.direction, frame)
+                                    : assets_players_get_walk_texture(
+                                          player->id, player->entity.direction,
+                                          player->walk_animation.frame_index);
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
                 WHITE);
@@ -296,7 +300,7 @@ void player_debug(Entity *self) {
            player->bomb_capacity, player_get_all_bombs(player, NULL),
            player->bomb_radius, player->speed,
            player->invencible ? "yes" : "no", player->alive ? "yes" : "no",
-           player->lives, player->walk_animation.current_frame,
+           player->lives, player->walk_animation.frame_index,
            tile == TILE_EMPTY   ? "EMPTY"
            : tile == TILE_WALL  ? "WALL"
            : tile == TILE_BRICK ? "BRICK"

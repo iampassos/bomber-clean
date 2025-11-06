@@ -8,6 +8,7 @@
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include <raylib.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 Ballom *ballom_create(GridPosition spawn_grid) {
@@ -30,14 +31,10 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   enemy.alive = true;
   enemy.type = ENEMY_BALLOM;
 
-  animation_init(&enemy.death_animation, 2, 0.01, true, false);
-
-  animation_init(&enemy.spawn_animation, MACHINE_SPAWN_ANIMATION_TICKS,
-                 MACHINE_SPAWN_ANIMATION_FRAME_TIME, false, false);
-  animation_play(&enemy.spawn_animation);
-
-  animation_init(&enemy.walk_animation, 4, 0.01f, true, false);
-  animation_play(&enemy.walk_animation);
+  animation_init(&enemy.death_animation, (int[]){0, 1}, 2, 0.01f, true, false);
+  animation_init(&enemy.spawn_animation, (int[]){0, 1}, 2, 0.01f, true, true);
+  animation_init(&enemy.walk_animation, (int[]){0, 1, 2, 3}, 4, 0.01, true,
+                 true);
 
   Ballom *ballom = malloc(sizeof(Ballom));
   ballom->enemy = enemy;
@@ -52,85 +49,88 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 
 void ballom_update(Entity *self) {
   Ballom *ballom = (Ballom *)self;
-  Entity *entity = (Entity *)&ballom->enemy.entity;
+  Enemy *enemy = (Enemy *)self;
 
-  if (animation_is_playing(&ballom->enemy.spawn_animation)) {
-    entity->direction = DIR_DOWN;
-    animation_update(&ballom->enemy.spawn_animation);
+  animation_update(&enemy->walk_animation);
+
+  if (!animation_is_finished(&enemy->spawn_animation)) {
+    self->direction = DIR_DOWN;
+    animation_update(&enemy->spawn_animation);
+
+    if (animation_elapsed(&enemy->spawn_animation) >
+        MACHINE_SPAWN_ANIMATION_TIME) {
+      animation_finish(&enemy->spawn_animation);
+    }
+
     return;
   }
 
-  if (!ballom->enemy.alive) {
-    if (!animation_is_playing(&ballom->enemy.death_animation))
-      animation_play(&ballom->enemy.death_animation);
-    else {
-      if (GetTime() - animation_started_at(&ballom->enemy.death_animation) >=
-          1.0f)
+  if (!enemy->alive) {
+    if (enemy->death_animation.playing) {
+      if (animation_elapsed(&enemy->death_animation) >= 1.0f)
         entities_manager_remove(self);
       else
-        animation_update(&ballom->enemy.death_animation);
+        animation_update(&enemy->death_animation);
+    } else {
+      animation_play(&enemy->death_animation);
     }
     return;
   }
 
-  animation_update(&ballom->enemy.walk_animation);
-
-  if (GetTime() - animation_started_at(&ballom->enemy.spawn_animation) < 1.0f)
-    return;
-
-  EntityDirection dir = entity->direction;
-  Vector2 position = entity->position;
+  EntityDirection dir = self->direction;
+  Vector2 position = self->position;
   Vector2 projected = position;
 
-  projected.x = position.x + (dir == DIR_LEFT    ? -ballom->enemy.speed
-                              : dir == DIR_RIGHT ? ballom->enemy.speed
+  projected.x = position.x + (dir == DIR_LEFT    ? -enemy->speed
+                              : dir == DIR_RIGHT ? enemy->speed
                                                  : 0);
-  projected.y = position.y + (dir == DIR_UP     ? -ballom->enemy.speed
-                              : dir == DIR_DOWN ? ballom->enemy.speed
+  projected.y = position.y + (dir == DIR_UP     ? -enemy->speed
+                              : dir == DIR_DOWN ? enemy->speed
                                                 : 0);
 
   if (physics_can_move_to(
           (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
-          entity->width, entity->height))
+          self->width, self->height))
     position = projected;
   else {
     EntityDirection new_dir = rand() % 4;
 
-    projected.x = position.x + (new_dir == DIR_LEFT    ? -ballom->enemy.speed
-                                : new_dir == DIR_RIGHT ? ballom->enemy.speed
+    projected.x = position.x + (new_dir == DIR_LEFT    ? -enemy->speed
+                                : new_dir == DIR_RIGHT ? enemy->speed
                                                        : 0);
-    projected.y = position.y + (new_dir == DIR_UP     ? -ballom->enemy.speed
-                                : new_dir == DIR_DOWN ? ballom->enemy.speed
+    projected.y = position.y + (new_dir == DIR_UP     ? -enemy->speed
+                                : new_dir == DIR_DOWN ? enemy->speed
                                                       : 0);
 
     if (physics_can_move_to(
             (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
-            entity->width, entity->height))
-      entity->direction = new_dir;
+            self->width, self->height))
+      self->direction = new_dir;
   }
 
-  entity->position = position;
+  self->position = position;
 }
 
 void ballom_draw(Entity *self) {
-  Ballom *ballom = (Ballom *)self;
+  Enemy *enemy = (Enemy *)self;
 
-  int frame = animation_get_frame(&ballom->enemy.walk_animation);
+  int frame = enemy->walk_animation.frame_index;
 
   Texture2D *texture =
-      animation_get_frame(&ballom->enemy.death_animation) == 0 &&
-              animation_get_frame(&ballom->enemy.spawn_animation) % 2 == 0
-          ? assets_enemies_get_normal_ballom_texture(
-                ballom->enemy.entity.direction, frame)
-          : assets_enemies_get_white_ballom_texture(
-                ballom->enemy.entity.direction, frame);
+      enemy->death_animation.frame_index == 0 &&
+              enemy->spawn_animation.frame_index % 2 == 1
+          ? assets_enemies_get_normal_ballom_texture(self->direction, frame)
+          : assets_enemies_get_white_ballom_texture(self->direction, frame);
 
-  frame = animation_get_frame(&ballom->enemy.spawn_animation);
+  frame = enemy->spawn_animation.frame_index;
 
-  DrawTexture(*texture, ballom->enemy.entity.position.x,
-              (animation_is_playing(&ballom->enemy.spawn_animation)
-                   ? (MACHINE_SPAWN_ANIMATION_TICKS - frame) * -5.0f
+  DrawTexture(*texture, self->position.x,
+              (enemy->spawn_animation.playing
+                   ? (MACHINE_SPAWN_ANIMATION_TIME /
+                      (MACHINE_SPAWN_ANIMATION_TIME -
+                       enemy->spawn_animation.started_at)) *
+                         -5.0f
                    : 0) +
-                  ballom->enemy.entity.position.y,
+                  self->position.y,
               WHITE);
 }

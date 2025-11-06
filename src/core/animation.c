@@ -1,102 +1,67 @@
 #include "animation.h"
 #include <raylib.h>
+#include <string.h>
 
-void animation_init(Animation *animation, int total_frames,
-                    float frame_duration, bool loop, bool end_and_reverse) {
-  animation->total_frames = total_frames;
-  animation->current_frame = 0;
-  animation->frame_duration = frame_duration;
-  animation->last_frame = GetTime();
-  animation->loop = loop;
-  animation->playing = false;
-  animation->ended = false;
-  animation->end_and_reverse = end_and_reverse;
-  animation->reached_end = false;
+void animation_init(Animation *anm, int *frames, int frame_count,
+                    float frame_time, bool loops, bool play) {
+  anm->frame_count = frame_count;
+  anm->frame_index = 0;
+  memcpy(anm->frames, frames, frame_count * sizeof(int));
+  anm->frame_time = frame_time;
+  anm->loops = loops;
+  anm->playing = play;
+  anm->started_at = GetTime();
 }
 
-void animation_update(Animation *animation) {
-  if (!animation || !animation->playing || animation->ended)
-    return;
-
-  float now = GetTime();
-  if (now - animation->last_frame < animation->frame_duration)
-    return;
-
-  animation->last_frame = now;
-
-  if (animation->reached_end && animation->end_and_reverse)
-    animation_reverse(animation);
-  else
-    animation_advance(animation);
+void animation_play(Animation *anm) {
+  anm->playing = true;
+  anm->started_at = GetTime();
 }
 
-void animation_advance(Animation *animation) {
-  if (!animation)
+void animation_pause(Animation *anm) { anm->playing = false; }
+
+void animation_resume(Animation *anm) { anm->playing = true; }
+
+int animation_total_ticks(Animation *anm) {
+  return animation_elapsed(anm) / anm->frame_time;
+}
+
+void animation_reset(Animation *anm) {
+  anm->playing = false;
+  anm->started_at = GetTime();
+  anm->frame_index = 0;
+}
+
+void animation_finish(Animation *anm) {
+  animation_reset(anm);
+  anm->frame_index = anm->frame_count - 1;
+  anm->loops = false;
+}
+
+void animation_update(Animation *anm) {
+  if (!anm->playing)
     return;
 
-  if (animation->current_frame + 1 >= animation->total_frames) {
-    animation->reached_end = true;
+  float elapsed = animation_elapsed(anm);
+  int index = elapsed / anm->frame_time;
 
-    if (animation->end_and_reverse) {
-      animation->current_frame--;
-    } else if (animation->loop) {
-      animation_restart(animation);
-    } else {
-      animation_stop(animation);
-      animation->ended = true;
-    }
-  } else {
-    animation->current_frame++;
+  if (anm->loops)
+    index %= anm->frame_count;
+  else if (index >= anm->frame_count) {
+    index = anm->frame_count - 1;
+    anm->playing = false;
   }
+
+  anm->frame_index = index;
 }
 
-void animation_reverse(Animation *animation) {
-  if (!animation)
-    return;
-
-  if (animation->current_frame <= 0) {
-    if (animation->loop) {
-      animation->reached_end = false;
-      animation->current_frame++;
-    } else {
-      animation_stop(animation);
-      animation->ended = true;
-    }
-  } else {
-    animation->current_frame--;
-  }
+int animation_get_frame(Animation *anm) {
+  return anm->frames[anm->frame_index];
 }
 
-void animation_play(Animation *animation) {
-  animation->started_at = GetTime();
-  animation->playing = true;
-  animation->ended = false;
+float animation_elapsed(Animation *anm) { return GetTime() - anm->started_at; };
+
+bool animation_is_finished(Animation *anm) {
+  return !anm->playing && anm->frame_index == anm->frame_count - 1 &&
+         !anm->loops;
 }
-
-void animation_stop(Animation *animation) {
-  animation->playing = false;
-  animation->ended = false;
-  animation->current_frame = 0;
-  animation->last_frame = GetTime();
-}
-
-void animation_restart(Animation *animation) {
-  animation->playing = true;
-  animation->ended = false;
-  animation->current_frame = 0;
-  animation->last_frame = GetTime();
-}
-
-float animation_started_at(Animation *animation) {
-  return animation->started_at;
-}
-
-void animation_pause(Animation *animation) { animation->playing = false; }
-
-int animation_get_frame(Animation *animation) {
-  return animation->current_frame;
-}
-
-bool animation_is_playing(Animation *animation) { return animation->playing; }
-
-bool animation_ended(Animation *animation) { return animation->ended; }

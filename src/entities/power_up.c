@@ -28,8 +28,8 @@ PowerUp *power_up_create(Vector2 position, PowerUpType type) {
   power_up->entity = entity;
   power_up->power_up_type = type;
 
-  animation_init(&power_up->tick_animation, 2, 0.05f, true, false);
-  animation_play(&power_up->tick_animation);
+  animation_init(&power_up->tick_animation, (int[]){0, 1}, 2, 0.05f, true,
+                 true);
 
   entities_manager_add((Entity *)power_up);
 
@@ -64,7 +64,7 @@ void power_up_draw(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;
 
   Texture2D *texture = asset_manager_get_power_up_texture(
-      power_up->power_up_type, animation_get_frame(&power_up->tick_animation));
+      power_up->power_up_type, power_up->tick_animation.frame_index);
 
   DrawTexture(*texture, power_up->entity.position.x,
               power_up->entity.position.y, WHITE);

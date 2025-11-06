@@ -30,9 +30,9 @@ ExplosionTile *explosion_tile_create(int player_id, Vector2 position,
   explosion_tile->lifetime = DEFAULT_EXPLOSION_LIFETIME;
   explosion_tile->spawn_time = GetTime();
 
-  animation_init(&explosion_tile->explosion_animation, 5,
+  animation_init(&explosion_tile->explosion_animation,
+                 (int[]){0, 1, 2, 3, 4, 3, 2, 1, 0}, 9,
                  explosion_tile->lifetime / 9.0f, false, true);
-  animation_play(&explosion_tile->explosion_animation);
 
   entities_manager_add((Entity *)explosion_tile);
 

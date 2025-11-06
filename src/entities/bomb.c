@@ -30,12 +30,9 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   bomb->spawn_time = GetTime();
   bomb->explosion_time = 2.0f;
 
-  animation_init(&bomb->tick_animation, 3, 0.2f, true, false);
-  animation_play(&bomb->tick_animation);
-
-  animation_init(&bomb->spawn_animation, MACHINE_SPAWN_ANIMATION_TICKS,
-                 MACHINE_SPAWN_ANIMATION_FRAME_TIME, false, false);
-  animation_play(&bomb->spawn_animation);
+  animation_init(&bomb->tick_animation, (int[]){0, 1, 2}, 3, 0.2f, true,
+                 player_id != -1);
+  animation_init(&bomb->spawn_animation, (int[]){0, 1}, 2, 0.01f, true, true);
 
   entities_manager_add((Entity *)bomb);
 
@@ -45,8 +42,14 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
 void bomb_update(Entity *self) {
   Bomb *bomb = (Bomb *)self;
 
-  if (bomb->player_id == -1 && animation_is_playing(&bomb->spawn_animation)) {
+  if (bomb->player_id == -1 && bomb->spawn_animation.playing) {
     animation_update(&bomb->spawn_animation);
+
+    if (animation_elapsed(&bomb->spawn_animation) >=
+        MACHINE_SPAWN_ANIMATION_TIME) {
+      animation_play(&bomb->tick_animation);
+      animation_reset(&bomb->spawn_animation);
+    }
     return;
   }
 
@@ -71,14 +74,14 @@ void bomb_draw(Entity *self) {
                            ? assets_maps_get_bomb_machine_texture(frame)
                            : assets_maps_get_bomb_texture(frame);
 
-  frame = animation_get_frame(&bomb->spawn_animation);
-
-  DrawTexture(*texture, bomb->entity.position.x,
-              (bomb->player_id == -1 &&
-               (animation_is_playing(&bomb->spawn_animation)
-                    ? (MACHINE_SPAWN_ANIMATION_TICKS - frame) * -5.0f
-                    : 0)) +
-                  bomb->entity.position.y,
+  DrawTexture(*texture, self->position.x,
+              (bomb->player_id == -1 && bomb->spawn_animation.playing
+                   ? (MACHINE_SPAWN_ANIMATION_TIME /
+                      (MACHINE_SPAWN_ANIMATION_TIME -
+                       bomb->spawn_animation.started_at)) *
+                         -5.0f
+                   : 0) +
+                  self->position.y,
               WHITE);
 }
 

@@ -40,12 +40,11 @@ void map_renderer_brick_destruction() {
   for (int i = 0; i < brick_destruction_length;) {
     Animation *anim = &brick_destruction_animation[i];
 
-    if (animation_is_playing(anim)) {
+    if (anim->playing) {
       Vector2 pos = map_grid_to_world(brick_destruction_position[i]);
 
-      DrawTexture(
-          *assets_maps_get_brick_destruction_texture(anim->current_frame),
-          pos.x, pos.y, WHITE);
+      DrawTexture(*assets_maps_get_brick_destruction_texture(anim->frame_index),
+                  pos.x, pos.y, WHITE);
 
       animation_update(anim);
       i++;
@@ -61,9 +60,8 @@ void map_renderer_brick_destruction() {
 }
 
 void map_renderer_animate_brick_destruction(GridPosition grid) {
-  animation_init(&brick_destruction_animation[brick_destruction_length], 6,
-                 0.125f, false, false);
-  animation_play(&brick_destruction_animation[brick_destruction_length]);
+  animation_init(&brick_destruction_animation[brick_destruction_length],
+                 (int[]){0, 1, 2, 3, 4, 5, 6}, 6, 0.125f, false, true);
   brick_destruction_position[brick_destruction_length++] = grid;
 }
 
@@ -97,29 +95,8 @@ void map_renderer_battle_stage_one_tiles() {
 
 void map_renderer_jump_zone_tiles() {
   static int turn = -1;
-  static float last = 0;
   static Animation upward = {0};
   static Animation downward = {0};
-
-  animation_init(&downward, 3, 0.1f, false, false);
-  animation_init(&upward, 3, 0.1f, false, false);
-
-  if (animation_is_playing(&upward)) {
-    animation_update(&upward);
-  } else if (animation_is_playing(&downward)) {
-    animation_update(&downward);
-  } else {
-    if (GetTime() - last > 0.5f) {
-      last = GetTime();
-      turn = -turn;
-    }
-
-    if (turn == 1) {
-      animation_play(&downward);
-    } else {
-      animation_play(&upward);
-    }
-  }
 
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
@@ -134,8 +111,8 @@ void map_renderer_jump_zone_tiles() {
       case TILE_EMPTY:
         break;
       case TILE_BRICK:
-        int frame = animation_get_frame(turn == 1 ? &downward : &upward);
-        text = turn == 1 ? &textures[1 + frame] : &textures[4 + frame];
+        // int frame = animation_get_frame(turn == 1 ? &downward : &upward);
+        // text = turn == 1 ? &textures[1 + frame] : &textures[4 + frame];
         break;
       case TILE_WALL:
         break;
@@ -172,8 +149,8 @@ void map_renderer_peace_town_tiles() {
         break;
       case TILE_BRICK:
         text = upper_tile != TILE_EMPTY
-                   ? &textures[3 + brick_animation.current_frame]
-                   : &textures[7 + brick_animation.current_frame];
+                   ? &textures[3 + brick_animation.frame_index]
+                   : &textures[7 + brick_animation.frame_index];
         break;
       case TILE_WALL:
         break;
@@ -185,9 +162,8 @@ void map_renderer_peace_town_tiles() {
     }
   }
 
-  if (!animation_is_playing(&brick_animation)) {
-    animation_init(&brick_animation, 4, 0.1f, true, false);
-    animation_play(&brick_animation);
+  if (!brick_animation.playing) {
+    animation_init(&brick_animation, (int[]){0, 0, 0, 0}, 4, 0.1f, true, true);
   } else {
     animation_update(&brick_animation);
   }

@@ -3,34 +3,32 @@
 
 #include <stdbool.h>
 
+#define MAX_FRAMES 16
+
 typedef struct {
   float started_at;
-  int total_frames;
-  int current_frame;
-  float frame_duration;
-  float last_frame;
-  bool loop;
+  float frame_time;
+  int frames[MAX_FRAMES];
+  int frame_count;
+  int frame_index;
+  bool loops;
   bool playing;
-  bool ended;
-
-  bool end_and_reverse;
-  bool reached_end;
 } Animation;
 
-void animation_init(Animation *animation, int total_frames,
-                    float frame_duration, bool loop, bool end_and_reverse);
+void animation_init(Animation *animation, int *frames, int frame_count,
+                    float frame_time, bool loops, bool play);
+
 void animation_update(Animation *animation);
-void animation_advance(Animation *animation);
-void animation_reverse(Animation *animation);
+void animation_play(Animation *anm);
+void animation_reset(Animation *anm);
+void animation_finish(Animation *anm);
+void animation_pause(Animation *anm);
+void animation_resume(Animation *anm);
 
-void animation_play(Animation *animation);
-void animation_stop(Animation *animation);
-void animation_restart(Animation *animation);
-void animation_pause(Animation *animation);
-
-float animation_started_at(Animation *animation);
+int animation_total_ticks(Animation *anm);
 int animation_get_frame(Animation *animation);
-bool animation_is_playing(Animation *animation);
-bool animation_ended(Animation *animation);
+float animation_elapsed(Animation *animation);
+
+bool animation_is_finished(Animation *animation);
 
 #endif
