@@ -93,7 +93,7 @@ void ballom_update(Entity *self) {
       entity->direction = new_dir;
   }
 
-  // entity->position = position;
+  entity->position = position;
 
   animation_update(&ballom->enemy.walk_animation);
 }

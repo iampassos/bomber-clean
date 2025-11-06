@@ -1,5 +1,7 @@
 #include "game_manager.h"
+#include "core/assets/asset_manager.h"
 #include "core/assets/assets_maps.h"
+#include "core/assets/assets_players.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "enemies/ballom.h"
@@ -34,9 +36,12 @@ void game_manager_init() {
 
   GridPosition spawn_pos[4] = {{1, 1}, {13, 11}, {13, 1}, {1, 11}};
 
+  asset_manager_load_all();
+
   do {
     game_manager.players[game_manager.player_count] = player_create(
         game_manager.player_count, spawn_pos[game_manager.player_count]);
+    assets_players_load_player_textures(game_manager.player_count);
     game_manager.player_count++;
   } while (game_manager.player_count < input_manager.controllers_n);
 

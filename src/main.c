@@ -20,10 +20,8 @@ int main(void) {
 
   entities_manager_init();
   input_manager_init();
-  game_manager_init();
   asset_manager_init();
-
-  asset_manager_load_all();
+  game_manager_init();
 
   SetTargetFPS(60);
 

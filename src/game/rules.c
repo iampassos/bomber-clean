@@ -52,13 +52,15 @@ bool rules_can_spawn_enemy(GridPosition grid) {
   if (tile != TILE_EMPTY)
     return false;
 
-  if(player_at_grid(grid) != NULL) return false; 
+  if (player_at_grid(grid) != NULL)
+    return false;
 
   for (int i = grid.col - 1; i <= grid.col + 1; i++) {
     for (int j = grid.row - 1; j <= grid.row + 1; j++) {
       if (enemy_at_grid((GridPosition){i, j}))
         return false;
-      if(player_at_grid((GridPosition){i, j}) != NULL) return false; 
+      if (player_at_grid((GridPosition){i, j}))
+        return false;
     }
   }
 
@@ -129,6 +131,8 @@ bool rules_can_spawn_bomb(GridPosition grid) {
   for (int i = grid.col - 1; i <= grid.col + 1; i++) {
     for (int j = grid.row - 1; j <= grid.row + 1; j++) {
       if (bomb_at_grid((GridPosition){i, j}))
+        return false;
+      if (player_at_grid((GridPosition){i, j}))
         return false;
     }
   }

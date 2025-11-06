@@ -236,7 +236,7 @@ void player_draw(Entity *self) {
 
   if (animation_is_playing(&player->death_animation)) {
     Texture2D *texture = assets_players_get_death_texture(
-        animation_get_frame(&player->death_animation));
+        player->id, animation_get_frame(&player->death_animation));
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
                 WHITE);
@@ -247,7 +247,7 @@ void player_draw(Entity *self) {
         frame == 1 ? assets_players_get_walk_white_texture(
                          player->entity.direction, frame)
                    : assets_players_get_walk_texture(
-                         player->entity.direction,
+                         player->id, player->entity.direction,
                          animation_get_frame(&player->walk_animation));
 
     DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
