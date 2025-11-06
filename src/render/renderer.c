@@ -38,7 +38,29 @@ void renderer_hud() {
 
     DrawTextEx(*asset_manager_get_font(0),
                player ? TextFormat("%i", player->lives) : "",
-               (Vector2){(i < 2 ? 134 : 730) + (192 * (i % 2)), 48.0f}, 38.0f,
+               (Vector2){(i < 2 ? 134 : 730) + (192 * (i % 2)), 45.0f}, 42.0f,
                0.0f, WHITE);
   }
+
+  int total_secs = GetTime() - game_manager.game_start;
+
+  int mins = total_secs / 60;
+  int secs = total_secs % 60;
+
+  int m1 = mins / 10 % 10;
+  int m2 = mins % 10;
+  int s1 = secs / 10 % 10;
+  int s2 = secs % 10;
+
+  DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", m1),
+             (Vector2){413, 45}, 42, 0, WHITE);
+  DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", m2),
+             (Vector2){458, 45}, 42, 0, WHITE);
+
+  DrawTextEx(*asset_manager_get_font(0), ":", (Vector2){496, 46}, 42, 0, WHITE);
+
+  DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", s1),
+             (Vector2){529, 45}, 42, 0, WHITE);
+  DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", s2),
+             (Vector2){574, 45}, 42, 0, WHITE);
 }

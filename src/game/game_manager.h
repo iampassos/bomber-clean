@@ -14,6 +14,7 @@ typedef struct {
   float last_event_interval;
   float event_interval;
   float stage_start;
+  float game_start;
   int bomb_radius;
   int bomb_quantity;
   int enemy_quantity;

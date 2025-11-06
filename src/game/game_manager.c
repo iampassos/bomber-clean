@@ -24,6 +24,7 @@ GameManager game_manager = {0};
 void game_manager_init() {
   game_manager.player_count = 0;
   game_manager.stage_start = 0;
+  game_manager.game_start = 0;
   game_manager.last_event_interval = GetTime();
   game_manager.bomb_radius = RANDOM_BOMB_INITIAL_RADIUS;
   game_manager.bomb_quantity = RANDOM_BOMB_INITIAL_QUANTITY;
