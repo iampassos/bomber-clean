@@ -38,11 +38,12 @@ void renderer_hud() {
     Player *player =
         i < game_manager.player_count ? game_manager.players[i] : NULL;
 
-    DrawTextEx(*asset_manager_get_font(0),
-               player ? player->alive ? TextFormat("%i", player->lives) : "X" : "",
-               (Vector2){off_set_x + (i < 2 ? 134 : 730) + (192 * (i % 2)),
-                         off_set_y + 45.0f},
-               42.0f, 0.0f, WHITE);
+    DrawTextEx(
+        *asset_manager_get_font(0),
+        player ? player->lives > 0 ? TextFormat("%i", player->lives) : "X" : "",
+        (Vector2){off_set_x + (i < 2 ? 134 : 730) + (192 * (i % 2)),
+                  off_set_y + 45.0f},
+        42.0f, 0.0f, player && !player->alive ? RED : WHITE);
   }
 
   int total_secs = GetTime() - game_manager.game_start;
