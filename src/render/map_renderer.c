@@ -11,8 +11,8 @@
 
 Animation brick_animation;
 
-GridPosition brick_destruction_position[4];
-Animation brick_destruction_animation[4];
+GridPosition brick_destruction_position[113] = {0};
+Animation brick_destruction_animation[113] = {0};
 int brick_destruction_length = 0;
 
 void map_renderer() {

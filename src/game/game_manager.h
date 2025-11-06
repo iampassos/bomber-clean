@@ -22,6 +22,7 @@ typedef struct {
   bool debug;
   bool hitboxes;
   bool grid;
+  bool fullscreen;
 } GameManager;
 
 extern GameManager game_manager;

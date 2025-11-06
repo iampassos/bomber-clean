@@ -78,6 +78,14 @@ void game_manager_update(float dt) {
     input_manager.last_dev_input = GetTime();
   }
 
+  if (input_manager.fullscreen &&
+      GetTime() - input_manager.last_dev_input >= 0.25f) {
+    game_manager.fullscreen = !game_manager.fullscreen;
+    input_manager.last_dev_input = GetTime();
+    SetWindowSize(game_manager.fullscreen ? 1920 : GAMEPLAY_WIDTH,
+                  game_manager.fullscreen ? 1080 : GAMEPLAY_HEIGHT);
+  }
+
   if (!CLEAN_MODE)
     game_manager_random_interval();
 

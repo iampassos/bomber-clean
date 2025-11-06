@@ -36,6 +36,7 @@ void input_manager_update() {
   input_manager.debug = IsKeyDown(KEY_F1);
   input_manager.hitboxes = IsKeyDown(KEY_F2);
   input_manager.grid = IsKeyDown(KEY_F3);
+  input_manager.fullscreen = IsKeyDown(KEY_F11);
 }
 
 void input_manager_reset() {
