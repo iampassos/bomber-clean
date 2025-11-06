@@ -12,6 +12,7 @@ void asset_manager_load_all() {
   assets_players_load_textures();
   assets_explosion_load_textures();
   asset_manager_load_hud_textures();
+  asset_manager_load_fullscreen_textures();
   asset_manager_load_power_ups_textures();
   asset_manager_load_fonts();
 }
@@ -76,3 +77,11 @@ void asset_manager_load_hud_textures() {
 }
 
 Texture2D *asset_manager_get_hud_texture() { return &asset_manager.hud_top; }
+
+void asset_manager_load_fullscreen_textures() {
+  asset_manager.fullscreen_background =
+      LoadTexture("assets/hud/FULLSCREEN_BACKGROUND.png");
+}
+Texture2D *asset_manager_get_fullscreen_texture() {
+  return &asset_manager.fullscreen_background;
+}

@@ -83,8 +83,7 @@ void game_manager_update(float dt) {
       GetTime() - input_manager.last_dev_input >= 0.25f) {
     game_manager.fullscreen = !game_manager.fullscreen;
     input_manager.last_dev_input = GetTime();
-    SetWindowSize(game_manager.fullscreen ? 1920 : GAMEPLAY_WIDTH,
-                  game_manager.fullscreen ? 1080 : GAMEPLAY_HEIGHT);
+    ToggleFullscreen();
   }
 
   if (!CLEAN_MODE)
@@ -296,6 +295,9 @@ void game_manager_random_interval() {
         GridPosition grid = {col, row};
 
         if (rules_can_spawn_enemy(grid)) {
+          if (game_manager.enemies_available_n <= 0)
+            return;
+
           switch (rand() % game_manager.enemies_available_n) {
           case ENEMY_BALLOM:
             ballom_create(grid);
@@ -332,6 +334,9 @@ int weighted_average(int items, float *probabilities) {
   for (int i = 1; i < items; i++)
     cumulative[i] = cumulative[i - 1] + probabilities[i];
 
+  if (cumulative[items - 1] <= 0.0f)
+    return rand() % items;
+
   float r = ((float)rand() / RAND_MAX) * cumulative[items - 1];
 
   for (int i = 0; i < items; i++) {
@@ -340,5 +345,5 @@ int weighted_average(int items, float *probabilities) {
     }
   }
 
-  return -1;
+  return items - 1;
 }

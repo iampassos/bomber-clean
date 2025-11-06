@@ -29,8 +29,10 @@ void renderer_draw_game() {
 }
 
 void renderer_hud() {
-  DrawTexture(*asset_manager_get_hud_texture(), MAP_X_OFFSET - TILE_SIZE / 2.0f,
-              0, WHITE);
+  float off_set_x = MAP_X_OFFSET - TILE_SIZE / 2.0f;
+  float off_set_y = MAP_Y_OFFSET - TILE_SIZE * 1.5f;
+
+  DrawTexture(*asset_manager_get_hud_texture(), off_set_x, off_set_y, WHITE);
 
   for (int i = 0; i < MAX_PLAYERS; i++) {
     Player *player =
@@ -38,8 +40,9 @@ void renderer_hud() {
 
     DrawTextEx(*asset_manager_get_font(0),
                player ? TextFormat("%i", player->lives) : "",
-               (Vector2){(i < 2 ? 134 : 730) + (192 * (i % 2)), 45.0f}, 42.0f,
-               0.0f, WHITE);
+               (Vector2){off_set_x + (i < 2 ? 134 : 730) + (192 * (i % 2)),
+                         off_set_y + 45.0f},
+               42.0f, 0.0f, WHITE);
   }
 
   int total_secs = GetTime() - game_manager.game_start;
@@ -53,14 +56,15 @@ void renderer_hud() {
   int s2 = secs % 10;
 
   DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", m1),
-             (Vector2){413, 45}, 42, 0, WHITE);
+             (Vector2){off_set_x + 413, off_set_y + 45}, 42, 0, WHITE);
   DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", m2),
-             (Vector2){458, 45}, 42, 0, WHITE);
+             (Vector2){off_set_x + 458, off_set_y + 45}, 42, 0, WHITE);
 
-  DrawTextEx(*asset_manager_get_font(0), ":", (Vector2){496, 46}, 42, 0, WHITE);
+  DrawTextEx(*asset_manager_get_font(0), ":",
+             (Vector2){off_set_x + 496, off_set_y + 46}, 42, 0, WHITE);
 
   DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", s1),
-             (Vector2){529, 45}, 42, 0, WHITE);
+             (Vector2){off_set_x + 529, off_set_y + 45}, 42, 0, WHITE);
   DrawTextEx(*asset_manager_get_font(0), TextFormat("%d", s2),
-             (Vector2){574, 45}, 42, 0, WHITE);
+             (Vector2){off_set_x + 574, off_set_y + 45}, 42, 0, WHITE);
 }

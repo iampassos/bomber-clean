@@ -93,24 +93,6 @@ void entities_manager_clear_but_player() {
   }
 }
 
-float old_x_offset = 0;
-float old_y_offset = 0;
-
-void entities_manager_recalculate_positions() {
-  for (int i = 0; i < entities_manager.count; i++) {
-    Entity *entity = entities_manager.entries[i];
-
-    entity->position.x -= old_x_offset;
-    entity->position.y -= old_y_offset;
-
-    entity->position.x += MAP_X_OFFSET;
-    entity->position.y += MAP_Y_OFFSET;
-  }
-
-  old_x_offset = MAP_X_OFFSET;
-  old_y_offset = MAP_Y_OFFSET;
-}
-
 int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
                                      int max_out) {
   int count = 0;

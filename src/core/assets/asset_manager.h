@@ -12,6 +12,7 @@
 typedef struct {
   Texture2D power_ups[6][2];
   Texture2D hud_top;
+  Texture2D fullscreen_background;
 
   Font fonts[1];
 
@@ -34,5 +35,8 @@ Font *asset_manager_get_font(int i);
 
 void asset_manager_load_hud_textures();
 Texture2D *asset_manager_get_hud_texture();
+
+void asset_manager_load_fullscreen_textures();
+Texture2D *asset_manager_get_fullscreen_texture();
 
 #endif

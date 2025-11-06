@@ -6,6 +6,10 @@
 #define GAMEPLAY_WIDTH 256 * 4
 #define GAMEPLAY_HEIGHT 224 * 4
 
+#define MAP_X_OFFSET (GAMEPLAY_WIDTH / 2.0f - TILE_SIZE * GRID_WIDTH / 2.0f)
+#define MAP_Y_OFFSET                                                           \
+  (GAMEPLAY_HEIGHT - GRID_HEIGHT * TILE_SIZE + TILE_SIZE / 2.0f)
+
 #define TILE_SIZE 64.0f
 #define GRID_WIDTH 15
 #define GRID_HEIGHT 13
@@ -28,11 +32,11 @@
 #define DEFAULT_BOMBS 1
 #define MAX_BOMB_RADIUS 10
 
-#define MAP_CHANGE_INTERVAL 150.0f
+#define MAP_CHANGE_INTERVAL 90.0f
 #define PROBABILITY_SPAWN_TILE_BRICK_ON_MAP 30
 
-#define BOMB_PROBABILITY 50
-#define ENEMY_PROBABILITY 50
+#define BOMB_PROBABILITY 50.0f
+#define ENEMY_PROBABILITY 50.0f
 
 #define POWER_UP_PROBABILITY 10
 #define POWER_UP_SPEED_INCREASE (MAX_PLAYER_SPEED * 0.05)
@@ -41,7 +45,7 @@
 
 #define ENEMY_MAP_LIMIT 6
 
-#define RANDOM_EVENT_INTERVAL 5.0f // invervalo de spawn de bomba
+#define RANDOM_EVENT_INTERVAL 5.0f
 #define RANDOM_EVENT_INTERVAL_DECREASE 0.25f
 #define RANDOM_BOMB_INITIAL_RADIUS 1
 #define RANDOM_BOMB_RADIUS_INCREASE 1
@@ -52,11 +56,5 @@
 #define RANDOM_ENEMY_QUANTITY_INCREASE 1
 #define RANDOM_ENEMY_INITIAL_QUANTITY 3
 #define RANDOM_ENEMY_MAP_QUANTITY_INCREASE 3
-
-extern float MAP_X_OFFSET;
-extern float MAP_Y_OFFSET;
-
-void common_update_offset();
-bool common_should_update_offset();
 
 #endif
