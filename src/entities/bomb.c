@@ -6,6 +6,7 @@
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
 #include "game/game_manager.h"
+#include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
 
@@ -74,14 +75,14 @@ void bomb_draw(Entity *self) {
                            ? assets_maps_get_bomb_machine_texture(frame)
                            : assets_maps_get_bomb_texture(frame);
 
-  DrawTexture(*texture, self->position.x,
+  DrawTexture(*texture, bomb->entity.position.x,
               (bomb->player_id == -1 && bomb->spawn_animation.playing
-                   ? (MACHINE_SPAWN_ANIMATION_TIME /
-                      (MACHINE_SPAWN_ANIMATION_TIME -
-                       bomb->spawn_animation.started_at)) *
+                   ? (MACHINE_SPAWN_ANIMATION_TICKS -
+                      fmin(animation_total_ticks(&bomb->spawn_animation),
+                           MACHINE_SPAWN_ANIMATION_TICKS)) *
                          -5.0f
-                   : 0) +
-                  self->position.y,
+                   : 0.0f) +
+                  bomb->entity.position.y,
               WHITE);
 }
 

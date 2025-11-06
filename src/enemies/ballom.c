@@ -7,6 +7,7 @@
 #include "enemies/enemy.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
+#include <math.h>
 #include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,11 +127,11 @@ void ballom_draw(Entity *self) {
 
   DrawTexture(*texture, self->position.x,
               (enemy->spawn_animation.playing
-                   ? (MACHINE_SPAWN_ANIMATION_TIME /
-                      (MACHINE_SPAWN_ANIMATION_TIME -
-                       enemy->spawn_animation.started_at)) *
+                   ? (MACHINE_SPAWN_ANIMATION_TICKS -
+                      fmin(animation_total_ticks(&enemy->spawn_animation),
+                           MACHINE_SPAWN_ANIMATION_TICKS)) *
                          -5.0f
-                   : 0) +
-                  self->position.y,
+                   : 0.0f) +
+                  enemy->entity.position.y,
               WHITE);
 }
