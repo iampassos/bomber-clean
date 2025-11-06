@@ -39,7 +39,7 @@ void renderer_hud() {
         i < game_manager.player_count ? game_manager.players[i] : NULL;
 
     DrawTextEx(*asset_manager_get_font(0),
-               player ? TextFormat("%i", player->lives) : "",
+               player ? player->alive ? TextFormat("%i", player->lives) : "X" : "",
                (Vector2){off_set_x + (i < 2 ? 134 : 730) + (192 * (i % 2)),
                          off_set_y + 45.0f},
                42.0f, 0.0f, WHITE);
