@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "entities/entity.h"
 
 typedef struct Score {
   int id;
@@ -14,6 +15,6 @@ typedef struct Score {
 } Score;
 
 
-void score_get_player(Player *p1);
+void score_set_player(Player *p1);
 
 #endif 

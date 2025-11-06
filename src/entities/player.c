@@ -14,6 +14,7 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "core/score.h"
 
 Player *player_create(int id, GridPosition spawn_grid) {
   spawn_grid.col = fmax(1, fmin(spawn_grid.col, GRID_WIDTH - 2));
@@ -37,6 +38,8 @@ Player *player_create(int id, GridPosition spawn_grid) {
   player->id = id;
   player->spawn_grid = spawn_grid;
   player->alive = true;
+  player->start_life_time = GetTime();
+  player->death_life_time = GetTime();
   player->invencible = true;
   player->invencibility_start = GetTime();
   player->lives = PLAYER_DEFAULT_LIVES;
@@ -92,8 +95,11 @@ void player_update(Entity *self) {
     } else {
       player->lives--;
 
-      if (player->lives <= 0)
+      if (player->lives <= 0){
+        player->death_life_time= abs(player->start_life_time-GetTime());
+        score_set_player(player);
         entities_manager_remove(self);
+      }
       else {
         player->alive = true;
         player->invencible = true;

@@ -27,9 +27,9 @@ void insertion_sort_score_by_time(Score *array, int len) {
   fclose(file);
 }
 
-void score_get_player(Player *p1) {
+void score_set_player(Player *p1) {
   if (p1 != NULL) {
-    insert_score(p1->id, 20);
+    insert_score(p1->id, p1->death_life_time);
   } else {
     return;
   }
