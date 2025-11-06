@@ -7,6 +7,7 @@
 #include "game/game_manager.h"
 #include "map_renderer.h"
 #include <raylib.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 GridPosition brick_destruction_position[113] = {0};
@@ -66,9 +67,10 @@ void map_renderer_animate_brick_destruction(GridPosition grid) {
 }
 
 void map_renderer_battle_stage_one_tiles() {
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = assets_maps_get_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
@@ -94,13 +96,22 @@ void map_renderer_battle_stage_one_tiles() {
 }
 
 void map_renderer_jump_zone_tiles() {
-  static int turn = -1;
-  static Animation upward = {0};
-  static Animation downward = {0};
+  static bool initialized = false;
+  static Animation downward;
+  static Animation upward;
+  static int turn = 1;
+  static int side = 1;
+
+  if (!initialized) {
+    animation_init(&downward, (int[]){0, 1, 2, 3}, 4, 0.05f, false, true);
+    animation_init(&upward, (int[]){3, 2, 1, 0}, 4, 0.15f, false, false);
+    initialized = true;
+  }
+
+  Texture2D *textures = assets_maps_get_tiles_textures();
 
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = assets_maps_get_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
@@ -111,8 +122,8 @@ void map_renderer_jump_zone_tiles() {
       case TILE_EMPTY:
         break;
       case TILE_BRICK:
-        // int frame = animation_get_frame(turn == 1 ? &downward : &upward);
-        // text = turn == 1 ? &textures[1 + frame] : &textures[4 + frame];
+        int frame = animation_get_frame(turn == 1 ? &downward : &upward);
+        text = &textures[(frame == 0) ? 0 : (side == 1) ? frame : (frame + 3)];
         break;
       case TILE_WALL:
         break;
@@ -123,14 +134,28 @@ void map_renderer_jump_zone_tiles() {
                     MAP_Y_OFFSET + i * TILE_SIZE, WHITE);
     }
   }
+
+  Animation *current = (turn == 1) ? &downward : &upward;
+  animation_update(current);
+
+  float delay = (turn == 1) ? 0.75f : 1.00f;
+  if (animation_is_finished(current) && animation_elapsed(current) >= delay) {
+    animation_reset(turn == 1 ? &downward : &upward);
+    animation_play(turn == 1 ? &upward : &downward);
+    turn = -turn;
+
+    if (turn == 1 && downward.playing)
+      side = -side;
+  }
 }
 
 void map_renderer_peace_town_tiles() {
   static Animation brick_animation = {0};
 
+  Texture2D *textures = assets_maps_get_tiles_textures();
+
   for (int i = 0; i < GRID_HEIGHT; i++) {
     for (int j = 0; j < GRID_WIDTH; j++) {
-      Texture2D *textures = assets_maps_get_tiles_textures();
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
