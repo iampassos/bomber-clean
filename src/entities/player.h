@@ -18,7 +18,6 @@ typedef struct {
   bool invencible;
   float invencibility_start;
   int lives;
-  float start_life_time;
   float death_life_time;
   PlayerState state;
   int bomb_capacity;
