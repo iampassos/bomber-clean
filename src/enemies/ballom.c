@@ -31,6 +31,10 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   enemy.type = ENEMY_BALLOM;
 
   animation_init(&enemy.death_animation, 2, 0.01, true, false);
+
+  animation_init(&enemy.spawn_animation, 25, 0.01, false, false);
+  animation_play(&enemy.spawn_animation);
+
   animation_init(&enemy.walk_animation, 4, 0.01f, true, false);
   animation_play(&enemy.walk_animation);
 
@@ -49,6 +53,12 @@ void ballom_update(Entity *self) {
   Ballom *ballom = (Ballom *)self;
   Entity *entity = (Entity *)&ballom->enemy.entity;
 
+  if (animation_is_playing(&ballom->enemy.spawn_animation)) {
+    entity->direction = DIR_DOWN;
+    animation_update(&ballom->enemy.spawn_animation);
+    return;
+  }
+
   if (!ballom->enemy.alive) {
     if (!animation_is_playing(&ballom->enemy.death_animation))
       animation_play(&ballom->enemy.death_animation);
@@ -61,6 +71,11 @@ void ballom_update(Entity *self) {
     }
     return;
   }
+
+  animation_update(&ballom->enemy.walk_animation);
+
+  if (GetTime() - animation_started_at(&ballom->enemy.spawn_animation) < 1.0f)
+    return;
 
   EntityDirection dir = entity->direction;
   Vector2 position = entity->position;
@@ -94,8 +109,6 @@ void ballom_update(Entity *self) {
   }
 
   entity->position = position;
-
-  animation_update(&ballom->enemy.walk_animation);
 }
 
 void ballom_draw(Entity *self) {
@@ -103,12 +116,20 @@ void ballom_draw(Entity *self) {
 
   int frame = animation_get_frame(&ballom->enemy.walk_animation);
 
-  Texture2D *texture = animation_get_frame(&ballom->enemy.death_animation) == 0
-                           ? assets_enemies_get_normal_ballom_texture(
-                                 ballom->enemy.entity.direction, frame)
-                           : assets_enemies_get_white_ballom_texture(
-                                 ballom->enemy.entity.direction, frame);
+  Texture2D *texture =
+      animation_get_frame(&ballom->enemy.death_animation) == 0 &&
+              animation_get_frame(&ballom->enemy.spawn_animation) % 2 == 0
+          ? assets_enemies_get_normal_ballom_texture(
+                ballom->enemy.entity.direction, frame)
+          : assets_enemies_get_white_ballom_texture(
+                ballom->enemy.entity.direction, frame);
+
+  frame = animation_get_frame(&ballom->enemy.spawn_animation);
 
   DrawTexture(*texture, ballom->enemy.entity.position.x,
-              ballom->enemy.entity.position.y, WHITE);
+              (animation_is_playing(&ballom->enemy.spawn_animation)
+                   ? (25 - frame) * -5.0f
+                   : 0) +
+                  ballom->enemy.entity.position.y,
+              WHITE);
 }

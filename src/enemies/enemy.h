@@ -14,6 +14,7 @@ typedef struct {
   bool alive;
   Animation walk_animation;
   Animation death_animation;
+  Animation spawn_animation;
 } Enemy;
 
 Enemy *enemy_at_grid(GridPosition grid);
