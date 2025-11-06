@@ -13,6 +13,8 @@ typedef struct {
   Texture2D power_ups[6][2];
   Texture2D hud_top;
 
+  Font fonts[1];
+
   AssetsMaps assets_maps;
   AssetsPlayers assets_players;
   AssetsEnemies assets_enemies;
@@ -26,6 +28,9 @@ void asset_manager_load_all();
 
 void asset_manager_load_power_ups_textures();
 Texture2D *asset_manager_get_power_up_texture(PowerUpType type, int frame);
+
+void asset_manager_load_fonts();
+Font *asset_manager_get_font(int i);
 
 void asset_manager_load_hud_textures();
 Texture2D *asset_manager_get_hud_texture();

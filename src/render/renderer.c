@@ -31,4 +31,14 @@ void renderer_draw_game() {
 void renderer_hud() {
   DrawTexture(*asset_manager_get_hud_texture(), MAP_X_OFFSET - TILE_SIZE / 2.0f,
               0, WHITE);
+
+  for (int i = 0; i < MAX_PLAYERS; i++) {
+    Player *player =
+        i < game_manager.player_count ? game_manager.players[i] : NULL;
+
+    DrawTextEx(*asset_manager_get_font(0),
+               player ? TextFormat("%i", player->lives) : "",
+               (Vector2){(i < 2 ? 134 : 730) + (192 * (i % 2)), 48.0f}, 38.0f,
+               0.0f, WHITE);
+  }
 }

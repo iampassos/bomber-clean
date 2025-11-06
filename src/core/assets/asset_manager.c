@@ -13,6 +13,7 @@ void asset_manager_load_all() {
   assets_explosion_load_textures();
   asset_manager_load_hud_textures();
   asset_manager_load_power_ups_textures();
+  asset_manager_load_fonts();
 }
 
 void asset_manager_load_power_ups_textures() {
@@ -59,6 +60,12 @@ void asset_manager_load_power_ups_textures() {
     }
   }
 }
+
+void asset_manager_load_fonts() {
+  asset_manager.fonts[0] = LoadFont("assets/fonts/PressStart2P-Regular.ttf");
+}
+
+Font *asset_manager_get_font(int i) { return &asset_manager.fonts[i]; }
 
 Texture2D *asset_manager_get_power_up_texture(PowerUpType type, int frame) {
   return &asset_manager.power_ups[type][frame];
