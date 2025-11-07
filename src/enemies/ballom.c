@@ -1,6 +1,7 @@
 #include "ballom.h"
 #include "core/animation.h"
 #include "core/assets/assets_enemies.h"
+#include "core/assets/assets_sounds.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "core/physics.h"
@@ -68,11 +69,12 @@ void ballom_update(Entity *self) {
 
   if (!enemy->alive) {
     if (enemy->death_animation.playing) {
-      if (animation_elapsed(&enemy->death_animation) >= 1.0f)
+      if (animation_elapsed(&enemy->death_animation) >= 1.0f) {
         entities_manager_remove(self);
-      else
+      } else
         animation_update(&enemy->death_animation);
     } else {
+      PlaySound(*assets_sounds_get_enemy_death());
       animation_play(&enemy->death_animation);
     }
     return;

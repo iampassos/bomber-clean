@@ -16,6 +16,8 @@ int main(void) {
 
   InitWindow(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT, "Bomber Clean");
 
+  InitAudioDevice();
+
   entities_manager_init();
   input_manager_init();
   asset_manager_init();
@@ -54,6 +56,7 @@ int main(void) {
     EndDrawing();
   }
 
+  CloseAudioDevice();
   CloseWindow();
 
   return 0;

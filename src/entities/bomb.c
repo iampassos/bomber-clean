@@ -1,6 +1,7 @@
 #include "bomb.h"
 #include "core/animation.h"
 #include "core/assets/assets_maps.h"
+#include "core/assets/assets_sounds.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "entities/entities_manager.h"
@@ -56,6 +57,8 @@ void bomb_update(Entity *self) {
 
   if (GetTime() - bomb->spawn_time >= bomb->explosion_time) {
     bomb->exploded = true;
+
+    PlaySound(*assets_sounds_get_bomb_explosion());
 
     game_manager_on_bomb_exploded(map_world_to_grid(bomb->entity.position),
                                   bomb->radius, bomb->player_id);

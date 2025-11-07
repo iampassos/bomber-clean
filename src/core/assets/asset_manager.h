@@ -5,6 +5,7 @@
 #include "core/assets/assets_explosion.h"
 #include "core/assets/assets_maps.h"
 #include "core/assets/assets_players.h"
+#include "core/assets/assets_sounds.h"
 #include "entities/power_up.h"
 
 #include <raylib.h>
@@ -20,6 +21,7 @@ typedef struct {
   AssetsPlayers assets_players;
   AssetsEnemies assets_enemies;
   AssetsExplosion assets_explosion;
+  AssetsSounds assets_sounds;
 } AssetManager;
 
 extern AssetManager asset_manager;

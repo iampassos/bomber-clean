@@ -1,5 +1,6 @@
 #include "asset_manager.h"
 #include "core/assets/assets_explosion.h"
+#include "core/assets/assets_sounds.h"
 #include "core/common.h"
 #include <raylib.h>
 #include <stdio.h>
@@ -15,6 +16,7 @@ void asset_manager_load_all() {
   asset_manager_load_fullscreen_textures();
   asset_manager_load_power_ups_textures();
   asset_manager_load_fonts();
+  assets_sounds_load_sounds();
 }
 
 void asset_manager_load_power_ups_textures() {

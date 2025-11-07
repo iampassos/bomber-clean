@@ -2,6 +2,7 @@
 #include "core/assets/asset_manager.h"
 #include "core/assets/assets_maps.h"
 #include "core/assets/assets_players.h"
+#include "core/assets/assets_sounds.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "enemies/ballom.h"
@@ -108,6 +109,8 @@ void game_manager_update(float dt) {
 }
 
 void game_manager_start_stage() {
+  PlaySound(*assets_sounds_get_stage_intro());
+
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = game_manager.players[i];
     player->entity.position = entity_grid_to_world(
@@ -292,6 +295,7 @@ void game_manager_on_power_up_press(Player *player, PowerUp *power_up) {
       player->invencible = true;
       break;
     }
+    PlaySound(*assets_sounds_get_item_get());
   }
 
   entities_manager_remove((Entity *)power_up);

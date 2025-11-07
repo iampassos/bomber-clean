@@ -1,6 +1,7 @@
 #include "player.h"
 #include "core/animation.h"
 #include "core/assets/assets_players.h"
+#include "core/assets/assets_sounds.h"
 #include "core/common.h"
 #include "core/map.h"
 #include "core/physics.h"
@@ -131,11 +132,13 @@ void player_update(Entity *self) {
     }
   }
 
-  if (player->input.place_bomb && rules_can_place_bomb(player))
+  if (player->input.place_bomb && rules_can_place_bomb(player)) {
     bomb_create(player->id,
                 map_grid_to_world(entity_world_to_grid(
                     &player->entity, PLAYER_HEIGHT_TOLERANCE)),
                 player->bomb_radius);
+    PlaySound(*assets_sounds_get_bomb_placement());
+  }
 
   Vector2 projected = player->entity.position;
 
