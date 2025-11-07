@@ -7,8 +7,7 @@ Enemy *enemy_at_grid(GridPosition grid) {
     Entity *entity = entities_manager.entries[i];
 
     if (entity->type == ENTITY_ENEMY) {
-      GridPosition grid2 =
-          entity_world_to_grid(entity, entity->height_tolerance);
+      GridPosition grid2 = entity_world_to_grid(entity);
       if (map_is_same_grid(grid, grid2))
         return (Enemy *)entity;
     }

@@ -45,11 +45,11 @@ Player *player_create(int id, GridPosition spawn_grid) {
   player->lives = PLAYER_DEFAULT_LIVES;
   player->bomb_capacity = DEFAULT_BOMBS;
   player->bomb_radius = DEFAULT_BOMB_RADIUS;
+  player->bomb_passthrough = false;
   player->speed = PLAYER_DEFAULT_SPEED;
   player->input = (PlayerInput){{0}, false};
 
-  player->entity.position = entity_grid_to_world(&player->entity, spawn_grid,
-                                                 PLAYER_HEIGHT_TOLERANCE);
+  player->entity.position = entity_grid_to_world(&player->entity, spawn_grid);
 
   animation_init(&player->death_animation, (int[]){0, 1, 2, 3, 4, 5, 6}, 7,
                  0.3f, false, false);
@@ -63,23 +63,22 @@ Player *player_create(int id, GridPosition spawn_grid) {
   entities_manager_add((Entity *)player);
 
   if (map_is_walkable(map, spawn_grid)) {
-    player->entity.position = entity_grid_to_world(&player->entity, spawn_grid,
-                                                   PLAYER_HEIGHT_TOLERANCE);
+    player->entity.position = entity_grid_to_world(&player->entity, spawn_grid);
     return player;
   }
 
   for (int r = spawn_grid.col; r < GRID_HEIGHT - 1; r++) {
     for (int c = spawn_grid.row; c < GRID_WIDTH - 1; c++) {
       if (map_is_walkable(map, (GridPosition){r, c})) {
-        player->entity.position = entity_grid_to_world(
-            &player->entity, (GridPosition){c, r}, PLAYER_HEIGHT_TOLERANCE);
+        player->entity.position =
+            entity_grid_to_world(&player->entity, (GridPosition){c, r});
         return player;
       }
     }
   }
 
-  player->entity.position = entity_grid_to_world(
-      &player->entity, (GridPosition){1, 1}, PLAYER_HEIGHT_TOLERANCE);
+  player->entity.position =
+      entity_grid_to_world(&player->entity, (GridPosition){1, 1});
 
   return player;
 }
@@ -108,8 +107,7 @@ void player_update(Entity *self) {
       player->alive = true;
       player->invencible = true;
       animation_reset(&player->death_animation);
-      player->entity.position = entity_grid_to_world(
-          &player->entity, player->spawn_grid, PLAYER_HEIGHT_TOLERANCE);
+      self->position = entity_grid_to_world(self, player->spawn_grid);
     }
 
     return;
@@ -118,7 +116,7 @@ void player_update(Entity *self) {
   for (int i = 0; i < entities_manager.count; i++) {
     Entity *entity2 = entities_manager.entries[i];
     if (entity2->type == ENTITY_ENEMY &&
-        physics_entity_collision(&player->entity, entity2)) {
+        physics_entity_collision(self, entity2)) {
       Enemy *enemy = (Enemy *)entity2;
       if (enemy->alive)
         game_manager_on_enemy_touch(player, (Enemy *)entity2);
@@ -137,33 +135,33 @@ void player_update(Entity *self) {
   }
 
   if (player->input.place_bomb && rules_can_place_bomb(player)) {
-    bomb_create(player->id,
-                map_grid_to_world(entity_world_to_grid(
-                    &player->entity, PLAYER_HEIGHT_TOLERANCE)),
+    bomb_create(player->id, map_grid_to_world(entity_world_to_grid(self)),
                 player->bomb_radius);
+    player->bomb_passthrough = true;
     PlaySound(*assets_sounds_get_bomb_placement());
   }
 
-  Vector2 projected = player->entity.position;
+  if (player->bomb_passthrough)
+    if (physics_can_move_to_entities(self, self->position, false))
+      player->bomb_passthrough = false;
 
-  projected.x = fmax(MAP_X_OFFSET, player->entity.position.x +
-                                       player->speed * player->input.move.x *
-                                           game_manager.dt);
+  Vector2 projected = self->position;
 
-  Vector2 new_pos = player->entity.position;
+  projected.x = fmax(MAP_X_OFFSET, self->position.x + player->speed *
+                                                          player->input.move.x *
+                                                          game_manager.dt);
+
+  Vector2 new_pos = self->position;
 
   Vector2 horizontal = {projected.x,
-                        player->entity.position.y + PLAYER_HEIGHT_TOLERANCE};
-  if (physics_can_move_to(horizontal, player->entity.width,
-                          player->entity.height))
+                        self->position.y + PLAYER_HEIGHT_TOLERANCE};
+  if (physics_can_move_to_entities(self, horizontal, player->bomb_passthrough))
     new_pos.x = horizontal.x;
   else if (player->input.move.y == 0) {
     float offset_in_tile =
-        player->entity.direction != DIR_UP
-            ? fmod(player->entity.position.y + PLAYER_HEIGHT_TOLERANCE,
-                   TILE_SIZE)
-            : fmod(player->entity.position.y - PLAYER_HEIGHT_TOLERANCE,
-                   TILE_SIZE);
+        self->direction != DIR_UP
+            ? fmod(self->position.y + PLAYER_HEIGHT_TOLERANCE, TILE_SIZE)
+            : fmod(self->position.y - PLAYER_HEIGHT_TOLERANCE, TILE_SIZE);
 
     float dist_to_up = offset_in_tile;
     float dist_to_down = TILE_SIZE - offset_in_tile;
@@ -173,17 +171,19 @@ void player_update(Entity *self) {
       if (dist_to_up < dist_to_down) {
         float val = fmin(player->speed, dist_to_up * 60.0f) * game_manager.dt;
 
-        if (physics_can_move_to(
+        if (physics_can_move_to_entities(
+                self,
                 (Vector2){new_pos.x, new_pos.y + val + PLAYER_HEIGHT_TOLERANCE},
-                player->entity.width, player->entity.height))
+                player->bomb_passthrough))
           new_pos.y += val;
 
       } else if (dist_to_down < dist_to_up) {
         float val = fmin(player->speed, dist_to_down * 60.0f) * game_manager.dt;
 
-        if (physics_can_move_to(
+        if (physics_can_move_to_entities(
+                self,
                 (Vector2){new_pos.x, new_pos.y - val + PLAYER_HEIGHT_TOLERANCE},
-                player->entity.width, player->entity.height))
+                player->bomb_passthrough))
           new_pos.y -= val;
       }
     }
@@ -193,14 +193,14 @@ void player_update(Entity *self) {
       fmax(MAP_Y_OFFSET,
            new_pos.y + player->speed * player->input.move.y * game_manager.dt);
 
-  Vector2 vertical = {player->entity.position.x, projected.y};
-  if (physics_can_move_to(
-          (Vector2){vertical.x, vertical.y + PLAYER_HEIGHT_TOLERANCE},
-          player->entity.width, player->entity.height))
+  Vector2 vertical = {self->position.x, projected.y};
+  if (physics_can_move_to_entities(
+          self, (Vector2){vertical.x, vertical.y + PLAYER_HEIGHT_TOLERANCE},
+          player->bomb_passthrough))
     new_pos.y = vertical.y;
   else if (player->input.move.x == 0) {
-    float offset_in_tile = fmod(
-        player->entity.position.x + player->entity.width / 2.0f, TILE_SIZE);
+    float offset_in_tile =
+        fmod(self->position.x + self->width / 2.0f, TILE_SIZE);
 
     float dist_to_left = offset_in_tile;
     float dist_to_right = TILE_SIZE - offset_in_tile;
@@ -208,28 +208,30 @@ void player_update(Entity *self) {
     if (dist_to_left < dist_to_right) {
       float val = fmin(player->speed, dist_to_left * 60.0f) * game_manager.dt;
 
-      if (physics_can_move_to(
+      if (physics_can_move_to_entities(
+              self,
               (Vector2){new_pos.x - val, new_pos.y + PLAYER_HEIGHT_TOLERANCE},
-              player->entity.width, player->entity.height))
+              player->bomb_passthrough))
         new_pos.x -= val;
     } else if (dist_to_right < dist_to_left) {
       float val = fmin(player->speed, dist_to_right * 60.0f) * game_manager.dt;
 
-      if (physics_can_move_to(
+      if (physics_can_move_to_entities(
+              self,
               (Vector2){new_pos.x + val, new_pos.y + PLAYER_HEIGHT_TOLERANCE},
-              player->entity.width, player->entity.height))
+              player->bomb_passthrough))
         new_pos.x += val;
     }
   }
 
-  float dx = new_pos.x - player->entity.position.x;
-  float dy = new_pos.y - player->entity.position.y;
+  float dx = new_pos.x - self->position.x;
+  float dy = new_pos.y - self->position.y;
 
   if (fabs(dx) > fabs(dy)) {
-    player->entity.direction = dx > 0 ? DIR_RIGHT : DIR_LEFT;
+    self->direction = dx > 0 ? DIR_RIGHT : DIR_LEFT;
     player->state = STATE_RUNNING;
   } else if (fabs(dy) > 0.0f) {
-    player->entity.direction = dy > 0 ? DIR_DOWN : DIR_UP;
+    self->direction = dy > 0 ? DIR_DOWN : DIR_UP;
     player->state = STATE_RUNNING;
   } else if (fabs(dy) == 0.0f && fabs(dx) == 0.0f) {
     player->state = STATE_IDLE;
@@ -247,7 +249,7 @@ void player_update(Entity *self) {
       StopSound(*assets_sounds_get_player_walk(i));
   }
 
-  player->entity.position = new_pos;
+  self->position = new_pos;
 
   animation_update(&player->invencible_animation);
 }
@@ -259,79 +261,76 @@ void player_draw(Entity *self) {
     Texture2D *texture = assets_players_get_death_texture(
         player->id, player->death_animation.frame_index);
 
-    DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
-                WHITE);
+    DrawTexture(*texture, self->position.x, self->position.y, WHITE);
   } else {
     int frame = player->invencible_animation.frame_index;
 
-    Texture2D *texture = frame == 1 ? assets_players_get_walk_white_texture(
-                                          player->entity.direction, frame)
-                                    : assets_players_get_walk_texture(
-                                          player->id, player->entity.direction,
-                                          player->walk_animation.frame_index);
+    Texture2D *texture =
+        frame == 1
+            ? assets_players_get_walk_white_texture(self->direction, frame)
+            : assets_players_get_walk_texture(
+                  player->id, self->direction,
+                  player->walk_animation.frame_index);
 
-    DrawTexture(*texture, player->entity.position.x, player->entity.position.y,
-                WHITE);
+    DrawTexture(*texture, self->position.x, self->position.y, WHITE);
   }
 }
 
 void player_debug(Entity *self) {
   Player *player = (Player *)self;
 
-  GridPosition pos =
-      entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
-  TileType tile = map_get_tile(game_manager.map, pos);
-  char strBuffer[1000];
-  snprintf(strBuffer, sizeof(strBuffer),
-           "Player debug\n"
-           "id: %d\n"
-           "position: (%.2f, %.2f)\n"
-           "grid: (%d, %d)\n"
-           "width: %.2f\n"
-           "height: %.2f\n"
-           "direction: %s\n"
-           "state: %s\n"
-           "bomb-capacity: %d\n"
-           "bombs: %d\n"
-           "bomb-radius: %d\n"
-           "speed: %.2f\n"
-           "invencible: %s\n"
-           "alive: %s\n"
-           "lives: %d\n"
-           "animation-step: %d\n"
-           "standing-on: %s",
-           player->id, player->entity.position.x, player->entity.position.y,
-           pos.col, pos.row, player->entity.width, player->entity.height,
-           player->entity.direction == DIR_UP     ? "UP"
-           : player->entity.direction == DIR_DOWN ? "DOWN"
-           : player->entity.direction == DIR_LEFT ? "LEFT"
-                                                  : "RIGHT",
-           player->state == STATE_IDLE      ? "IDLE"
-           : player->state == STATE_RUNNING ? "RUNNING"
-                                            : "DEAD",
-           player->bomb_capacity, player_get_all_bombs(player, NULL),
-           player->bomb_radius, player->speed,
-           player->invencible ? "yes" : "no", player->alive ? "yes" : "no",
-           player->lives, player->walk_animation.frame_index,
-           tile == TILE_EMPTY   ? "EMPTY"
-           : tile == TILE_WALL  ? "WALL"
-           : tile == TILE_BRICK ? "BRICK"
-                                : "BOMB");
+  if (player->id == 0) {
+    GridPosition pos = entity_world_to_grid(self);
+    TileType tile = map_get_tile(game_manager.map, pos);
+    char strBuffer[1000];
+    snprintf(strBuffer, sizeof(strBuffer),
+             "Player debug\n"
+             "id: %d\n"
+             "position: (%.2f, %.2f)\n"
+             "grid: (%d, %d)\n"
+             "width: %.2f\n"
+             "height: %.2f\n"
+             "direction: %s\n"
+             "state: %s\n"
+             "bomb-capacity: %d\n"
+             "bombs: %d\n"
+             "bomb-radius: %d\n"
+             "speed: %.2f\n"
+             "invencible: %s\n"
+             "alive: %s\n"
+             "bomb-passthrough: %s\n"
+             "lives: %d\n"
+             "animation-step: %d\n"
+             "standing-on: %s",
+             player->id, self->position.x, self->position.y, pos.col, pos.row,
+             self->width, self->height,
+             self->direction == DIR_UP     ? "UP"
+             : self->direction == DIR_DOWN ? "DOWN"
+             : self->direction == DIR_LEFT ? "LEFT"
+                                           : "RIGHT",
+             player->state == STATE_IDLE      ? "IDLE"
+             : player->state == STATE_RUNNING ? "RUNNING"
+                                              : "DEAD",
+             player->bomb_capacity, player_get_all_bombs(player, NULL),
+             player->bomb_radius, player->speed,
+             player->invencible ? "yes" : "no", player->alive ? "yes" : "no",
+             player->bomb_passthrough ? "yes" : "no", player->lives,
+             player->walk_animation.frame_index,
+             tile == TILE_EMPTY   ? "EMPTY"
+             : tile == TILE_WALL  ? "WALL"
+             : tile == TILE_BRICK ? "BRICK"
+                                  : "??");
 
-  Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
+    Vector2 textSize = MeasureTextEx(GetFontDefault(), strBuffer, 20, 1.0f);
 
-  float x = 15;
-  float y = (GAMEPLAY_HEIGHT + MAP_Y_OFFSET) / 2.0f - textSize.y / 2.0f;
+    float x = 15;
+    float y = (GAMEPLAY_HEIGHT + MAP_Y_OFFSET) / 2.0f - textSize.y / 2.0f;
 
-  DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
-                (Color){196, 196, 196, 200});
+    DrawRectangle(x, y, textSize.x + 10, textSize.y + 10,
+                  (Color){196, 196, 196, 200});
 
-  DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
-
-  Vector2 grid = map_grid_to_world(pos);
-
-  DrawRectangle(grid.x, grid.y, TILE_SIZE, TILE_SIZE,
-                (Color){128, 128, 128, 128});
+    DrawTextEx(GetFontDefault(), strBuffer, (Vector2){x, y}, 20, 1.0f, BLACK);
+  }
 }
 
 int player_get_all_bombs(Player *player, Entity **out) {
@@ -356,8 +355,7 @@ Player *player_at_grid(GridPosition grid) {
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = (Player *)game_manager.players[i];
 
-    GridPosition grid2 =
-        entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
+    GridPosition grid2 = entity_world_to_grid(&player->entity);
 
     if (map_is_same_grid(grid, grid2))
       return player;

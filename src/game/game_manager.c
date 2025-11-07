@@ -118,8 +118,8 @@ void game_manager_start_stage() {
 
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = game_manager.players[i];
-    player->entity.position = entity_grid_to_world(
-        &player->entity, player->spawn_grid, PLAYER_HEIGHT_TOLERANCE);
+    player->entity.position =
+        entity_grid_to_world(&player->entity, player->spawn_grid);
   }
 
   assets_maps_load_textures(game_manager.map->stage);
@@ -167,7 +167,7 @@ void game_manager_on_enemy_touch(Player *player, Enemy *enemy) {
 }
 
 void game_manager_on_entity_exploded(Entity *entity) {
-  GridPosition pos = entity_world_to_grid(entity, entity->height_tolerance);
+  GridPosition pos = entity_world_to_grid(entity);
 
   if (explosion_tile_at_grid(pos) == NULL)
     return;

@@ -41,8 +41,8 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   Ballom *ballom = malloc(sizeof(Ballom));
   ballom->enemy = enemy;
 
-  ballom->enemy.entity.position = entity_grid_to_world(
-      &ballom->enemy.entity, spawn_grid, BALLOM_HEIGHT_TOLERANCE);
+  ballom->enemy.entity.position =
+      entity_grid_to_world(&ballom->enemy.entity, spawn_grid);
 
   entities_manager_add((Entity *)ballom);
 
@@ -94,9 +94,9 @@ void ballom_update(Entity *self) {
                      : dir == DIR_DOWN ? enemy->speed * game_manager.dt
                                        : 0));
 
-  if (physics_can_move_to(
-          (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
-          self->width, self->height))
+  if (physics_can_move_to_entities(
+          self, (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
+          false))
     position = projected;
   else {
     EntityDirection new_dir = rand() % 4;
@@ -110,9 +110,9 @@ void ballom_update(Entity *self) {
                       : new_dir == DIR_DOWN ? enemy->speed * game_manager.dt
                                             : 0);
 
-    if (physics_can_move_to(
-            (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
-            self->width, self->height))
+    if (physics_can_move_to_entities(
+            self, (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
+            false))
       self->direction = new_dir;
   }
 

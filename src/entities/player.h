@@ -15,6 +15,7 @@ typedef struct {
   int id;
   GridPosition spawn_grid;
   bool alive;
+  bool bomb_passthrough;
   bool invencible;
   float invencibility_start;
   int lives;

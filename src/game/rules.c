@@ -16,8 +16,7 @@ bool rules_can_place_bomb(Player *player) {
   if (player_get_all_bombs(player, NULL) >= player->bomb_capacity)
     return false;
 
-  GridPosition pos =
-      entity_world_to_grid(&player->entity, PLAYER_HEIGHT_TOLERANCE);
+  GridPosition pos = entity_world_to_grid(&player->entity);
 
   if (!map_is_walkable(game_manager.map, pos))
     return false;

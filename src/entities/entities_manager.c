@@ -99,7 +99,10 @@ int entities_manager_get_all_at_grid(GridPosition grid, Entity **out,
   for (int i = 0; i < entities_manager.count && count < max_out; i++) {
     Entity *entity = entities_manager.entries[i];
 
-    GridPosition pos = map_world_to_grid(entity->position);
+    Vector2 position = {entity->position.x,
+                        entity->position.y + entity->height_tolerance};
+
+    GridPosition pos = map_world_to_grid(position);
 
     if (pos.col == grid.col && pos.row == grid.row) {
       if (out != NULL)
@@ -163,8 +166,7 @@ void entities_manager_grid() {
     Entity *entity = entities_manager.entries[i];
 
     if (entity->type == ENTITY_ENEMY || entity->type == ENTITY_PLAYER) {
-      GridPosition grid =
-          entity_world_to_grid(entity, entity->height_tolerance);
+      GridPosition grid = entity_world_to_grid(entity);
       Vector2 pos = map_grid_to_world(grid);
 
       DrawRectangle(pos.x, pos.y, TILE_SIZE, TILE_SIZE,

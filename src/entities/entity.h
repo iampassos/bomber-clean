@@ -41,8 +41,7 @@ typedef struct Entity {
   void (*debug)(struct Entity *self);
 } Entity;
 
-Vector2 entity_grid_to_world(Entity *entity, GridPosition grid,
-                             float height_tolerance);
-GridPosition entity_world_to_grid(Entity *entity, float height_tolerance);
+Vector2 entity_grid_to_world(Entity *entity, GridPosition grid);
+GridPosition entity_world_to_grid(Entity *entity);
 
 #endif
