@@ -160,8 +160,6 @@ void map_renderer_jump_zone_tiles() {
       Texture2D *text = NULL;
 
       TileType tile = map_get_tile(game_manager.map, (GridPosition){j, i});
-      TileType upper_tile =
-          map_get_tile(game_manager.map, (GridPosition){j, i - 1});
 
       switch (tile) {
       case TILE_EMPTY:

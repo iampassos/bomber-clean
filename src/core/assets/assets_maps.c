@@ -341,3 +341,7 @@ Texture2D *assets_maps_get_bomb_machine_texture(int frame) {
 Texture2D *assets_maps_get_brick_destruction_texture(int frame) {
   return &asset_manager.assets_maps.brick_destruction[frame];
 }
+
+Texture2D *assets_maps_get_power_up_explosion_texture(int frame) {
+  return &asset_manager.assets_maps.power_up_explosion[frame];
+}

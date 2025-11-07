@@ -19,6 +19,7 @@ typedef struct {
   bool active;
   PowerUpType power_up_type;
   Animation tick_animation;
+  Animation explosion_animation;
 } PowerUp;
 
 PowerUp *power_up_create(Vector2 position, PowerUpType type);
