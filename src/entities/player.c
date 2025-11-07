@@ -6,6 +6,7 @@
 #include "core/map.h"
 #include "core/physics.h"
 #include "core/score.h"
+#include "enemies/enemy.h"
 #include "entities/bomb.h"
 #include "entities/entities_manager.h"
 #include "entity.h"
@@ -89,6 +90,7 @@ void player_update(Entity *self) {
   if (!player->alive) {
     if (!player->death_animation.playing &&
         !animation_is_finished(&player->death_animation)) {
+      PlaySound(*assets_sounds_get_player_death());
       animation_play(&player->death_animation);
       return;
     } else if (!animation_is_finished(&player->death_animation)) {
@@ -117,7 +119,9 @@ void player_update(Entity *self) {
     Entity *entity2 = entities_manager.entries[i];
     if (entity2->type == ENTITY_ENEMY &&
         physics_entity_collision(&player->entity, entity2)) {
-      game_manager_on_enemy_touch(player, (Enemy *)entity2);
+      Enemy *enemy = (Enemy *)entity2;
+      if (enemy->alive)
+        game_manager_on_enemy_touch(player, (Enemy *)entity2);
     }
   }
 
@@ -234,9 +238,13 @@ void player_update(Entity *self) {
   if (player->state == STATE_RUNNING) {
     animation_update(&player->walk_animation);
     animation_resume(&player->walk_animation);
+    PlaySound(
+        *assets_sounds_get_player_walk(player->walk_animation.frame_index));
   } else {
     player->walk_animation.frame_index = 1;
     animation_pause(&player->walk_animation);
+    for (int i = 0; i < player->walk_animation.frame_count; i++)
+      StopSound(*assets_sounds_get_player_walk(i));
   }
 
   player->entity.position = new_pos;

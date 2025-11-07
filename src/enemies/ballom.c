@@ -30,7 +30,7 @@ Ballom *ballom_create(GridPosition spawn_grid) {
   Enemy enemy;
   enemy.entity = entity;
   enemy.speed = 2.0f * 60.0f;
-  enemy.alive = true;
+  enemy.alive = false;
   enemy.type = ENEMY_BALLOM;
 
   animation_init(&enemy.death_animation, (int[]){0, 1}, 2, 0.01f, true, false);
@@ -62,6 +62,7 @@ void ballom_update(Entity *self) {
     if (animation_elapsed(&enemy->spawn_animation) >
         MACHINE_SPAWN_ANIMATION_TIME) {
       animation_finish(&enemy->spawn_animation);
+      enemy->alive = true;
     }
 
     return;

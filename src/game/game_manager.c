@@ -106,6 +106,11 @@ void game_manager_update(float dt) {
 
   if (GetTime() - game_manager.stage_start >= MAP_CHANGE_INTERVAL)
     game_manager_on_next_stage();
+  else if (GetTime() - game_manager.stage_start >= MAP_CHANGE_INTERVAL - 3.0f) {
+    Sound sound = *assets_sounds_get_stage_clear();
+    if (!IsSoundPlaying(sound))
+      PlaySound(*assets_sounds_get_stage_clear());
+  }
 }
 
 void game_manager_start_stage() {

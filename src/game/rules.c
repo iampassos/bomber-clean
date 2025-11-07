@@ -35,9 +35,19 @@ bool rules_can_kill_player(Player *player) {
   return false;
 }
 
-bool rules_can_kill_power_up(PowerUp *power_up) { return true; }
+bool rules_can_kill_power_up(PowerUp *power_up) {
+  if (power_up->active)
+    return true;
 
-bool rules_can_kill_enemy(Enemy *enemy) { return true; }
+  return false;
+}
+
+bool rules_can_kill_enemy(Enemy *enemy) {
+  if (enemy->alive)
+    return true;
+
+  return false;
+}
 
 bool rules_can_spawn_enemy(GridPosition grid) {
   if (entities_manager_get_all_from_type(ENTITY_ENEMY, NULL, ENEMY_MAP_LIMIT) >=

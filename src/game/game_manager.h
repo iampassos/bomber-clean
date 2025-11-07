@@ -19,7 +19,7 @@ typedef struct {
   int bomb_radius;
   int bomb_quantity;
   int enemy_quantity;
-  EnemyType enemies_available[1];
+  EnemyType enemies_available[16];
   int enemies_available_n;
   bool debug;
   bool hitboxes;
