@@ -22,6 +22,7 @@
 GameManager game_manager = {0};
 
 void game_manager_init() {
+  game_manager.dt = 0;
   game_manager.player_count = 0;
   game_manager.stage_start = 0;
   game_manager.game_start = 0;
@@ -49,6 +50,8 @@ void game_manager_init() {
 }
 
 void game_manager_update(float dt) {
+  game_manager.dt = dt;
+
   for (int i = 0; i < game_manager.player_count; i++) {
     PlayerInput input = input_manager_get_player_input(i);
 
@@ -75,6 +78,11 @@ void game_manager_update(float dt) {
   if (input_manager.hitboxes &&
       GetTime() - input_manager.last_dev_input >= 0.25f) {
     game_manager.hitboxes = !game_manager.hitboxes;
+    input_manager.last_dev_input = GetTime();
+  }
+
+  if (input_manager.fps && GetTime() - input_manager.last_dev_input >= 0.25f) {
+    game_manager.fps = !game_manager.fps;
     input_manager.last_dev_input = GetTime();
   }
 

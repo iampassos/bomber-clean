@@ -26,6 +26,8 @@ void renderer_draw_game() {
     map_renderer_debug();
     entities_manager_grid();
   }
+  if (game_manager.fps)
+    DrawFPS(0, 0);
 }
 
 void renderer_hud() {

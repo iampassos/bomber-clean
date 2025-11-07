@@ -80,7 +80,8 @@ void bomb_draw(Entity *self) {
                    ? (MACHINE_SPAWN_ANIMATION_TICKS -
                       fmin(animation_total_ticks(&bomb->spawn_animation),
                            MACHINE_SPAWN_ANIMATION_TICKS)) *
-                         -5.0f
+                         -5.0f * 60.0f * game_manager.dt
+
                    : 0.0f) +
                   bomb->entity.position.y,
               WHITE);

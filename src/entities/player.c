@@ -7,7 +7,6 @@
 #include "core/score.h"
 #include "entities/bomb.h"
 #include "entities/entities_manager.h"
-#include "entities/power_up.h"
 #include "entity.h"
 #include "game/game_manager.h"
 #include "game/rules.h"
@@ -141,7 +140,8 @@ void player_update(Entity *self) {
   Vector2 projected = player->entity.position;
 
   projected.x = fmax(MAP_X_OFFSET, player->entity.position.x +
-                                       player->speed * player->input.move.x);
+                                       player->speed * player->input.move.x *
+                                           game_manager.dt);
 
   Vector2 new_pos = player->entity.position;
 
@@ -164,7 +164,7 @@ void player_update(Entity *self) {
 
     if (dist_from_center > 0.5f) {
       if (dist_to_up < dist_to_down) {
-        float val = fmin(player->speed, dist_to_up);
+        float val = fmin(player->speed, dist_to_up * 60.0f) * game_manager.dt;
 
         if (physics_can_move_to(
                 (Vector2){new_pos.x, new_pos.y + val + PLAYER_HEIGHT_TOLERANCE},
@@ -172,7 +172,7 @@ void player_update(Entity *self) {
           new_pos.y += val;
 
       } else if (dist_to_down < dist_to_up) {
-        float val = fmin(player->speed, dist_to_down);
+        float val = fmin(player->speed, dist_to_down * 60.0f) * game_manager.dt;
 
         if (physics_can_move_to(
                 (Vector2){new_pos.x, new_pos.y - val + PLAYER_HEIGHT_TOLERANCE},
@@ -183,7 +183,8 @@ void player_update(Entity *self) {
   }
 
   projected.y =
-      fmax(MAP_Y_OFFSET, new_pos.y + player->speed * player->input.move.y);
+      fmax(MAP_Y_OFFSET,
+           new_pos.y + player->speed * player->input.move.y * game_manager.dt);
 
   Vector2 vertical = {player->entity.position.x, projected.y};
   if (physics_can_move_to(
@@ -198,14 +199,14 @@ void player_update(Entity *self) {
     float dist_to_right = TILE_SIZE - offset_in_tile;
 
     if (dist_to_left < dist_to_right) {
-      float val = fmin(player->speed, dist_to_left);
+      float val = fmin(player->speed, dist_to_left * 60.0f) * game_manager.dt;
 
       if (physics_can_move_to(
               (Vector2){new_pos.x - val, new_pos.y + PLAYER_HEIGHT_TOLERANCE},
               player->entity.width, player->entity.height))
         new_pos.x -= val;
     } else if (dist_to_right < dist_to_left) {
-      float val = fmin(player->speed, dist_to_right);
+      float val = fmin(player->speed, dist_to_right * 60.0f) * game_manager.dt;
 
       if (physics_can_move_to(
               (Vector2){new_pos.x + val, new_pos.y + PLAYER_HEIGHT_TOLERANCE},

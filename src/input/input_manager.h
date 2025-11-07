@@ -26,6 +26,7 @@ typedef struct {
   bool hitboxes;
   bool grid;
   bool fullscreen;
+  bool fps;
 } InputManager;
 
 extern InputManager input_manager;

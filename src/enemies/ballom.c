@@ -7,9 +7,9 @@
 #include "enemies/enemy.h"
 #include "entities/entities_manager.h"
 #include "entities/entity.h"
+#include "game/game_manager.h"
 #include <math.h>
 #include <raylib.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 Ballom *ballom_create(GridPosition spawn_grid) {
@@ -28,7 +28,7 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 
   Enemy enemy;
   enemy.entity = entity;
-  enemy.speed = 2.0f;
+  enemy.speed = 2.0f * 60.0f;
   enemy.alive = true;
   enemy.type = ENEMY_BALLOM;
 
@@ -82,12 +82,14 @@ void ballom_update(Entity *self) {
   Vector2 position = self->position;
   Vector2 projected = position;
 
-  projected.x = position.x + (dir == DIR_LEFT    ? -enemy->speed
-                              : dir == DIR_RIGHT ? enemy->speed
-                                                 : 0);
-  projected.y = position.y + (dir == DIR_UP     ? -enemy->speed
-                              : dir == DIR_DOWN ? enemy->speed
-                                                : 0);
+  projected.x =
+      position.x + (dir == DIR_LEFT    ? -enemy->speed * game_manager.dt
+                    : dir == DIR_RIGHT ? enemy->speed * game_manager.dt
+                                       : 0);
+  projected.y =
+      (position.y + (dir == DIR_UP     ? -enemy->speed * game_manager.dt
+                     : dir == DIR_DOWN ? enemy->speed * game_manager.dt
+                                       : 0));
 
   if (physics_can_move_to(
           (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
@@ -96,12 +98,14 @@ void ballom_update(Entity *self) {
   else {
     EntityDirection new_dir = rand() % 4;
 
-    projected.x = position.x + (new_dir == DIR_LEFT    ? -enemy->speed
-                                : new_dir == DIR_RIGHT ? enemy->speed
-                                                       : 0);
-    projected.y = position.y + (new_dir == DIR_UP     ? -enemy->speed
-                                : new_dir == DIR_DOWN ? enemy->speed
-                                                      : 0);
+    projected.x =
+        position.x + (new_dir == DIR_LEFT    ? -enemy->speed * game_manager.dt
+                      : new_dir == DIR_RIGHT ? enemy->speed * game_manager.dt
+                                             : 0);
+    projected.y =
+        position.y + (new_dir == DIR_UP     ? -enemy->speed * game_manager.dt
+                      : new_dir == DIR_DOWN ? enemy->speed * game_manager.dt
+                                            : 0);
 
     if (physics_can_move_to(
             (Vector2){projected.x, projected.y + BALLOM_HEIGHT_TOLERANCE},
@@ -130,7 +134,7 @@ void ballom_draw(Entity *self) {
                    ? (MACHINE_SPAWN_ANIMATION_TICKS -
                       fmin(animation_total_ticks(&enemy->spawn_animation),
                            MACHINE_SPAWN_ANIMATION_TICKS)) *
-                         -5.0f
+                         -5.0f * 60.0f * game_manager.dt
                    : 0.0f) +
                   enemy->entity.position.y,
               WHITE);

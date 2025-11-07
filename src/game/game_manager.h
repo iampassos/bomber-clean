@@ -9,6 +9,7 @@
 
 typedef struct {
   Map *map;
+  float dt;
   Player *players[MAX_PLAYERS];
   int player_count;
   float last_event_interval;
@@ -24,6 +25,7 @@ typedef struct {
   bool hitboxes;
   bool grid;
   bool fullscreen;
+  bool fps;
 } GameManager;
 
 extern GameManager game_manager;

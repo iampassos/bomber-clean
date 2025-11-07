@@ -12,6 +12,8 @@
 int main(void) {
   seed_rng();
 
+  SetConfigFlags(FLAG_VSYNC_HINT);
+
   InitWindow(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT, "Bomber Clean");
 
   entities_manager_init();
@@ -20,8 +22,6 @@ int main(void) {
   game_manager_init();
 
   RenderTexture2D target = LoadRenderTexture(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT);
-
-  SetTargetFPS(60);
 
   while (!WindowShouldClose()) {
     float dt = GetFrameTime();
