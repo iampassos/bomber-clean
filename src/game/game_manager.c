@@ -33,7 +33,10 @@ void game_manager_init() {
   game_manager.enemy_quantity = RANDOM_ENEMY_INITIAL_QUANTITY;
   game_manager.enemies_available_n = 0;
 
-  game_manager.map = map_create(MAP_BELT_ZONE);
+  for (int i = 1; i < 8; i++)
+    map_create(i);
+
+  game_manager.map = map_first();
 
   GridPosition spawn_pos[4] = {{1, 1}, {13, 11}, {13, 1}, {1, 11}};
 
@@ -133,10 +136,17 @@ void game_manager_on_next_stage() {
   game_manager_start_stage();
 
   game_manager.bomb_radius += RANDOM_BOMB_RADIUS_INCREASE;
+
+  game_manager.event_interval -=
+      game_manager.event_interval > RANDOM_EVENT_INTERVAL_MINIMUM
+          ? RANDOM_EVENT_INTERVAL_DECREASE
+          : 0;
+
   game_manager.bomb_quantity +=
       game_manager.map->stage % RANDOM_BOMB_MAP_QUANTITY_INCREASE == 0
           ? RANDOM_BOMB_QUANTITY_INCREASE
           : 0;
+
   game_manager.enemy_quantity +=
       game_manager.map->stage % RANDOM_ENEMY_MAP_QUANTITY_INCREASE == 0
           ? RANDOM_ENEMY_QUANTITY_INCREASE

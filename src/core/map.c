@@ -67,6 +67,11 @@ Map *map_create(MapType map_type) {
   return map;
 }
 
+Map *map_first() {
+  Map *m = (Map *)list_get_data_position(linked_list_head, 0);
+  return m != NULL ? m : NULL;
+}
+
 Map *map_next(Map *map) {
   int pos = list_find_node_position(linked_list_head, map);
   Map *next = (Map *)list_get_data_position(linked_list_head, pos + 1);

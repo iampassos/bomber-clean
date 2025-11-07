@@ -6,13 +6,13 @@
 
 typedef enum {
   MAP_NORMAL_ZONE,
-  MAP_BOMB_ZONE,
   MAP_JUMP_ZONE,
-  MAP_DUEL_ZONE,
-  MAP_LIGHT_ZONE,
-  MAP_SPEED_ZONE,
   MAP_BELT_ZONE,
-  MAP_WESTERN_ZONE
+  MAP_WESTERN_ZONE,
+  MAP_BOMB_ZONE,
+  MAP_DUEL_ZONE,
+  MAP_SPEED_ZONE,
+  MAP_LIGHT_ZONE,
 } MapType;
 
 typedef enum {
@@ -35,6 +35,7 @@ typedef struct Map {
 
 Map *map_create(MapType map_type);
 Map *map_next(Map *map);
+Map *map_first();
 
 TileType map_get_tile(Map *map, GridPosition position);
 void map_set_tile(Map *map, GridPosition position, TileType tile);
