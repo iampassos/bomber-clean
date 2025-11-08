@@ -2,9 +2,9 @@
 #include "asset_manager.h"
 #include "core/assets/assets_enemies.h"
 #include "core/map.h"
+#include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 void assets_maps_load_textures(MapType map_type) {
   assets_enemies_load_ballom_textures();
@@ -35,6 +35,24 @@ void assets_maps_load_textures(MapType map_type) {
     assets_maps_load_western_zone();
     break;
   }
+}
+
+void assets_maps_unload_all() {
+  UnloadTexture(asset_manager.assets_maps.background);
+
+  for (int i = 0; i < asset_manager.assets_maps.tile_count; i++)
+    UnloadTexture(asset_manager.assets_maps.tiles[i]);
+
+  for (int i = 0; i < 3; i++) {
+    UnloadTexture(asset_manager.assets_maps.bomb[i]);
+    UnloadTexture(asset_manager.assets_maps.bomb_machine[i]);
+  }
+
+  for (int i = 0; i < 6; i++)
+    UnloadTexture(asset_manager.assets_maps.brick_destruction[i]);
+
+  for (int i = 0; i < 7; i++)
+    UnloadTexture(asset_manager.assets_maps.power_up_explosion[i]);
 }
 
 void assets_maps_load_core(char *map_path) {
@@ -88,6 +106,7 @@ void assets_maps_load_normal_zone() {
       "BRICK",
   };
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -121,6 +140,7 @@ void assets_maps_load_bomb_zone() {
       "BRICK4",
   };
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -151,6 +171,7 @@ void assets_maps_load_light_zone() {
       "BRICK_SHADOW4", "BRICK_SHADOW5",
   };
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -178,6 +199,7 @@ void assets_maps_load_speed_zone() {
   static const char *paths[] = {"BRICK1", "BRICK2", "BRICK3", "GRASS_SHADOW"};
 
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -208,6 +230,7 @@ void assets_maps_load_belt_zone() {
       "BRICK10",      "BRICK11", "BRICK12", "CAR_LEFT", "CAR_RIGHT"};
 
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -245,6 +268,7 @@ void assets_maps_load_western_zone() {
                                 "GRASS_SHADOW1"};
 
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -271,6 +295,7 @@ void assets_maps_load_duel_zone() {
 
   static const char *paths[] = {"GRASS_SHADOW", "BRICK"};
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);
@@ -301,6 +326,7 @@ void assets_maps_load_jump_zone() {
 
   };
   int size = sizeof(paths) / sizeof(paths[0]);
+  asset_manager.assets_maps.tile_count = size;
 
   Image images[size];
   asset_manager.assets_maps.tiles = malloc(sizeof(Texture2D) * size);

@@ -9,7 +9,10 @@ typedef struct {
   Texture2D ballom_white[4][4];
 } AssetsEnemies;
 
+void assets_enemies_unload_all();
+
 void assets_enemies_load_ballom_textures();
+
 Texture2D *assets_enemies_get_normal_ballom_texture(EntityDirection direction,
                                                     int frame);
 Texture2D *assets_enemies_get_white_ballom_texture(EntityDirection direction,

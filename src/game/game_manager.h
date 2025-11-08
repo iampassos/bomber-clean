@@ -7,7 +7,10 @@
 #include "entities/player.h"
 #include "entities/power_up.h"
 
+typedef enum { GAME_PLAYING, GAME_OVER } GameStatus;
+
 typedef struct {
+  GameStatus status;
   Map *map;
   float dt;
   Player *players[MAX_PLAYERS];
@@ -36,6 +39,7 @@ void game_manager_update(float dt);
 void game_manager_start_stage();
 void game_manager_random_interval();
 
+void game_manager_on_game_end();
 void game_manager_on_next_stage();
 void game_manager_on_enemy_touch(Player *player, Enemy *enemy);
 void game_manager_on_entity_exploded(Entity *entity);

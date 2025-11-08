@@ -3,6 +3,15 @@
 #include <raylib.h>
 #include <stdio.h>
 
+void assets_enemies_unload_all() {
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      UnloadTexture(asset_manager.assets_enemies.ballom[i][j]);
+      UnloadTexture(asset_manager.assets_enemies.ballom_white[i][j]);
+    }
+  }
+}
+
 void assets_enemies_load_ballom_textures() {
   char *ballom_path = "assets/sprites/enemies/ballom/";
 
@@ -15,27 +24,23 @@ void assets_enemies_load_ballom_textures() {
 
   for (int dir = 0; dir < 4; dir++) {
     for (int frame = 0; frame < 4; frame++) {
-      sprintf(path, "%s%s_WHITE.png", ballom_path, paths[dir][frame]);
-      Image img = LoadImage(path);
-      ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-      ImageResizeNN(&img, 64, 88);
-      ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
-      asset_manager.assets_enemies.ballom_white[dir][frame] =
-          LoadTextureFromImage(img);
-      SetTextureFilter(asset_manager.assets_enemies.ballom_white[dir][frame],
-                       TEXTURE_FILTER_POINT);
-      UnloadImage(img);
-    }
-  }
-
-  for (int dir = 0; dir < 4; dir++) {
-    for (int frame = 0; frame < 4; frame++) {
       sprintf(path, "%s%s.png", ballom_path, paths[dir][frame]);
       Image img = LoadImage(path);
       ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
       ImageResizeNN(&img, 64, 88);
       ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
       asset_manager.assets_enemies.ballom[dir][frame] =
+          LoadTextureFromImage(img);
+      SetTextureFilter(asset_manager.assets_enemies.ballom_white[dir][frame],
+                       TEXTURE_FILTER_POINT);
+      UnloadImage(img);
+
+      sprintf(path, "%s%s_WHITE.png", ballom_path, paths[dir][frame]);
+      img = LoadImage(path);
+      ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+      ImageResizeNN(&img, 64, 88);
+      ImageColorReplace(&img, (Color){48, 136, 160, 255}, BLANK);
+      asset_manager.assets_enemies.ballom_white[dir][frame] =
           LoadTextureFromImage(img);
       SetTextureFilter(asset_manager.assets_enemies.ballom_white[dir][frame],
                        TEXTURE_FILTER_POINT);

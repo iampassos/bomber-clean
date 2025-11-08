@@ -15,6 +15,7 @@ typedef struct {
 } AssetsSounds;
 
 void assets_sounds_load_sounds();
+void assets_sounds_unload_all();
 
 Sound *assets_sounds_get_bomb_explosion();
 Sound *assets_sounds_get_bomb_placement();

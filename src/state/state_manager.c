@@ -7,7 +7,6 @@ StateManager state_manager = {0};
 
 void state_manager_init() {
   asset_manager_init();
-  asset_manager_load_all();
 
   state_manager_set(STATE_MENU);
 }

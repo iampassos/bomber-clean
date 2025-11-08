@@ -11,25 +11,33 @@
 #include <raylib.h>
 
 typedef struct {
+  // All
+  Font fonts[1];
+  AssetsSounds assets_sounds;
+
+  // Game
   Texture2D power_ups[6][2];
   Texture2D hud_top;
   Texture2D fullscreen_background;
-  Texture2D menu_background;
-  Texture2D menu_background_2;
-
-  Font fonts[1];
-
   AssetsMaps assets_maps;
   AssetsPlayers assets_players;
   AssetsEnemies assets_enemies;
   AssetsExplosion assets_explosion;
-  AssetsSounds assets_sounds;
+
+  // Menu
+  Texture2D menu_background;
+  Texture2D menu_background_2;
 } AssetManager;
 
 extern AssetManager asset_manager;
 
 void asset_manager_init();
-void asset_manager_load_all();
+void asset_manager_load_menu();
+void asset_manager_load_game();
+
+void asset_manager_unload_all();
+void asset_manager_unload_game();
+void asset_manager_unload_menu();
 
 void asset_manager_load_power_ups_textures();
 Texture2D *asset_manager_get_power_up_texture(PowerUpType type, int frame);

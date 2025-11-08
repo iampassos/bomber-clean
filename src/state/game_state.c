@@ -19,9 +19,17 @@ void game_state_init() {
   state_manager.state.render = game_state_render;
 
   target = LoadRenderTexture(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT);
+
+  asset_manager_load_game();
 }
 
 void game_state_update() {
+  if (game_manager.status == GAME_OVER) {
+    state_manager_set(STATE_MENU);
+    asset_manager_unload_game();
+    return;
+  }
+
   input_manager_update();
   game_manager_update(GetFrameTime());
 }

@@ -1,5 +1,6 @@
 #include "assets_players.h"
 #include "asset_manager.h"
+#include <raylib.h>
 #include <stdio.h>
 
 void assets_players_load_textures() {
@@ -9,6 +10,21 @@ void assets_players_load_textures() {
 void assets_players_load_player_textures(int player_id) {
   assets_players_load_walk_textures(player_id);
   assets_players_load_death_textures(player_id);
+}
+
+void assets_players_unload_all() {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      for (int k = 0; k < 3; k++)
+        UnloadTexture(asset_manager.assets_players.walk[i][j][k]);
+
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 3; j++)
+      UnloadTexture(asset_manager.assets_players.white[i][j]);
+
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 7; j++)
+      UnloadTexture(asset_manager.assets_players.death[i][j]);
 }
 
 void assets_players_load_walk_white_textures() {

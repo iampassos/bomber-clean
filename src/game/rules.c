@@ -9,6 +9,15 @@
 #include "game/game_manager.h"
 #include <time.h>
 
+bool rules_can_end_game() {
+  for (int i = 0; i < game_manager.player_count; i++) {
+    if (game_manager.players[i]->lives > 0)
+      return false;
+  }
+
+  return true;
+}
+
 bool rules_can_place_bomb(Player *player) {
   if (!player->alive)
     return false;

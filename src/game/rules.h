@@ -6,6 +6,8 @@
 #include "entities/power_up.h"
 #include <stdbool.h>
 
+bool rules_can_end_game();
+
 bool rules_can_place_bomb(Player *player);
 bool rules_can_kill_player(Player *player);
 bool rules_can_spawn_power_up(GridPosition grid);

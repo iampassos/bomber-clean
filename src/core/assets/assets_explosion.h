@@ -11,6 +11,8 @@ typedef struct {
 } AssetsExplosion;
 
 void assets_explosion_load_textures();
+void assets_explosion_unload_all();
+
 void assets_explosion_load_center_textures();
 void assets_explosion_load_middle_textures();
 void assets_explosion_load_final_textures();

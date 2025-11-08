@@ -21,6 +21,7 @@ int main(void) {
     state_manager_render();
   }
 
+  asset_manager_unload_all();
   CloseAudioDevice();
   CloseWindow();
 

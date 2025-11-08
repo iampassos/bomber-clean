@@ -1,5 +1,4 @@
 #include "game_manager.h"
-#include "core/assets/asset_manager.h"
 #include "core/assets/assets_maps.h"
 #include "core/assets/assets_players.h"
 #include "core/assets/assets_sounds.h"
@@ -16,6 +15,7 @@
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
 #include "rules.h"
+#include "state/state_manager.h"
 #include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
@@ -23,6 +23,7 @@
 GameManager game_manager = {0};
 
 void game_manager_init() {
+  game_manager.status = GAME_PLAYING;
   game_manager.dt = 0;
   game_manager.player_count = 0;
   game_manager.stage_start = 0;
@@ -41,8 +42,6 @@ void game_manager_init() {
 
   GridPosition spawn_pos[4] = {{1, 1}, {13, 11}, {13, 1}, {1, 11}};
 
-  asset_manager_load_all();
-
   do {
     game_manager.players[game_manager.player_count] = player_create(
         game_manager.player_count, spawn_pos[game_manager.player_count]);
@@ -55,6 +54,11 @@ void game_manager_init() {
 
 void game_manager_update(float dt) {
   game_manager.dt = dt;
+
+  if (rules_can_end_game()) {
+    game_manager_on_game_end();
+    return;
+  }
 
   for (int i = 0; i < game_manager.player_count; i++) {
     PlayerInput input = input_manager_get_player_input(i);
@@ -160,6 +164,8 @@ void game_manager_on_next_stage() {
           ? RANDOM_ENEMY_QUANTITY_INCREASE
           : 0;
 }
+
+void game_manager_on_game_end() { game_manager.status = GAME_OVER; }
 
 void game_manager_on_enemy_touch(Player *player, Enemy *enemy) {
   if (enemy->alive && rules_can_kill_player(player))

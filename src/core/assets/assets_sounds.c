@@ -26,6 +26,20 @@ void assets_sounds_load_sounds() {
   }
 }
 
+void assets_sounds_unload_all() {
+  UnloadSound(asset_manager.assets_sounds.bomb_explosion);
+  UnloadSound(asset_manager.assets_sounds.bomb_placement);
+  UnloadSound(asset_manager.assets_sounds.item_get);
+  UnloadSound(asset_manager.assets_sounds.enemy_death);
+  UnloadSound(asset_manager.assets_sounds.player_death);
+
+  for (int i = 0; i < 4; i++)
+    UnloadSound(asset_manager.assets_sounds.player_walk[i]);
+
+  UnloadSound(asset_manager.assets_sounds.stage_intro);
+  UnloadSound(asset_manager.assets_sounds.stage_clear);
+}
+
 Sound *assets_sounds_get_bomb_explosion() {
   return &asset_manager.assets_sounds.bomb_explosion;
 }

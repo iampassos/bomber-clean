@@ -1,12 +1,25 @@
 #include "assets_explosion.h"
 #include "asset_manager.h"
 #include "core/common.h"
+#include <raylib.h>
 #include <stdio.h>
 
 void assets_explosion_load_textures() {
   assets_explosion_load_center_textures();
   assets_explosion_load_middle_textures();
   assets_explosion_load_final_textures();
+}
+
+void assets_explosion_unload_all(void) {
+  for (int i = 0; i < 5; i++) {
+    UnloadTexture(asset_manager.assets_explosion.center[i]);
+
+    for (int j = 0; j < 2; j++)
+      UnloadTexture(asset_manager.assets_explosion.middle[j][i]);
+
+    for (int j = 0; j < 4; j++)
+      UnloadTexture(asset_manager.assets_explosion.final[j][i]);
+  }
 }
 
 void assets_explosion_load_center_textures() {

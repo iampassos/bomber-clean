@@ -6,6 +6,7 @@
 
 typedef struct {
   Texture2D *tiles;
+  int tile_count;
   Texture2D background;
   Texture2D brick_destruction[6];
   Texture2D bomb[3];
@@ -14,6 +15,7 @@ typedef struct {
 } AssetsMaps;
 
 void assets_maps_load_textures(MapType map_type);
+void assets_maps_unload_all();
 
 void assets_maps_load_jump_zone();
 void assets_maps_load_duel_zone();

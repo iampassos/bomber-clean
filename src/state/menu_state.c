@@ -34,13 +34,17 @@ void menu_state_init() {
 
   play_text = (Text){
       "PLAY GAME", {364, 528}, 38, 1.0f, *asset_manager_get_font(0), WHITE};
+
+  asset_manager_load_menu();
 }
 
 void menu_state_update() {
   play_text.color = menu_state_is_touching_text(play_text) ? GOLD : WHITE;
 
-  if (menu_state_is_clicking_text(play_text))
+  if (menu_state_is_clicking_text(play_text)) {
     state_manager_set(STATE_GAME);
+    asset_manager_unload_menu();
+  }
 }
 
 void menu_state_render() {

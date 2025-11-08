@@ -1,5 +1,8 @@
 #include "asset_manager.h"
+#include "core/assets/assets_enemies.h"
 #include "core/assets/assets_explosion.h"
+#include "core/assets/assets_maps.h"
+#include "core/assets/assets_players.h"
 #include "core/assets/assets_sounds.h"
 #include "core/common.h"
 #include <raylib.h>
@@ -7,17 +10,47 @@
 
 AssetManager asset_manager = {0};
 
-void asset_manager_init() {}
+void asset_manager_init() {
+  asset_manager_load_fonts();
+  assets_sounds_load_sounds();
+}
 
-void asset_manager_load_all() {
+void asset_manager_load_menu() { asset_manager_load_menu_textures(); }
+
+void asset_manager_load_game() {
   assets_players_load_textures();
   assets_explosion_load_textures();
   asset_manager_load_hud_textures();
   asset_manager_load_fullscreen_textures();
   asset_manager_load_power_ups_textures();
-  asset_manager_load_fonts();
-  assets_sounds_load_sounds();
-  asset_manager_load_menu_textures();
+}
+
+void asset_manager_unload_all() {
+  asset_manager_unload_game();
+  asset_manager_unload_menu();
+  assets_sounds_unload_all();
+
+  for (int i = 0; i < 1; i++)
+    UnloadFont(asset_manager.fonts[i]);
+}
+
+void asset_manager_unload_game() {
+  assets_enemies_unload_all();
+  assets_explosion_unload_all();
+  assets_maps_unload_all();
+  assets_players_unload_all();
+
+  UnloadTexture(asset_manager.hud_top);
+  UnloadTexture(asset_manager.fullscreen_background);
+
+  for (int i = 0; i < 6; i++)
+    for (int j = 0; j < 2; j++)
+      UnloadTexture(asset_manager.power_ups[i][j]);
+}
+
+void asset_manager_unload_menu() {
+  UnloadTexture(asset_manager.menu_background);
+  UnloadTexture(asset_manager.menu_background_2);
 }
 
 void asset_manager_load_power_ups_textures() {

@@ -11,6 +11,8 @@ typedef struct {
 } AssetsPlayers;
 
 void assets_players_load_textures();
+void assets_players_unload_all();
+
 void assets_players_load_player_textures(int player_id);
 void assets_players_load_walk_textures(int player_id);
 void assets_players_load_walk_white_textures();

@@ -50,7 +50,6 @@ Ballom *ballom_create(GridPosition spawn_grid) {
 }
 
 void ballom_update(Entity *self) {
-  Ballom *ballom = (Ballom *)self;
   Enemy *enemy = (Enemy *)self;
 
   animation_update(&enemy->walk_animation);
