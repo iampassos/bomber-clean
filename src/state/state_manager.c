@@ -11,9 +11,9 @@ void state_manager_init() {
   state_manager_set(STATE_MENU);
 }
 
-void state_manager_update() { state_manager.state.update(); }
+void state_manager_update() { state_manager.state->update(); }
 
-void state_manager_render() { state_manager.state.render(); }
+void state_manager_render() { state_manager.state->render(); }
 
 void state_manager_set(StateType type) {
   switch (type) {

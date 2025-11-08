@@ -12,6 +12,9 @@ typedef struct {
   Sound player_walk[4];
   Sound stage_intro;
   Sound stage_clear;
+  Sound menu_music;
+  Sound menu_select;
+  Sound menu_cursor;
 } AssetsSounds;
 
 void assets_sounds_load_sounds();
@@ -25,5 +28,8 @@ Sound *assets_sounds_get_player_death();
 Sound *assets_sounds_get_player_walk(int i);
 Sound *assets_sounds_get_stage_intro();
 Sound *assets_sounds_get_stage_clear();
+Sound *assets_sounds_get_menu_music();
+Sound *assets_sounds_get_menu_select();
+Sound *assets_sounds_get_menu_cursor();
 
 #endif

@@ -4,17 +4,21 @@
 #include "state/state.h"
 #include <raylib.h>
 
+typedef enum { TEXT_NONE, TEXT_PLAY } TextType;
+
 typedef struct {
-  char *text;
   Vector2 position;
   float size;
   float spacing;
-  Font font;
   Color color;
+  Font *font;
+  char *text;
 } Text;
 
 typedef struct {
   State state;
+  TextType current;
+  Texture2D *background;
 } MenuState;
 
 void menu_state_init();

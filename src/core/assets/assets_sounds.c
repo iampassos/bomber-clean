@@ -24,6 +24,13 @@ void assets_sounds_load_sounds() {
         LoadSound("assets/sounds/Walking 2.wav");
     SetSoundVolume(asset_manager.assets_sounds.player_walk[i], 0.25f);
   }
+
+  asset_manager.assets_sounds.menu_music = LoadSound("assets/sounds/menu.wav");
+  SetSoundVolume(asset_manager.assets_sounds.menu_music, 0.25f);
+  asset_manager.assets_sounds.menu_select =
+      LoadSound("assets/sounds/Title Screen Select.wav");
+  asset_manager.assets_sounds.menu_cursor =
+      LoadSound("assets/sounds/Title Screen Cursor.wav");
 }
 
 void assets_sounds_unload_all() {
@@ -38,6 +45,9 @@ void assets_sounds_unload_all() {
 
   UnloadSound(asset_manager.assets_sounds.stage_intro);
   UnloadSound(asset_manager.assets_sounds.stage_clear);
+  UnloadSound(asset_manager.assets_sounds.menu_music);
+  UnloadSound(asset_manager.assets_sounds.menu_select);
+  UnloadSound(asset_manager.assets_sounds.menu_cursor);
 }
 
 Sound *assets_sounds_get_bomb_explosion() {
@@ -69,4 +79,16 @@ Sound *assets_sounds_get_stage_intro() {
 
 Sound *assets_sounds_get_stage_clear() {
   return &asset_manager.assets_sounds.stage_clear;
+}
+
+Sound *assets_sounds_get_menu_music() {
+  return &asset_manager.assets_sounds.menu_music;
+}
+
+Sound *assets_sounds_get_menu_cursor() {
+  return &asset_manager.assets_sounds.menu_cursor;
+}
+
+Sound *assets_sounds_get_menu_select() {
+  return &asset_manager.assets_sounds.menu_select;
 }

@@ -6,6 +6,7 @@
 #include "render/renderer.h"
 #include "state_manager.h"
 #include <raylib.h>
+#include <stdlib.h>
 
 RenderTexture2D target;
 
@@ -14,9 +15,12 @@ void game_state_init() {
   input_manager_init();
   game_manager_init();
 
+  GameState *game_state = malloc(sizeof(GameState));
+  game_state->state.update = game_state_update;
+  game_state->state.render = game_state_render;
+
   state_manager.type = STATE_GAME;
-  state_manager.state.update = game_state_update;
-  state_manager.state.render = game_state_render;
+  state_manager.state = (State *)game_state;
 
   target = LoadRenderTexture(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT);
 
