@@ -21,7 +21,7 @@ bool rules_can_place_bomb(Player *player) {
   if (!map_is_walkable(game_manager.map, pos))
     return false;
 
-  if (entities_manager_get_all_at_grid(pos, NULL, MAX_ENTITIES) > 0)
+  if (entities_manager_get_all_at_grid(pos, NULL, MAX_ENTITIES) > 1)
     return false;
 
   return true;

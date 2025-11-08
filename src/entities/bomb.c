@@ -55,7 +55,7 @@ void bomb_update(Entity *self) {
     return;
   }
 
-  if (GetTime() - bomb->spawn_time >= bomb->explosion_time) {
+  if (GetTime() - bomb->spawn_time >= bomb->explosion_time && false) {
     bomb->exploded = true;
 
     PlaySound(*assets_sounds_get_bomb_explosion());

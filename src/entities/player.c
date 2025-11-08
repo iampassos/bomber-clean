@@ -142,7 +142,11 @@ void player_update(Entity *self) {
   }
 
   if (player->bomb_passthrough)
-    if (physics_can_move_to_entities(self, self->position, false))
+    if (physics_can_move_to_entities(
+            self,
+            (Vector2){self->position.x,
+                      self->position.y + PLAYER_HEIGHT_TOLERANCE},
+            false))
       player->bomb_passthrough = false;
 
   Vector2 projected = self->position;
