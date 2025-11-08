@@ -17,6 +17,7 @@ void asset_manager_load_all() {
   asset_manager_load_power_ups_textures();
   asset_manager_load_fonts();
   assets_sounds_load_sounds();
+  asset_manager_load_menu_textures();
 }
 
 void asset_manager_load_power_ups_textures() {
@@ -86,4 +87,17 @@ void asset_manager_load_fullscreen_textures() {
 }
 Texture2D *asset_manager_get_fullscreen_texture() {
   return &asset_manager.fullscreen_background;
+}
+
+void asset_manager_load_menu_textures() {
+  asset_manager.menu_background = LoadTexture("assets/MENU.png");
+  asset_manager.menu_background_2 = LoadTexture("assets/MENU_2.png");
+}
+
+Texture2D *asset_manager_get_menu_background() {
+  return &asset_manager.menu_background;
+}
+
+Texture2D *asset_manager_get_menu_background_small() {
+  return &asset_manager.menu_background_2;
 }
