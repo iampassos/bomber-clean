@@ -275,7 +275,7 @@ void game_manager_on_bomb_exploded(GridPosition center, int radius,
   }
 }
 
-void game_manager_on_explosion_end(GridPosition grid) {
+void game_manager_on_machine_entity_death(GridPosition grid) {
   if (rules_can_spawn_power_up(grid)) {
     int spawn = rand() % 100 < POWER_UP_PROBABILITY;
 

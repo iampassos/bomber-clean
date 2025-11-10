@@ -45,7 +45,7 @@ void game_manager_on_enemy_touch(Player *player, Enemy *enemy);
 void game_manager_on_entity_exploded(Entity *entity);
 void game_manager_on_bomb_exploded(GridPosition center, int radius,
                                    int player_id);
-void game_manager_on_explosion_end(GridPosition grid);
+void game_manager_on_machine_entity_death(GridPosition grid);
 void game_manager_on_power_up_press(Player *player, PowerUp *power_up);
 
 int weighted_average(int items, float probabilities[]);

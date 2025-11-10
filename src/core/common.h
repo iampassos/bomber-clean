@@ -59,7 +59,7 @@
 #define BOMB_PROBABILITY 50.0f  // Probabilidade de spawn de bombas
 #define ENEMY_PROBABILITY 50.0f // Probabilidade de spawn de inimigos
 
-#define POWER_UP_PROBABILITY 25 // Probabilidade de spawn de power-up
+#define POWER_UP_PROBABILITY 30 // Probabilidade de spawn de power-up
 #define POWER_UP_SPEED_INCREASE                                                \
   (MAX_PLAYER_SPEED * 0.05)    // Incremento de velocidade
 #define POWER_UP_MAP_LIMIT 6   // Quantidade máxima de power-ups no mapa

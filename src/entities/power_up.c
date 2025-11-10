@@ -53,13 +53,13 @@ void power_up_update(Entity *self) {
     return;
   }
 
-  Player *player = player_at_grid(map_world_to_grid(power_up->entity.position));
+  Player *player = player_at_grid(map_world_to_grid(self->position));
   if (player) {
     game_manager_on_power_up_press(player, power_up);
     return;
   }
 
-  if (GetTime() - power_up->entity.spawn_time >= POWER_UP_TIMEOUT) {
+  if (GetTime() - self->spawn_time >= POWER_UP_TIMEOUT) {
     entities_manager_remove(self);
     return;
   }
@@ -77,21 +77,19 @@ void power_up_draw(Entity *self) {
           : assets_maps_get_power_up_explosion_texture(
                 power_up->explosion_animation.frame_index);
 
-  DrawTexture(*texture, power_up->entity.position.x,
-              power_up->entity.position.y, WHITE);
+  DrawTexture(*texture, self->position.x, self->position.y, WHITE);
 }
 
 void power_up_debug(Entity *self) {
   PowerUp *power_up = (PowerUp *)self;
 
   char buff[100];
-  snprintf(buff, sizeof(buff), "%.2f", GetTime() - power_up->entity.spawn_time);
+  snprintf(buff, sizeof(buff), "%.2f", GetTime() - self->spawn_time);
 
   Vector2 textSize = MeasureTextEx(GetFontDefault(), buff, 20, 1.0f);
   DrawTextEx(GetFontDefault(), buff,
-             (Vector2){power_up->entity.position.x,
-                       power_up->entity.position.y - textSize.y},
-             20, 1.0f, WHITE);
+             (Vector2){self->position.x, self->position.y - textSize.y}, 20,
+             1.0f, WHITE);
 }
 
 PowerUp *power_up_at_grid(GridPosition grid) {

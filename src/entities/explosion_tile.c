@@ -44,12 +44,12 @@ void explosion_tile_update(Entity *self) {
   animation_update(&explosion_tile->explosion_animation);
 
   if (GetTime() - self->spawn_time >= explosion_tile->lifetime) {
-    Vector2 pos = explosion_tile->entity.position;
+    Vector2 pos = self->position;
     entities_manager_remove(self);
 
     if (explosion_tile->player_id == -1 &&
         explosion_tile->tile_type == EXPLOSION_CENTER)
-      game_manager_on_explosion_end(map_world_to_grid(pos));
+      game_manager_on_machine_entity_death(map_world_to_grid(pos));
 
     return;
   }
@@ -75,16 +75,15 @@ void explosion_tile_draw(Entity *self) {
 
   } else if (explosion_tile->tile_type == EXPLOSION_MIDDLE) {
     texture = assets_explosion_get_middle_texture(
-        explosion_tile->entity.direction,
+        self->direction,
         animation_get_frame(&explosion_tile->explosion_animation));
   } else {
     texture = assets_explosion_get_final_texture(
-        explosion_tile->entity.direction,
+        self->direction,
         animation_get_frame(&explosion_tile->explosion_animation));
   }
 
-  DrawTexture(*texture, explosion_tile->entity.position.x,
-              explosion_tile->entity.position.y, WHITE);
+  DrawTexture(*texture, self->position.x, self->position.y, WHITE);
 }
 
 ExplosionTile *explosion_tile_at_grid(GridPosition grid) {

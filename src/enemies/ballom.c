@@ -70,6 +70,7 @@ void ballom_update(Entity *self) {
   if (!enemy->alive) {
     if (enemy->death_animation.playing) {
       if (animation_elapsed(&enemy->death_animation) >= 1.0f) {
+        game_manager_on_machine_entity_death(entity_world_to_grid(self));
         entities_manager_remove(self);
       } else
         animation_update(&enemy->death_animation);

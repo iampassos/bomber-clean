@@ -59,7 +59,7 @@ void bomb_update(Entity *self) {
 
     PlaySound(*assets_sounds_get_bomb_explosion());
 
-    game_manager_on_bomb_exploded(map_world_to_grid(bomb->entity.position),
+    game_manager_on_bomb_exploded(map_world_to_grid(self->position),
                                   bomb->radius, bomb->player_id);
 
     entities_manager_remove(self);
@@ -77,7 +77,7 @@ void bomb_draw(Entity *self) {
                            ? assets_maps_get_bomb_machine_texture(frame)
                            : assets_maps_get_bomb_texture(frame);
 
-  DrawTexture(*texture, bomb->entity.position.x,
+  DrawTexture(*texture, self->position.x,
               (bomb->player_id == -1 && bomb->spawn_animation.playing
                    ? (MACHINE_SPAWN_ANIMATION_TICKS -
                       fmin(animation_total_ticks(&bomb->spawn_animation),
@@ -85,7 +85,7 @@ void bomb_draw(Entity *self) {
                          -5.0f * 60.0f * game_manager.dt
 
                    : 0.0f) +
-                  bomb->entity.position.y,
+                  self->position.y,
               WHITE);
 }
 
