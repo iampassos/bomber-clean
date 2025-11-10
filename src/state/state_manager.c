@@ -1,5 +1,6 @@
 #include "state_manager.h"
 #include "core/assets/asset_manager.h"
+#include "input/input_manager.h"
 #include "state/game_state.h"
 #include "state/menu_state.h"
 
@@ -7,11 +8,15 @@ StateManager state_manager = {0};
 
 void state_manager_init() {
   asset_manager_init();
+  input_manager_init();
 
   state_manager_set(STATE_MENU);
 }
 
-void state_manager_update() { state_manager.state->update(); }
+void state_manager_update() {
+  input_manager_update();
+  state_manager.state->update();
+}
 
 void state_manager_render() { state_manager.state->render(); }
 

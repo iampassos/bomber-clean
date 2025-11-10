@@ -16,7 +16,7 @@ int main(void) {
 
   state_manager_init();
 
-  while (!WindowShouldClose()) {
+  while (!WindowShouldClose() && !state_manager.should_exit) {
     state_manager_update();
     state_manager_render();
   }

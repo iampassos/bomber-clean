@@ -15,7 +15,6 @@
 #include "input/input_manager.h"
 #include "render/map_renderer.h"
 #include "rules.h"
-#include "state/state_manager.h"
 #include <math.h>
 #include <raylib.h>
 #include <stdlib.h>
@@ -45,7 +44,11 @@ void game_manager_init() {
   do {
     game_manager.players[game_manager.player_count] = player_create(
         game_manager.player_count, spawn_pos[game_manager.player_count]);
+
     assets_players_load_player_textures(game_manager.player_count);
+
+    input_manager.last_input[game_manager.player_count] = GetTime();
+
     game_manager.player_count++;
   } while (game_manager.player_count < input_manager.controllers_n);
 

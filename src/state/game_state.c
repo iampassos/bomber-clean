@@ -2,7 +2,6 @@
 #include "core/assets/asset_manager.h"
 #include "entities/entities_manager.h"
 #include "game/game_manager.h"
-#include "input/input_manager.h"
 #include "render/renderer.h"
 #include "state_manager.h"
 #include <raylib.h>
@@ -12,7 +11,6 @@ RenderTexture2D target;
 
 void game_state_init() {
   entities_manager_init();
-  input_manager_init();
   game_manager_init();
 
   GameState *game_state = malloc(sizeof(GameState));
@@ -36,7 +34,6 @@ void game_state_update() {
     return;
   }
 
-  input_manager_update();
   game_manager_update(GetFrameTime());
 }
 

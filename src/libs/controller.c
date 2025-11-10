@@ -36,9 +36,9 @@ ControllerInput controller_input(SDL_Joystick *joy) {
   input.up = (y < -10000);
   input.down = (y > 10000);
 
-  input.a = SDL_JoystickGetButton(joy, 0);
-  input.b = SDL_JoystickGetButton(joy, 1);
-  input.x = SDL_JoystickGetButton(joy, 2);
+  input.a = SDL_JoystickGetButton(joy, 1);
+  input.b = SDL_JoystickGetButton(joy, 2);
+  input.x = SDL_JoystickGetButton(joy, 0);
   input.y = SDL_JoystickGetButton(joy, 3);
 
   input.start = SDL_JoystickGetButton(joy, 9);

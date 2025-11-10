@@ -1,6 +1,7 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
+#include "controller.h"
 #include "core/common.h"
 #include <SDL2/SDL_joystick.h>
 #include <raylib.h>
@@ -10,12 +11,11 @@ typedef struct {
   bool place_bomb;
 } PlayerInput;
 
-typedef enum { ORIGIN_KEYBOARD, ORIGIN_CONTROLLER } InputOrigin;
-
 typedef struct {
   PlayerInput player_inputs[MAX_PLAYERS];
 
-  InputOrigin input_origins[MAX_PLAYERS];
+  ControllerInput controller_input_all;
+
   float last_input[MAX_PLAYERS];
 
   SDL_Joystick *controllers[4];

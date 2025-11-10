@@ -1,6 +1,7 @@
 #include "input_manager.h"
 #include "controller.h"
 #include "game/game_manager.h"
+#include "state/state_manager.h"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_joystick.h>
 #include <raylib.h>
@@ -12,12 +13,7 @@ void input_manager_init() {
   controllers_init(input_manager.controllers, &input_manager.controllers_n);
 }
 
-void input_manager_update() {
-  if (input_manager.controllers_n > 0) {
-    SDL_PumpEvents();
-    SDL_JoystickUpdate();
-  }
-
+void input_manager_game_update() {
   for (int i = 0; i < game_manager.player_count; i++) {
     PlayerInput *input = &input_manager.player_inputs[i];
 
@@ -38,6 +34,28 @@ void input_manager_update() {
   input_manager.grid = IsKeyDown(KEY_F3);
   input_manager.fps = IsKeyDown(KEY_F4);
   input_manager.fullscreen = IsKeyDown(KEY_F11);
+}
+
+void input_manager_menu_update() {
+  if (input_manager.controllers_n > 0)
+    input_manager.controller_input_all = controllers_all_inputs(
+        input_manager.controllers, input_manager.controllers_n);
+}
+
+void input_manager_update() {
+  if (input_manager.controllers_n > 0) {
+    SDL_PumpEvents();
+    SDL_JoystickUpdate();
+  }
+
+  switch (state_manager.type) {
+  case STATE_GAME:
+    input_manager_game_update();
+    break;
+  case STATE_MENU:
+    input_manager_menu_update();
+    break;
+  }
 }
 
 void input_manager_reset() {
