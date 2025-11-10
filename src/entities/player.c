@@ -103,7 +103,7 @@ void player_update(Entity *self) {
     self->spawn_time = now;
 
     if (player->lives <= 0) {
-      player->death_life_time = now - game_manager.stage_start;
+      player->death_life_time = now - game_manager.game_start;
       score_set_player(player);
       entities_manager_remove(self);
     } else {
