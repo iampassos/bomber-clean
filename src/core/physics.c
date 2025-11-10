@@ -7,6 +7,7 @@
 #include "entities/player.h"
 #include "game/game_manager.h"
 #include <math.h>
+#include <raylib.h>
 
 bool physics_can_move_to(Vector2 projected, float width, float height) {
   int left = (projected.x - MAP_X_OFFSET) / TILE_SIZE;
@@ -55,7 +56,16 @@ bool physics_can_move_to_entities(Entity *self, Vector2 projected,
         if (entity == self)
           continue;
 
-        if (entity->type == ENTITY_BOMB && bomb_passthrough)
+        if (entity->type == ENTITY_PLAYER &&
+            GetTime() - entity->spawn_time < PLAYER_SPAWN_TIME_NO_COLLISION)
+          continue;
+
+        if (self->type == ENTITY_PLAYER &&
+            GetTime() - self->spawn_time < PLAYER_SPAWN_TIME_NO_COLLISION)
+          continue;
+
+        if (entity->type == ENTITY_BOMB && self->type == ENTITY_PLAYER &&
+            bomb_passthrough)
           if (((Bomb *)entity)->player_id == ((Player *)self)->id)
             continue;
 

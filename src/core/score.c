@@ -104,4 +104,3 @@ char *party_get_ranking() {
   free(array);
   return tabela;
 }
-

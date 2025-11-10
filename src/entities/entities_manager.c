@@ -22,24 +22,14 @@ void entities_manager_remove(Entity *entity) {
   if (!entity || entities_manager.count <= 0)
     return;
 
-  int idx = -1;
   for (int i = 0; i < entities_manager.count; i++) {
     if (entities_manager.entries[i] == entity) {
-      idx = i;
-      break;
+      for (int j = i; j < entities_manager.count - 1; j++)
+        entities_manager.entries[j] = entities_manager.entries[j + 1];
+      entities_manager.entries[--entities_manager.count] = NULL;
+      return;
     }
   }
-
-  if (idx == -1)
-    return;
-
-  for (int i = idx; i < entities_manager.count - 1; i++)
-    entities_manager.entries[i] = entities_manager.entries[i + 1];
-
-  entities_manager.count--;
-
-  if (entities_manager.count >= 0)
-    entities_manager.entries[entities_manager.count] = NULL;
 }
 
 void entities_manager_update_all() {
@@ -86,7 +76,7 @@ void entities_manager_clear() {
 };
 
 void entities_manager_clear_but_player() {
-  for (int i = 0; i < entities_manager.count; i++) {
+  for (int i = entities_manager.count - 1; i >= 0; i--) {
     Entity *entity = entities_manager.entries[i];
     if (entity->type != ENTITY_PLAYER)
       entities_manager_remove(entity);

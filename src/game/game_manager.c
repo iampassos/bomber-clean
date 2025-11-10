@@ -55,6 +55,8 @@ void game_manager_init() {
 void game_manager_update(float dt) {
   game_manager.dt = dt;
 
+  double now = GetTime();
+
   if (rules_can_end_game()) {
     game_manager_on_game_end();
     return;
@@ -64,57 +66,54 @@ void game_manager_update(float dt) {
     PlayerInput input = input_manager_get_player_input(i);
 
     input.place_bomb =
-        input.place_bomb && GetTime() - input_manager.last_input[i] >= 0.25f;
+        input.place_bomb && now - input_manager.last_input[i] >= 0.25f;
 
     input_manager.last_input[i] =
-        input.place_bomb ? GetTime() : input_manager.last_input[i];
+        input.place_bomb ? now : input_manager.last_input[i];
 
     game_manager.players[i]->input = input;
   }
 
-  if (input_manager.debug &&
-      GetTime() - input_manager.last_dev_input >= 0.25f) {
+  if (input_manager.debug && now - input_manager.last_dev_input >= 0.25f) {
     game_manager.debug = !game_manager.debug;
-    input_manager.last_dev_input = GetTime();
+    input_manager.last_dev_input = now;
   }
 
-  if (input_manager.grid && GetTime() - input_manager.last_dev_input >= 0.25f) {
+  if (input_manager.grid && now - input_manager.last_dev_input >= 0.25f) {
     game_manager.grid = !game_manager.grid;
-    input_manager.last_dev_input = GetTime();
+    input_manager.last_dev_input = now;
   }
 
-  if (input_manager.hitboxes &&
-      GetTime() - input_manager.last_dev_input >= 0.25f) {
+  if (input_manager.hitboxes && now - input_manager.last_dev_input >= 0.25f) {
     game_manager.hitboxes = !game_manager.hitboxes;
-    input_manager.last_dev_input = GetTime();
+    input_manager.last_dev_input = now;
   }
 
-  if (input_manager.fps && GetTime() - input_manager.last_dev_input >= 0.25f) {
+  if (input_manager.fps && now - input_manager.last_dev_input >= 0.25f) {
     game_manager.fps = !game_manager.fps;
-    input_manager.last_dev_input = GetTime();
+    input_manager.last_dev_input = now;
   }
 
-  if (input_manager.fullscreen &&
-      GetTime() - input_manager.last_dev_input >= 0.25f) {
+  if (input_manager.fullscreen && now - input_manager.last_dev_input >= 0.25f) {
     game_manager.fullscreen = !game_manager.fullscreen;
-    input_manager.last_dev_input = GetTime();
+    input_manager.last_dev_input = now;
     SetWindowSize(game_manager.fullscreen ? 1920 : GAMEPLAY_WIDTH,
                   game_manager.fullscreen ? 1080 : GAMEPLAY_HEIGHT);
     ToggleFullscreen();
+  }
+
+  if (now - game_manager.stage_start >= MAP_CHANGE_INTERVAL)
+    game_manager_on_next_stage();
+  else if (now - game_manager.stage_start >= MAP_CHANGE_INTERVAL - 3.0f) {
+    Sound sound = *assets_sounds_get_stage_clear();
+    if (!IsSoundPlaying(sound))
+      PlaySound(*assets_sounds_get_stage_clear());
   }
 
   if (!CLEAN_MODE)
     game_manager_random_interval();
 
   entities_manager_update_all();
-
-  if (GetTime() - game_manager.stage_start >= MAP_CHANGE_INTERVAL)
-    game_manager_on_next_stage();
-  else if (GetTime() - game_manager.stage_start >= MAP_CHANGE_INTERVAL - 3.0f) {
-    Sound sound = *assets_sounds_get_stage_clear();
-    if (!IsSoundPlaying(sound))
-      PlaySound(*assets_sounds_get_stage_clear());
-  }
 }
 
 void game_manager_start_stage() {
@@ -122,8 +121,13 @@ void game_manager_start_stage() {
 
   for (int i = 0; i < game_manager.player_count; i++) {
     Player *player = game_manager.players[i];
-    player->entity.position =
-        entity_grid_to_world(&player->entity, player->spawn_grid);
+    if (player->lives > 0) {
+      player->entity.position =
+          entity_grid_to_world(&player->entity, player->spawn_grid);
+      player->invencible = true;
+      player->invencibility_start = GetTime();
+      player->entity.spawn_time = GetTime();
+    }
   }
 
   assets_maps_load_textures(game_manager.map->stage);

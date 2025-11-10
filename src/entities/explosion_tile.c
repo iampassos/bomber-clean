@@ -28,7 +28,6 @@ ExplosionTile *explosion_tile_create(int player_id, Vector2 position,
   explosion_tile->entity = entity;
   explosion_tile->tile_type = tile_type;
   explosion_tile->lifetime = DEFAULT_EXPLOSION_LIFETIME;
-  explosion_tile->spawn_time = GetTime();
 
   animation_init(&explosion_tile->explosion_animation,
                  (int[]){0, 1, 2, 3, 4, 3, 2, 1, 0}, 9,
@@ -44,7 +43,7 @@ void explosion_tile_update(Entity *self) {
 
   animation_update(&explosion_tile->explosion_animation);
 
-  if (GetTime() - explosion_tile->spawn_time >= explosion_tile->lifetime) {
+  if (GetTime() - self->spawn_time >= explosion_tile->lifetime) {
     Vector2 pos = explosion_tile->entity.position;
     entities_manager_remove(self);
 

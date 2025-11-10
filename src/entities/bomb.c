@@ -29,7 +29,6 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   bomb->exploded = false;
   bomb->player_id = player_id;
   bomb->radius = radius;
-  bomb->spawn_time = GetTime();
   bomb->explosion_time = 2.0f;
 
   animation_init(&bomb->tick_animation, (int[]){0, 1, 2}, 3, 0.2f, true,
@@ -55,7 +54,7 @@ void bomb_update(Entity *self) {
     return;
   }
 
-  if (GetTime() - bomb->spawn_time >= bomb->explosion_time) {
+  if (GetTime() - self->spawn_time >= bomb->explosion_time) {
     bomb->exploded = true;
 
     PlaySound(*assets_sounds_get_bomb_explosion());

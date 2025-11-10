@@ -10,7 +10,6 @@ typedef struct {
   int player_id;
   bool exploded;
   int radius;
-  float spawn_time;
   float explosion_time;
   Animation tick_animation;
   Animation spawn_animation;

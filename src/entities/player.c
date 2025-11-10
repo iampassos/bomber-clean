@@ -86,6 +86,8 @@ Player *player_create(int id, GridPosition spawn_grid) {
 void player_update(Entity *self) {
   Player *player = (Player *)self;
 
+  double now = GetTime();
+
   if (!player->alive) {
     if (!player->death_animation.playing &&
         !animation_is_finished(&player->death_animation)) {
@@ -98,9 +100,10 @@ void player_update(Entity *self) {
     }
 
     player->lives--;
+    self->spawn_time = now;
 
     if (player->lives <= 0) {
-      player->death_life_time = GetTime() - game_manager.stage_start;
+      player->death_life_time = now - game_manager.stage_start;
       score_set_player(player);
       entities_manager_remove(self);
     } else {
@@ -113,22 +116,22 @@ void player_update(Entity *self) {
     return;
   }
 
-  for (int i = 0; i < entities_manager.count; i++) {
-    Entity *entity2 = entities_manager.entries[i];
-    if (entity2->type == ENTITY_ENEMY &&
-        physics_entity_collision(self, entity2)) {
-      Enemy *enemy = (Enemy *)entity2;
-      if (enemy->alive)
-        game_manager_on_enemy_touch(player, (Enemy *)entity2);
+  if (!player->invencible)
+    for (int i = 0; i < entities_manager.count; i++) {
+      Entity *entity2 = entities_manager.entries[i];
+      if (entity2->type == ENTITY_ENEMY &&
+          physics_entity_collision(self, entity2)) {
+        Enemy *enemy = (Enemy *)entity2;
+        if (enemy->alive)
+          game_manager_on_enemy_touch(player, (Enemy *)entity2);
+      }
     }
-  }
 
   if (player->invencible) {
     if (!player->invencible_animation.playing) {
       animation_play(&player->invencible_animation);
-      player->invencibility_start = GetTime();
-    } else if (GetTime() - player->invencibility_start >=
-               PLAYER_INVENCIBILITY_TIME) {
+      player->invencibility_start = now;
+    } else if (now - player->invencibility_start >= PLAYER_INVENCIBILITY_TIME) {
       player->invencible = false;
       animation_reset(&player->invencible_animation);
     }

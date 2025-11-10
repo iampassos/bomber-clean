@@ -25,6 +25,8 @@ void game_state_init() {
   target = LoadRenderTexture(GAMEPLAY_WIDTH, GAMEPLAY_HEIGHT);
 
   asset_manager_load_game();
+
+  game_manager.game_start = GetTime();
 }
 
 void game_state_update() {

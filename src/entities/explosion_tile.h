@@ -17,7 +17,6 @@ typedef struct {
   int player_id;
   ExplosionTileType tile_type;
   float lifetime;
-  float spawn_time;
   Animation explosion_animation;
 } ExplosionTile;
 

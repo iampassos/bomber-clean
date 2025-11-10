@@ -62,10 +62,10 @@ bool rules_can_spawn_enemy(GridPosition grid) {
       ENEMY_MAP_LIMIT)
     return false;
 
-  TileType tile = map_get_tile(game_manager.map, grid);
-
   if (!map_is_valid_grid(grid))
     return false;
+
+  TileType tile = map_get_tile(game_manager.map, grid);
 
   if (tile != TILE_EMPTY)
     return false;
@@ -90,10 +90,10 @@ bool rules_can_spawn_power_up(GridPosition grid) {
           ENTITY_POWER_UP, NULL, POWER_UP_MAP_LIMIT) >= POWER_UP_MAP_LIMIT)
     return false;
 
-  TileType tile = map_get_tile(game_manager.map, grid);
-
   if (!map_is_valid_grid(grid))
     return false;
+
+  TileType tile = map_get_tile(game_manager.map, grid);
 
   if (tile != TILE_EMPTY)
     return false;
@@ -138,10 +138,10 @@ bool rules_player_can_consume_power_up(Player *player, PowerUp *power_up) {
 }
 
 bool rules_can_spawn_bomb(GridPosition grid) {
-  TileType tile = map_get_tile(game_manager.map, grid);
-
   if (!map_is_valid_grid(grid))
     return false;
+
+  TileType tile = map_get_tile(game_manager.map, grid);
 
   if (tile != TILE_EMPTY)
     return false;
