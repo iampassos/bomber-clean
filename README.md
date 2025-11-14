@@ -8,6 +8,13 @@
 
 O jogo coloca **1 a 4 jogadores** em uma arena dinâmica onde o objetivo é simples e direto: **sobreviver o máximo de tempo possível**.
 
+## 👥 Equipe de Desenvolvimento
+
+- [**João Passos**](https://github.com/iampassos)
+- [**Mircio Ferreira**](https://github.com/Mircio-Ferreira)
+- [**Thiago Fernandes**](https://github.com/ThIagoMedeiros21)
+- [**Gabriel Aniceto**](https://github.com/gabrielaniceto1)
+
 ## 🎮 Jogabilidade
 
 Durante a partida:
@@ -36,12 +43,6 @@ No final, apenas uma regra importa:
 **Sobreviva. Engane. Coopere. Traia.  
 Faça o que for preciso para ser o último jogador de pé em *Bomber Rush*.**
 
-## 👥 Equipe de Desenvolvimento
-
-- [**João Passos**](https://github.com/iampassos)
-- [**Mircio Ferreira**](https://github.com/Mircio-Ferreira)
-- [**Thiago Fernandes**](https://github.com/ThIagoMedeiros21)
-- [**Gabriel Aniceto**](https://github.com/gabrielaniceto1)
 
 ## 🎬 Vídeo Demonstrativo
 
