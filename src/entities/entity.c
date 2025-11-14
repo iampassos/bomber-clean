@@ -3,7 +3,7 @@
 Vector2 entity_grid_to_world(Entity *entity, GridPosition grid) {
   Vector2 center = map_grid_to_world_center(grid);
   return (Vector2){center.x - entity->width / 2.0f,
-                   center.y - entity->height / 2.0f - entity->height_tolerance};
+                   center.y - entity->height / 2.0f - entity->height_tolerance};  //a algura de uma entidade pode ser maior que um grid.
 }
 
 GridPosition entity_world_to_grid(Entity *entity) {

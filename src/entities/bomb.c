@@ -22,7 +22,7 @@ Bomb *bomb_create(int player_id, Vector2 position, int radius) {
   entity.height_tolerance = 0;
   entity.update = bomb_update;
   entity.draw = bomb_draw;
-  entity.debug = NULL;
+  entity.debug = NULL; //Uma bomba não possui debug
 
   Bomb *bomb = malloc(sizeof(Bomb));
   bomb->entity = entity;

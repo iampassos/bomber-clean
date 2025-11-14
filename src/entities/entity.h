@@ -4,6 +4,7 @@
 #include "core/map.h"
 #include <raylib.h>
 
+//Entidades do jogo
 typedef enum {
   ENTITY_PLAYER,
   ENTITY_BOMB,
@@ -12,6 +13,7 @@ typedef enum {
   ENTITY_ENEMY,
 } EntityType;
 
+//Prioridade de sobreposição de entidades
 typedef enum {
   LAYER_PLAYERS,
   LAYER_ENEMIES,
@@ -19,6 +21,7 @@ typedef enum {
   LAYER_POWER_UPS
 } EntityLayer;
 
+//Direção de possiveis movimentações de uma entidade
 typedef enum {
   DIR_UP,
   DIR_DOWN,
@@ -26,6 +29,7 @@ typedef enum {
   DIR_RIGHT,
 } EntityDirection;
 
+// Estrutura base para qualquer entidade do jogo
 typedef struct Entity {
   EntityType type;
   EntityLayer layer;
@@ -41,7 +45,7 @@ typedef struct Entity {
   void (*debug)(struct Entity *self);
 } Entity;
 
-Vector2 entity_grid_to_world(Entity *entity, GridPosition grid);
-GridPosition entity_world_to_grid(Entity *entity);
+Vector2 entity_grid_to_world(Entity *entity, GridPosition grid); // alinha uma entidade ao centro do grid position
+GridPosition entity_world_to_grid(Entity *entity); // Recebe uma entidade e retorna a seu grid position em relação a sua posição em pixel
 
 #endif

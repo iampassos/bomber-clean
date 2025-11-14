@@ -15,11 +15,11 @@ typedef struct {
   Animation spawn_animation;
 } Bomb;
 
-Bomb *bomb_create(int player_id, Vector2 position, int radius);
+Bomb *bomb_create(int player_id, Vector2 position, int radius); //Construtor de uma entidade bomba
 
-void bomb_update(Entity *self);
-void bomb_draw(Entity *self);
+void bomb_update(Entity *self); //Lida com toda a física de atualização de uma bomba do jogo
+void bomb_draw(Entity *self); 
 
-Bomb *bomb_at_grid(GridPosition grid);
+Bomb *bomb_at_grid(GridPosition grid); //Verifica se existe uma bomba em um grid position
 
 #endif
