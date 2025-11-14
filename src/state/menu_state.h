@@ -6,6 +6,8 @@
 
 typedef enum { TEXT_PLAY, TEXT_TUTORIAL, TEXT_LEADERBOARD, TEXT_EXIT } TextType;
 
+typedef enum { MENU_INITIAL, MENU_LEADERBOARD } MenuScreen;
+
 typedef struct {
   Vector2 position;
   float size;
@@ -18,6 +20,7 @@ typedef struct {
 
 typedef struct {
   State state;
+  MenuScreen screen;
   Texture2D *background;
   int buttons_n;
   Text *buttons;

@@ -125,6 +125,9 @@ Texture2D *asset_manager_get_fullscreen_texture() {
 void asset_manager_load_menu_textures() {
   asset_manager.menu_background = LoadTexture("assets/MENU.png");
   asset_manager.menu_background_2 = LoadTexture("assets/MENU_2.png");
+  asset_manager.menu_leaderboard = LoadTexture("assets/LEADERBOARD_FULL.png");
+  asset_manager.menu_leaderboard_2 =
+      LoadTexture("assets/LEADERBOARD_SMALL.png");
 }
 
 Texture2D *asset_manager_get_menu_background() {
@@ -133,4 +136,12 @@ Texture2D *asset_manager_get_menu_background() {
 
 Texture2D *asset_manager_get_menu_background_small() {
   return &asset_manager.menu_background_2;
+}
+
+Texture2D *asset_manager_get_menu_leaderboard() {
+  return &asset_manager.menu_leaderboard;
+}
+
+Texture2D *asset_manager_get_menu_leaderboard_small() {
+  return &asset_manager.menu_leaderboard_2;
 }

@@ -68,6 +68,11 @@ void game_manager_update(float dt) {
   for (int i = 0; i < game_manager.player_count; i++) {
     PlayerInput input = input_manager_get_player_input(i);
 
+    if (input.menu && now - input_manager.last_input[i] >= 0.25f) {
+      game_manager_on_game_end();
+      return;
+    }
+
     input.place_bomb =
         input.place_bomb && now - input_manager.last_input[i] >= 0.25f;
 

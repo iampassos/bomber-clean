@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 void swap_Score(Score *a, Score *b) {
   Score temp = *a;
   *a = *b;
@@ -47,33 +48,27 @@ void score_set_player(Player *p1) {
   }
 }
 
-char *score_get() {
+int score_get(Score *out, int max) {
   FILE *file;
   file = fopen("Ranking.txt", "r");
+
   if (!file)
-    return NULL;
-  Score *array = malloc(100 * sizeof(Score));
-  if (!array)
-    return NULL;
+    return -1;
+
+  if (!out)
+    return -1;
+
   int cont = 0;
-  while (fscanf(file, "Jogador %d Tempo: %lf\n", &array[cont].id,
-                &array[cont].time) == 2) {
+  while (cont < max && fscanf(file, "Jogador %d Tempo: %lf\n", &out[cont].id,
+                              &out[cont].time) == 2) {
     cont++;
-    if (cont >= 100)
-      break;
-  }
-  fclose(file);
-  insertion_sort_score_by_time(array, cont);
-  char *tabela = malloc(10000);
-  tabela[0] = '\0';
-  for (int i = 0; i < cont; i++) {
-    char linha[100];
-    sprintf(linha, "Jogador %d Tempo: %.3lf\n", array[i].id, array[i].time);
-    strcat(tabela, linha);
   }
 
-  free(array);
-  return tabela;
+  fclose(file);
+
+  insertion_sort_score_by_time(out, cont);
+
+  return cont;
 }
 
 char *party_get_ranking() {

@@ -16,6 +16,8 @@ int main(void) {
 
   state_manager_init();
 
+  SetExitKey(KEY_NULL);
+
   while (!WindowShouldClose() && !state_manager.should_exit) {
     state_manager_update();
     state_manager_render();

@@ -27,6 +27,8 @@ typedef struct {
   // Menu
   Texture2D menu_background;
   Texture2D menu_background_2;
+  Texture2D menu_leaderboard;
+  Texture2D menu_leaderboard_2;
 } AssetManager;
 
 extern AssetManager asset_manager;
@@ -54,5 +56,7 @@ Texture2D *asset_manager_get_fullscreen_texture();
 void asset_manager_load_menu_textures();
 Texture2D *asset_manager_get_menu_background();
 Texture2D *asset_manager_get_menu_background_small();
+Texture2D *asset_manager_get_menu_leaderboard();
+Texture2D *asset_manager_get_menu_leaderboard_small();
 
 #endif

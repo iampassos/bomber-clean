@@ -22,10 +22,12 @@ void input_manager_game_update() {
       input->move.x = c_input.left ? -1.0f : c_input.right ? 1.0f : 0.0f;
       input->move.y = c_input.up ? -1.0f : c_input.down ? 1.0f : 0.0f;
       input->place_bomb = c_input.a || c_input.b ? true : false;
+      input->menu = c_input.start;
     } else {
       input->move.x = IsKeyDown(KEY_A) ? -1.0 : IsKeyDown(KEY_D) ? 1.0f : 0.0f;
       input->move.y = IsKeyDown(KEY_W) ? -1.0 : IsKeyDown(KEY_S) ? 1.0f : 0.0f;
       input->place_bomb = IsKeyDown(KEY_SPACE);
+      input->menu = IsKeyDown(KEY_ESCAPE);
     }
   }
 

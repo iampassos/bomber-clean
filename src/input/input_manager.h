@@ -9,6 +9,7 @@
 typedef struct {
   Vector2 move;
   bool place_bomb;
+  bool menu;
 } PlayerInput;
 
 typedef struct {

@@ -30,6 +30,7 @@ void game_state_init() {
 void game_state_update() {
   if (game_manager.status == GAME_OVER) {
     state_manager_set(STATE_MENU);
+    entities_manager_clear();
     asset_manager_unload_game();
     return;
   }
