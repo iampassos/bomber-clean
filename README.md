@@ -91,6 +91,7 @@ Mesmo não sendo o ideal (a diversão real é no multiplayer), é possível joga
 
 - 🕹️ **Movimentação:** `W`, `A`, `S`, `D`  
 - 💣 **Colocar bomba:** `SPACE`  
+- 🖥️ **Alternar Fullscreen:** `F11`
 
 ---
 
