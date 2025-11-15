@@ -135,6 +135,14 @@ A cada bomba explodida ou inimigo derrotado, existe a chance de surgir um **powe
 
 ---
 
+### 🔹 Aumento de Limite de Bombas
+<img src="assets/sprites/power_ups/BOMB_1.png" alt="Power-up X" width="50"/>  
+
+**Efeito:** Aumenta em **+1** a quantidade máxima de bombas que o jogador pode colocar simultaneamente no mapa (Máximo de 5 )
+ 
+
+---
+
 ### 🔹 Aumento de Raio de Explosão  
 <img src="assets/sprites/power_ups/RADIUS_1.png" alt="Power-up Raio +" width="50"/>  
 
