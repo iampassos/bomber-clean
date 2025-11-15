@@ -27,6 +27,6 @@ ExplosionTile *explosion_tile_create(int player_id, Vector2 position,
 void explosion_tile_update(Entity *self);
 void explosion_tile_draw(Entity *self);
 
-ExplosionTile *explosion_tile_at_grid(GridPosition grid);
+ExplosionTile *explosion_tile_at_grid(GridPosition grid); // retorna uma explosão aparti de um grid position
 
 #endif

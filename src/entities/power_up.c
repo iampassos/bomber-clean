@@ -53,9 +53,9 @@ void power_up_update(Entity *self) {
     return;
   }
 
-  Player *player = player_at_grid(map_world_to_grid(self->position));
+  Player *player = player_at_grid(map_world_to_grid(self->position)); //pega um jogador caso ele esteja na mesma posição de um power up
   if (player) {
-    game_manager_on_power_up_press(player, power_up);
+    game_manager_on_power_up_press(player, power_up); // o player computa o power up para si
     return;
   }
 

@@ -36,7 +36,7 @@ void player_update(Entity *self);
 void player_draw(Entity *self);
 void player_debug(Entity *self);
 
-int player_get_all_bombs(Player *player, Entity **out);
-Player *player_at_grid(GridPosition grid);
+int player_get_all_bombs(Player *player, Entity **out); //retorna a quantidade de bombas de um jogador e prenche em um array de saida ( out ) 
+Player *player_at_grid(GridPosition grid); //retorna o jogador que esteja na grid position
 
 #endif

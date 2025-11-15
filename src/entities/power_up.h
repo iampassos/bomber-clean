@@ -5,6 +5,7 @@
 #include "core/map.h"
 #include "entity.h"
 
+// tipos de power up do jogo
 typedef enum {
   POWER_UP_LIFE,
   POWER_UP_SPEED,
@@ -28,6 +29,6 @@ void power_up_update(Entity *self);
 void power_up_draw(Entity *self);
 void power_up_debug(Entity *self);
 
-PowerUp *power_up_at_grid(GridPosition grid);
+PowerUp *power_up_at_grid(GridPosition grid); //aparti de um grid position retorna um power up caso exista.
 
 #endif

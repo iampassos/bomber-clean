@@ -25,8 +25,8 @@ void entities_manager_remove(Entity *entity) {
   for (int i = 0; i < entities_manager.count; i++) {
     if (entities_manager.entries[i] == entity) {
       for (int j = i; j < entities_manager.count - 1; j++)
-        entities_manager.entries[j] = entities_manager.entries[j + 1];
-      entities_manager.entries[--entities_manager.count] = NULL;
+        entities_manager.entries[j] = entities_manager.entries[j + 1]; //regorganiza o array de entidades
+      entities_manager.entries[--entities_manager.count] = NULL; // Grante que não tenha ``buracos`` no array
       return;
     }
   }
