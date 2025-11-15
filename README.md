@@ -32,8 +32,60 @@ O jogo coloca **1 a 4 jogadores** em uma arena dinâmica onde o objetivo é simp
 Para jogar o **Bomber Rush**, é necessário ter **Raylib** e **SDL2** instaladas no sistema.  
 O projeto funciona em **Windows** e **Linux**, e inclui **Makefiles específicos para cada plataforma**.
 
----
+**Linux:**
 
+*Abra seu terminal do Linux e siga as etapas:*
+- instalação das bibliotecas basicas de copilação:
+```bash
+#Fedora:
+sudo npm install build-essential
+#Ubuntu:
+sudo apt install build-essential
+```
+- Instalação Git:
+```bash
+# Fedora:
+sudo dnf install git
+# Ubuntu:
+sudo apt install git
+```
+- Instalação da Biblioteca grafica Raylib.h:
+```bash
+# Fedora:
+sudo dnf install alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
+
+# Ubuntu:
+sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+
+
+```
+- Instalação da Biblioteca de Controles SDL2:
+ ```bash
+# Fedora:
+sudo dnf install SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel
+
+# Ubuntu:
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+```
+- Clone o Repositório:
+```bash
+https://github.com/iampassos/bomber-rush.git
+```
+
+- Acesse a pasta do Repositório:
+```bash
+cd bomber-rush/
+```
+- Compile o jogo:
+```bash
+make
+```
+- rode o jogo
+```bash
+./game.out
+```
+
+**Windows** ...
 ## 🎮 Jogabilidade
 
 Durante a partida:
