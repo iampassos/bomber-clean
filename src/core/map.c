@@ -62,7 +62,7 @@ Map *map_create(MapType map_type) {
     break;
   }
 
-  list_insert_end(linked_list_head, map);
+  list_insert_end(linked_list_head, map); // inseri na lista encadeada
 
   return map;
 }

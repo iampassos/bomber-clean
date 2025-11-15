@@ -72,24 +72,6 @@ GridPosition get_first_move(NodeA *goalNode, GridPosition star){
 }
 
 
-//deletar dps
-//deletar dps
-//deletar dps
-// void reconstruct(NodeA *goal, char visual[GRID_HEIGHT][GRID_WIDTH]) {
-//     NodeA *cur = goal;
-//     while (cur) {
-//         if (visual[cur->grid.row][cur->grid.col] == '.')
-//             visual[cur->grid.row][cur->grid.col] = '*';
-//         cur = cur->parent;
-//     }
-// }
-//deletar dps
-//deletar dps
-//deletar dps
-
-
-//Funcao A_Star
-//char visual[GRID_HEIGHT][GRID_WIDTH]
 
 GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition star, GridPosition goal){
     LinkedList *open=list_create();
@@ -111,7 +93,6 @@ GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition s
         list_insert_end(closed, current);
 
         if(is_grid_equal(current->grid,goal)){
-            //reconstruct(current,visual); //deleta dps deub ***********************
             goalNode=current;
             break;
         }
@@ -135,11 +116,10 @@ GridPosition path_finding(TileType grid[GRID_HEIGHT][GRID_WIDTH], GridPosition s
     }
 
     nextMove = get_first_move(goalNode, star);
-    //problema de segment fault arrumar 
     //******************************************************************** */
-    //list_free_all(open);
-    //list_free_all(closed);
-      //******************************************************************** */
+    list_free_all(open);
+    list_free_all(closed);
+    //******************************************************************** */
 
     return nextMove;
 }
