@@ -57,7 +57,16 @@ sudo apt install git
 sudo dnf install alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
 
 # Ubuntu:
-sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev
+sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev
+git clone https://github.com/raysan5/raylib.git
+cd raylib
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
 
 
 ```
