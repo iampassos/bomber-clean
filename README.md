@@ -21,9 +21,14 @@ O jogo coloca **1 a 4 jogadores** em uma arena dinâmica onde o objetivo é simp
 
 ---
 
-## 🎬 Vídeo Demonstrativo
+## 🎬 Vídeos de Demonstração (YouTube)
 
-- [**Link para o vídeo no YouTube**]() *(em breve)*
+- [**Demonstração do Gameplay — YouTube**](https://youtu.be/CFksENJ9CzU)  
+- [**Demonstração Técnica (Modo Debug) — YouTube**](https://youtu.be/gXLOxB3hNz4)
+- [**Link backup de vídeo via google drive**](https://drive.google.com/drive/folders/12B128QSV8odMmiVKKyRhX1gSiA0wLOK6?usp=sharing
+---) *
+
+
 
 ---
 
@@ -131,10 +136,18 @@ Os jogadores são reconhecidos automaticamente pelo controle — basta conectar 
 >  
 > <img src="assets/readme_icons/controle_image.jpg" alt="Controle suportado" width="350"/>
 
-### 🎮 Controles — Gamepad
+### 🛠️ Controles — Modo Debug
 
-- 🕹️ **Movimentação:** Setas do controle  
-- 💣 **Colocar bomba:** Botão **Y** ou **B**  
+Além dos controles padrão, o jogo possui teclas especiais para depuração, úteis para inspecionar o funcionamento interno durante o desenvolvimento:
+
+- 🧩 **F1 — Debug de Entidades e Jogador:**  
+  Exibe informações internas sobre entidades ativas e estado do jogador.
+
+- 🧱 **F2 — Debug de Colisões:**  
+  Mostra visualmente as colisões detectadas no mapa.
+
+- 🗺️ **F3 — Debug da Matriz de Tiles:**  
+  Revela a grade da matriz utilizada na lógica do mapa.
 
 ---
 
