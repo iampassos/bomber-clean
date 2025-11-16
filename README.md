@@ -98,7 +98,6 @@ make
 ./game.out
 ```
 
-**Windows** ...
 ## 🎮 Jogabilidade
 
 Durante a partida:
