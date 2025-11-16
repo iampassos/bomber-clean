@@ -51,12 +51,22 @@ sudo dnf install git
 # Ubuntu:
 sudo apt install git
 ```
+
+- Instalação da Biblioteca de Controles SDL2:
+ ```bash
+# Fedora:
+sudo dnf install SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel
+
+# Ubuntu:
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+```
 - Instalação da Biblioteca grafica Raylib.h:
 ```bash
 # Fedora:
 sudo dnf install alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
 
 # Ubuntu:
+sudo apt install cmake
 sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev
 sudo apt install libwayland-dev wayland-protocols libxkbcommon-dev
 git clone https://github.com/raysan5/raylib.git
@@ -69,14 +79,6 @@ sudo make install
 
 
 
-```
-- Instalação da Biblioteca de Controles SDL2:
- ```bash
-# Fedora:
-sudo dnf install SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel
-
-# Ubuntu:
-sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 ```
 - Clone o Repositório:
 ```bash
