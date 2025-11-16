@@ -26,7 +26,7 @@ O jogo coloca **1 a 4 jogadores** em uma arena dinâmica onde o objetivo é simp
 - [**Demonstração do Gameplay — YouTube**](https://youtu.be/CFksENJ9CzU)  
 - [**Demonstração Técnica (Modo Debug) — YouTube**](https://youtu.be/gXLOxB3hNz4)
 - [**Link backup de vídeo via google drive**](https://drive.google.com/drive/folders/12B128QSV8odMmiVKKyRhX1gSiA0wLOK6?usp=sharing
----) *
+)
 
 
 
