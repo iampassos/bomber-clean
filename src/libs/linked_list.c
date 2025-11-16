@@ -19,13 +19,12 @@ void list_insert_end(LinkedList *list, void *data) {
   new->data = data;
   new->next = NULL;
 
-  if (list->head == NULL){
+  if (list->head == NULL) {
     list->head = new;
     list->tail = new;
-  }
-  else {
-    list->tail->next=new;
-    list->tail=new;
+  } else {
+    list->tail->next = new;
+    list->tail = new;
   }
 }
 
@@ -43,35 +42,35 @@ int list_length(LinkedList *list) {
   }
 }
 
-void list_free_all(LinkedList *list) {
-  if (list == NULL)
+void list_free_all(LinkedList **list) {
+  if (list == NULL || *list == NULL)
     return;
 
-  Node *aux = list->head;
+  Node *aux = (*list)->head;
   while (aux != NULL) {
     Node *delete = aux;
     aux = aux->next;
-    if(delete->data){
+    if (delete->data) {
       free(delete->data); // libera o ponteiro data
     }
-    free(delete);    // libera o nó em si
+    free(delete); // libera o nó em si
   }
-  free(list);
+  free(*list);
+  *list = NULL;
 }
 
-void pop(LinkedList *list){
+void pop(LinkedList *list) {
 
-  if(list!=NULL && list->head!=NULL){
-    Node *delete=list->head;
-    list->head=list->head->next;
+  if (list != NULL && list->head != NULL) {
+    Node *delete = list->head;
+    list->head = list->head->next;
     free(delete->data);
     free(delete);
-    if(list->head==NULL){
-      list->tail=NULL;
+    if (list->head == NULL) {
+      list->tail = NULL;
     }
   }
 }
-
 
 int list_find_node_position(LinkedList *list, void *target) {
   if (list == NULL || target == NULL)
@@ -105,32 +104,33 @@ void *list_get_data_position(LinkedList *list, int posi) {
   return NULL;
 }
 
-
 void list_remove_node(LinkedList *list, void *target) {
-    if (!list || !list->head) return;
-    
-    //removendo o primeiro no
-    if(list->head->data==target){
-      Node *delete=list->head;
-      list->head=list->head->next;
+  if (!list || !list->head)
+    return;
 
-      if(list->head==NULL) list->tail=NULL;
-      free(delete->data);
-      free(delete);
-    }
-    else{
-      Node *aux=list->head;
-      
-      while(aux->next !=NULL){
-        if(aux->next->data==target){ //para um antes
-          Node *delete=aux->next;
-          aux->next=aux->next->next;
-          if(delete == list->tail) list->tail = aux; //atualiza a tail
-          free(delete->data);
-          free(delete);
-          return;
-        }
-        aux=aux->next;
+  // removendo o primeiro no
+  if (list->head->data == target) {
+    Node *delete = list->head;
+    list->head = list->head->next;
+
+    if (list->head == NULL)
+      list->tail = NULL;
+    free(delete->data);
+    free(delete);
+  } else {
+    Node *aux = list->head;
+
+    while (aux->next != NULL) {
+      if (aux->next->data == target) { // para um antes
+        Node *delete = aux->next;
+        aux->next = aux->next->next;
+        if (delete == list->tail)
+          list->tail = aux; // atualiza a tail
+        free(delete->data);
+        free(delete);
+        return;
       }
+      aux = aux->next;
     }
+  }
 }

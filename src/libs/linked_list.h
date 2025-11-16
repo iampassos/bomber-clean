@@ -17,14 +17,14 @@ typedef struct {
 LinkedList *list_create();                          // criar uma lista
 void list_insert_end(LinkedList *list, void *data); // inserir um no no final
 int list_length(LinkedList *list);
-void list_free_all(LinkedList *list);
+void list_free_all(LinkedList **list);
 int list_find_node_position(
     LinkedList *list, void *target); // achar a posicao de um data especifico
 void *list_get_data_position(LinkedList *list,
                              int posi); // retorna uma data por posicao
 
-void pop(LinkedList *list); //excluir o primeiro no
+void pop(LinkedList *list); // excluir o primeiro no
 
-void list_remove_node(LinkedList *list, void *target); //remover no especifico
+void list_remove_node(LinkedList *list, void *target); // remover no especifico
 
 #endif

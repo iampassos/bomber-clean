@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-LinkedList *linked_list_head = NULL;
+LinkedList *maps_linked_list = NULL;
 
 Map *map_create(MapType map_type) {
-  if (linked_list_head == NULL)
-    linked_list_head = list_create();
+  if (maps_linked_list == NULL)
+    maps_linked_list = list_create();
 
   Map *map = malloc(sizeof(Map));
 
@@ -62,21 +62,27 @@ Map *map_create(MapType map_type) {
     break;
   }
 
-  list_insert_end(linked_list_head, map); // inseri na lista encadeada
+  list_insert_end(maps_linked_list, map); // inseri na lista encadeada
 
   return map;
 }
 
 Map *map_first() {
-  Map *m = (Map *)list_get_data_position(linked_list_head, 0);
+  Map *m = (Map *)list_get_data_position(maps_linked_list, 0);
   return m != NULL ? m : NULL;
 }
 
 Map *map_next(Map *map) {
-  int pos = list_find_node_position(linked_list_head, map);
-  Map *next = (Map *)list_get_data_position(linked_list_head, pos + 1);
-  return next != NULL ? next : NULL;
+  int pos = list_find_node_position(maps_linked_list, map);
+  Map *next = (Map *)list_get_data_position(maps_linked_list, pos + 1);
+  if (next != NULL) {
+    list_remove_node(maps_linked_list, map);
+    return next;
+  }
+  return NULL;
 }
+
+void map_clean_up() { list_free_all(&maps_linked_list); }
 
 TileType map_get_tile(Map *map, GridPosition position) {
   return map->grid[position.row][position.col];

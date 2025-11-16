@@ -1,5 +1,6 @@
 #include "game_state.h"
 #include "core/assets/asset_manager.h"
+#include "core/map.h"
 #include "entities/entities_manager.h"
 #include "game/game_manager.h"
 #include "render/renderer.h"
@@ -32,6 +33,7 @@ void game_state_update() {
     state_manager_set(STATE_MENU);
     entities_manager_clear();
     asset_manager_unload_game();
+    map_clean_up();
     return;
   }
 
