@@ -38,8 +38,10 @@ O projeto funciona em **Windows** e **Linux**, e inclui **Makefiles específicos
 - instalação das bibliotecas basicas de copilação:
 ```bash
 #Fedora:
+sudo npm update
 sudo npm install build-essential
 #Ubuntu:
+sudo apt update
 sudo apt install build-essential
 ```
 - Instalação Git:
@@ -69,7 +71,7 @@ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 ```
 - Clone o Repositório:
 ```bash
-https://github.com/iampassos/bomber-rush.git
+git clone https://github.com/iampassos/bomber-rush.git
 ```
 
 - Acesse a pasta do Repositório:
