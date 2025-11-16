@@ -14,7 +14,7 @@ void insertion_sort_score_by_time(Score *array, int len) {
     if (array != NULL) { // verificação se o ponteiro está apontando pra algo
         for (int i = 1; i < len; i++) {
             int current = i;
-            while (current != 0 && array[current].time < array[current - 1].time) {
+            while (current != 0 && array[current].time > array[current - 1].time) {
                 swap_Score(&array[current], &array[current - 1]);
                 current--; // Finalização do InsertionSort
             }
