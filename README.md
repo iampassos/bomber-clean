@@ -157,10 +157,21 @@ Dentro da pasta do projeto, use o Makefile específico de Windows:
 ```bash
 mingw32-make -f MakeFileWindows clean && mingw32-make -f MakeFileWindows run
 ```
+ou
+
+```bash
+mingw32-make -f MakeFileWindows && .\main.exe
+```
+
 Se preferir rodar em comandos separados:
 ```bash
 mingw32-make -f MakeFileWindows clean
 mingw32-make -f MakeFileWindows run
+```
+ou
+```bash
+mingw32-make -f MakeFileWindows
+.\main.exe
 ```
 Após a compilação, o jogo será iniciado automaticamente.
 ## 🎮 Jogabilidade
