@@ -92,6 +92,77 @@ make
 ./game.out
 ```
 
+**Windows:**
+
+Siga estes passos para configurar o ambiente e executar o **Bomber Rush** no Windows:
+
+### 1. Instalar o MSYS2
+
+- Baixe e instale o MSYS2 a partir do site oficial:  
+  https://www.msys2.org/
+
+### 2. Abrir o Terminal MSYS2
+
+- Após a instalação, abra o menu Iniciar do Windows e execute o terminal:  
+  **MSYS2 UCRT64 (mingw64/ucrt64)**  
+  (é importante usar o terminal UCRT64, pois é nele que instalaremos as dependências).
+
+### 3. Instalar Ferramentas de Compilação
+
+No terminal **UCRT64**, execute o comando abaixo para instalar GCC, Make e ferramentas essenciais:
+
+```bash
+pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain git
+```
+### 4. Adicionar o GCC ao Path do Windows
+
+1. No Windows, pesquise por “variáveis de ambiente” e abra
+Editar as variáveis de ambiente do sistema.
+
+2. Clique em Variáveis de Ambiente….
+
+3. Em Variáveis do sistema, localize a variável Path e clique em Editar.
+
+4. Adicione um novo caminho apontando para o diretório bin do UCRT64, por exemplo:
+
+```text
+C:\msys64\ucrt64\bin
+```
+5. Confirme todas as janelas com OK.
+
+### 5. Instalar as Bibliotecas Raylib e SDL2
+
+Ainda no terminal UCRT64, instale a Raylib:
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-raylib
+```
+Em seguida, instale a SDL2 e extensões usadas no projeto:
+```bash
+pacman -S mingw-w64-ucrt-x86_64-SDL2 \
+          mingw-w64-ucrt-x86_64-SDL2_image \
+          mingw-w64-ucrt-x86_64-SDL2_mixer \
+          mingw-w64-ucrt-x86_64-SDL2_ttf
+```
+### 6. Clonar o Repositório
+
+No mesmo terminal, escolha uma pasta de sua preferência e execute:
+```bash
+git clone https://github.com/iampassos/bomber-rush.git
+cd bomber-rush
+```
+7. Compilar e Executar o Jogo
+
+Dentro da pasta do projeto, use o Makefile específico de Windows:
+```bash
+mingw32-make -f MakeFileWindows clean && mingw32-make -f MakeFileWindows run
+```
+Se preferir rodar em comandos separados:
+```bash
+mingw32-make -f MakeFileWindows clean
+mingw32-make -f MakeFileWindows run
+```
+Após a compilação, o jogo será iniciado automaticamente.
 ## 🎮 Jogabilidade
 
 Durante a partida:
