@@ -139,10 +139,7 @@ pacman -S mingw-w64-ucrt-x86_64-raylib
 ```
 Em seguida, instale a SDL2 e extensões usadas no projeto:
 ```bash
-pacman -S mingw-w64-ucrt-x86_64-SDL2 \
-          mingw-w64-ucrt-x86_64-SDL2_image \
-          mingw-w64-ucrt-x86_64-SDL2_mixer \
-          mingw-w64-ucrt-x86_64-SDL2_ttf
+pacman -S mingw-w64-ucrt-x86_64-SDL2
 ```
 ### 6. Clonar o Repositório
 
@@ -151,29 +148,14 @@ No mesmo terminal, escolha uma pasta de sua preferência e execute:
 git clone https://github.com/iampassos/bomber-rush.git
 cd bomber-rush
 ```
-7. Compilar e Executar o Jogo
+### 7. Compilar e Executar o Jogo
 
-Dentro da pasta do projeto, use o Makefile específico de Windows:
-```bash
-mingw32-make -f MakeFileWindows clean && mingw32-make -f MakeFileWindows run
-```
-ou
 
-```bash
-mingw32-make -f MakeFileWindows && .\main.exe
-```
 
-Se preferir rodar em comandos separados:
-```bash
-mingw32-make -f MakeFileWindows clean
-mingw32-make -f MakeFileWindows run
-```
-ou
 ```bash
 mingw32-make -f MakeFileWindows
-.\main.exe
+main.exe
 ```
-Após a compilação, o jogo será iniciado automaticamente.
 ## 🎮 Jogabilidade
 
 Durante a partida:
